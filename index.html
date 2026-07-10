@@ -471,6 +471,45 @@ button{font-family:inherit;cursor:pointer;border:none}
 .bh-row .bh-g{color:#8CF5B0}
 .bh-row .bh-b{color:#FF9E96}
 .bh-row .bh-tie{color:#EED9A0}
+/* ── format strip + 💥 rumble ── */
+.fmt-strip{display:flex;gap:8px;margin:2px 0 10px}
+.fmt-chip{flex:1;min-height:40px;border-radius:10px;background:#0A0B13;border:2px solid #55606E;
+  color:#9AA6B2;font-family:'Bungee';font-size:10px;letter-spacing:.03em;cursor:pointer}
+.fmt-chip.on{border-color:var(--gold);color:var(--gold-lt);box-shadow:0 0 12px rgba(200,169,81,.35)}
+.fmt-chip:disabled{opacity:.45;cursor:default}
+.fmt-chip:active:not(:disabled){transform:scale(.97)}
+.rmb-face{display:none}
+.rmb-face.show{display:block}
+.rmb-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rmb-corner{border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:5px;
+  background:#0B0E17;border:2px solid var(--rc,#55606E)}
+.rmb-corner b{font-family:'Bungee';font-size:9.5px;text-align:center;color:var(--rc)}
+.rmb-ava{height:52px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px}
+.rmb-ava img{height:100%;object-fit:contain;filter:hue-rotate(var(--hr,0deg)) saturate(1.15)}
+.rmb-corner input{width:100%;min-height:36px;background:#070910;border-radius:8px;border:2px solid var(--rc);
+  color:var(--ink);font-weight:800;font-size:13px;text-align:center;text-transform:uppercase}
+.rmb-corner button{min-height:34px;border-radius:8px;background:#0A0B13;font-family:'Bungee';
+  font-size:9px;border:2px solid var(--rc);color:var(--rc);cursor:pointer}
+.rmb-corner button:disabled{opacity:.5;cursor:default}
+.rmb-rdy{min-height:13px;font-size:9.5px;font-weight:800;text-align:center;color:var(--rc)}
+.rmb-rdy.err{color:#FF8A80 !important}
+.rmb-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.rmb-row{position:relative;overflow:hidden;display:none;align-items:center;gap:10px;border-radius:12px;
+  padding:10px 12px;background:#0B0E17;border:2px solid var(--rc,#55606E)}
+.rmb-row.show{display:flex;animation:rmbPop .45s ease}
+@keyframes rmbPop{0%{transform:scale(.7);opacity:0}70%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+.rmb-row .rdot{width:14px;height:14px;border-radius:50%;background:var(--rc);flex:none}
+.rmb-row .rtxt{flex:1;min-width:0;font-weight:800;font-size:12.5px;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rmb-row .rsc{font-family:'Bungee';font-size:14px;color:var(--gold-lt)}
+.rmb-row.champ{border-color:var(--gold);box-shadow:0 0 16px rgba(200,169,81,.5)}
+.rmb-row.last{opacity:.9;min-height:64px}
+.rmb-podium{display:none;margin-top:12px;border-radius:14px;padding:14px;text-align:center;
+  background:#12141F;border:2px solid var(--gold)}
+.rmb-podium.show{display:block}
+.rmb-podium .ptitle{font-family:'Bungee';font-size:19px;color:var(--gold-lt);margin-bottom:8px}
+.rmb-podium .pline{font-size:13px;font-weight:800;color:var(--ink);margin:4px 0}
+@media (prefers-reduced-motion: reduce){.rmb-row.show{animation:none}}
 .btl-arena{display:none}
 .btl-arena.show{display:block}
 .btl-machine{position:relative;border-radius:14px;padding:10px;margin-top:10px;overflow:hidden}
@@ -1168,6 +1207,11 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
     <div class="battle" id="battleLayer" role="dialog" aria-label="Battle mode">
       <div class="btl-scroll">
         <div class="btl-head"><b>&#129354; BATTLE MODE</b><button class="btl-exit" id="btlExit">EXIT &#10005;</button></div>
+        <div class="fmt-strip">
+          <button class="fmt-chip on" id="fmtClassic">&#9876;&#65039; CLASSIC 1v1</button>
+          <button class="fmt-chip" id="fmtRumble">&#128165; RUMBLE</button>
+          <button class="fmt-chip" id="fmtTourney" disabled>&#127942; TOURNEY &#183; SOON</button>
+        </div>
         <div class="btl-face" id="btlFace">
           <div class="btl-vs">
             <div class="btl-ava b" id="btlAvaB"><svg viewBox="0 0 140 150" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="glvr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF7A70"/><stop offset="1" stop-color="#B71C1C"/></linearGradient></defs><g transform="translate(66,62)"><ellipse cx="0" cy="0" rx="54" ry="48" fill="url(#glvr)" stroke="#1A0808" stroke-width="5"/><ellipse cx="32" cy="17" rx="22" ry="28" fill="url(#glvr)" stroke="#1A0808" stroke-width="4"/><rect x="-26" y="38" width="52" height="38" rx="10" fill="#22314A" stroke="#1A0808" stroke-width="4"/><ellipse cx="-16" cy="-20" rx="18" ry="12" fill="#FFCDD2" opacity=".55"/><path d="M-38 6 q10 13 32 15" stroke="#1A0808" stroke-width="4" fill="none" opacity=".5"/></g></svg><img id="btlImgB" alt=""></div>
@@ -1195,6 +1239,22 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
           <button class="btl-clearbtn" id="btlClearBtn">CLEAR RECENT BATTLES</button>
           <div class="btl-hist" id="btlHist" style="display:none"></div>
         </div>
+        <div class="rmb-face" id="rmbFace">
+          <div class="btl-wait">3&#8211;8 fighters &#183; one rumble &#183; last place takes the pail &#128465;</div>
+          <div class="rmb-grid" id="rmbGrid">
+            <div class="rmb-corner" style="--rc:#E53935;--hr:0deg"><b>RED</b><div class="rmb-ava"><img id="rmbAva0" alt=""></div><input id="rmbIn0" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="RED corner ticker"><button id="rmbGo0">INSERT COIN</button><button class="btl-cclear" id="rmbClr0" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy0"></div></div>
+            <div class="rmb-corner" style="--rc:#35D96B;--hr:0deg"><b>GREEN</b><div class="rmb-ava"><img id="rmbAva1" alt=""></div><input id="rmbIn1" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="GREEN corner ticker"><button id="rmbGo1">INSERT COIN</button><button class="btl-cclear" id="rmbClr1" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy1"></div></div>
+            <div class="rmb-corner" style="--rc:#26C6DA;--hr:165deg"><b>TEAL</b><div class="rmb-ava"><img id="rmbAva2" alt=""></div><input id="rmbIn2" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="TEAL corner ticker"><button id="rmbGo2">INSERT COIN</button><button class="btl-cclear" id="rmbClr2" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy2"></div></div>
+            <div class="rmb-corner" style="--rc:#E8C35A;--hr:275deg"><b>GOLD</b><div class="rmb-ava"><img id="rmbAva3" alt=""></div><input id="rmbIn3" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="GOLD corner ticker"><button id="rmbGo3">INSERT COIN</button><button class="btl-cclear" id="rmbClr3" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy3"></div></div>
+            <div class="rmb-corner" style="--rc:#AB7BF5;--hr:255deg"><b>PURPLE</b><div class="rmb-ava"><img id="rmbAva4" alt=""></div><input id="rmbIn4" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="PURPLE corner ticker"><button id="rmbGo4">INSERT COIN</button><button class="btl-cclear" id="rmbClr4" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy4"></div></div>
+            <div class="rmb-corner" style="--rc:#5B9BFF;--hr:105deg"><b>BLUE</b><div class="rmb-ava"><img id="rmbAva5" alt=""></div><input id="rmbIn5" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="BLUE corner ticker"><button id="rmbGo5">INSERT COIN</button><button class="btl-cclear" id="rmbClr5" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy5"></div></div>
+            <div class="rmb-corner" style="--rc:#FF9142;--hr:35deg"><b>ORANGE</b><div class="rmb-ava"><img id="rmbAva6" alt=""></div><input id="rmbIn6" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="ORANGE corner ticker"><button id="rmbGo6">INSERT COIN</button><button class="btl-cclear" id="rmbClr6" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy6"></div></div>
+            <div class="rmb-corner" style="--rc:#FF7BAC;--hr:215deg"><b>PINK</b><div class="rmb-ava"><img id="rmbAva7" alt=""></div><input id="rmbIn7" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="PINK corner ticker"><button id="rmbGo7">INSERT COIN</button><button class="btl-cclear" id="rmbClr7" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy7"></div></div>
+            </div>
+          <div class="btl-wait" id="rmbWait">0 of 8 corners paid &#8212; need 3+ to rumble&#8230;</div>
+          <button class="btl-fightbtn" id="rmbFightBtn" disabled aria-disabled="true">RUMBLE!</button>
+          <button class="btl-clearbtn" id="rmbClearAll">CLEAR ALL CORNERS</button>
+        </div>
         <div class="btl-arena" id="btlArena">
           <div class="btl-fight" id="btlFight">FIGHT!</div>
           <div class="btl-machine b" id="btlMachB">
@@ -1216,6 +1276,12 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
             <div class="btl-actions"><button id="btlRematch">REMATCH</button><button id="btlClose">EXIT BATTLE</button></div>
           </div>
           <div class="btl-prizeslot" id="btlPrizeSlot"></div>
+        </div>
+        <div class="btl-arena" id="rmbArena">
+          <div class="btl-fight" id="rmbFight">RUMBLE!</div>
+          <div class="rmb-list" id="rmbList"></div>
+          <div class="rmb-podium" id="rmbPodium"></div>
+          <div class="btl-actions" id="rmbActions" style="display:none"><button id="rmbAgain">RUMBLE AGAIN</button><button id="rmbExit2">EXIT BATTLE</button></div>
         </div>
       </div>
     </div>
@@ -1607,6 +1673,19 @@ function gfmScore(d){
   return Math.max(0, Math.min(1000, tier + macd + dmi + ppo + sma + hi + bench));
 }
 
+/* RUMBLE ranking: competition ranking with dead-heat ties. entries=[{t,sc}] */
+function rumbleRank(entries){
+  const s = (entries || []).slice().sort(function(a, b){ return b.sc - a.sc; });
+  let place = 0, prev = null, seen = 0;
+  const ranked = s.map(function(e){
+    seen++;
+    if (prev === null || e.sc < prev){ place = seen; prev = e.sc; }
+    return { t: e.t, sc: e.sc, place: place };
+  });
+  const champs = ranked.filter(function(r){ return r.place === 1; }).map(function(r){ return r.t; });
+  return { ranked: ranked, champs: champs, tie: champs.length > 1 };
+}
+
 /* Session share: compact payload = tickers + timestamps + memo; the importer's
    machine recomputes every verdict from its OWN seed (short codes, future-proof). */
 function buildSessionPayload(spinsArr, memo, day){
@@ -1805,7 +1884,7 @@ function mirrorDrift(r, snap){
 }
 
 if (typeof module !== "undefined" && module.exports){
-  module.exports = { CONFIG, SEED, iconFor, outcomeIcons, momoStars, isFiveStarStud,
+  module.exports = { CONFIG, SEED, rumbleRank, iconFor, outcomeIcons, momoStars, isFiveStarStud,
     verdictFor, levenshtein, closestTicker, normalizeTicker,
     isClub, isGlobe, isPerfect, logoCandidates, encodeShare, decodeShare, resolveQuery, buildSessionPayload, sessionRows, gfmScore, isStud, parseMoney, parseCapUsd, strikeIncrement, firstOtmCall, modeledIV, bsCall, kickerTrade, kickerLiq, atmStrike, hailMaryTrade, hmVerdict, battleWinner,
     MSEED, MRRG, MANCHOR, MANCHOR_ISO, mirrorStud, mirrorClub, mirrorGlobe,
@@ -2638,6 +2717,7 @@ const Sound = (function(){
       box.style.display = "";
       let h = '<div class="bh-head">RECENT BATTLES \u2014 TAP TO REMATCH</div>';
       list.slice(0, 8).forEach(function(r){
+        if (r.k === "R"){ h += rmbHistRow(r); return; }
         const g = bhSafe(r.g), b = bhSafe(r.b), sg = (+r.sg || 0), sb = (+r.sb || 0);
         const tie = r.w === "T";
         const wt = r.w === "B" ? b : g, ws = r.w === "B" ? sb : sg;
@@ -2651,6 +2731,7 @@ const Sound = (function(){
       box.innerHTML = h;
       box.querySelectorAll(".bh-row").forEach(function(btn){
         btn.addEventListener("click", function(){
+          if (btn.dataset.r){ rmbLoadRoster(btn.dataset.r.split(",")); return; }
           clearCorners("grudge match loaded \u2014 insert your coins\u2026");
           $("btlInG").value = btn.dataset.g;
           $("btlInB").value = btn.dataset.b;
@@ -2751,6 +2832,7 @@ const Sound = (function(){
       fb.disabled = true; fb.classList.remove("armed");
       fb.setAttribute("aria-disabled", "true");
       cleanupPrizes();
+      rmbReset(); fmtSet("C");
       renderBattles();
       $("battleLayer").classList.add("show");
       Sound.wake();
@@ -3271,6 +3353,167 @@ const Sound = (function(){
     }
     $("btlInG").addEventListener("focus", function(){ keepAboveKeyboard(this); });
     $("btlInB").addEventListener("focus", function(){ keepAboveKeyboard(this); });
+
+    /* ── 💥 RUMBLE — 3-8 fighter battle royale ── */
+    var rmbPick = [null, null, null, null, null, null, null, null];
+    var RMB_COLORS = [
+      { n: "RED", c: "#E53935", src: "B" }, { n: "GREEN", c: "#35D96B", src: "G" },
+      { n: "TEAL", c: "#26C6DA", src: "B" }, { n: "GOLD", c: "#E8C35A", src: "G" },
+      { n: "PURPLE", c: "#AB7BF5", src: "B" }, { n: "BLUE", c: "#5B9BFF", src: "G" },
+      { n: "ORANGE", c: "#FF9142", src: "B" }, { n: "PINK", c: "#FF7BAC", src: "G" }];
+    function rmbCount(){ return rmbPick.filter(Boolean).length; }
+    function rmbSync(){
+      var n = rmbCount();
+      $("rmbWait").textContent = n + " of 8 corners paid" + (n >= 3 ? " \u2014 ready to RUMBLE!" : " \u2014 need 3+ to rumble\u2026");
+      var fb = $("rmbFightBtn"), ok = n >= 3;
+      fb.disabled = !ok;
+      fb.classList.toggle("armed", ok);
+      fb.setAttribute("aria-disabled", ok ? "false" : "true");
+    }
+    function rmbClear(i, msg){
+      rmbPick[i] = null;
+      $("rmbIn" + i).value = ""; $("rmbIn" + i).disabled = false;
+      $("rmbGo" + i).disabled = false;
+      var r = $("rmbRdy" + i); r.textContent = msg || ""; r.classList.remove("err");
+      rmbSync();
+    }
+    function rmbInsert(i){
+      var t = resolveQuery($("rmbIn" + i).value);
+      var rdy = $("rmbRdy" + i);
+      if (!t || !SEED[t]){
+        rdy.classList.add("err"); rdy.textContent = "NOT IN THIS UNIVERSE";
+        Sound.rejectClunk(); return;
+      }
+      for (var j = 0; j < 8; j++){
+        if (rmbPick[j] && rmbPick[j].t === t){
+          rdy.classList.add("err"); rdy.textContent = "ALREADY IN THE RING";
+          Sound.rejectClunk(); return;
+        }
+      }
+      rdy.classList.remove("err");
+      rmbPick[i] = { t: t, d: SEED[t] };
+      $("rmbIn" + i).value = t; $("rmbIn" + i).disabled = true; $("rmbGo" + i).disabled = true;
+      rdy.textContent = "\u2713 " + t + " \u2014 READY";
+      Sound.coinInsert(); rmbSync();
+      if (rmbCount() >= 3) Sound.bonusSting();
+    }
+    function rmbReset(){
+      for (var i = 0; i < 8; i++) rmbClear(i);
+      $("rmbArena").classList.remove("show");
+      $("rmbList").innerHTML = "";
+      $("rmbPodium").classList.remove("show"); $("rmbPodium").innerHTML = "";
+      $("rmbActions").style.display = "none";
+      $("rmbFight").classList.remove("show");
+    }
+    function fmtSet(mode){
+      var rumble = mode === "R";
+      $("fmtClassic").classList.toggle("on", !rumble);
+      $("fmtRumble").classList.toggle("on", rumble);
+      $("btlFace").style.display = rumble ? "none" : "";
+      $("rmbFace").classList.toggle("show", rumble);
+      $("btlArena").classList.remove("show");
+      $("rmbArena").classList.remove("show");
+    }
+    function rmbLoadRoster(ts){
+      fmtSet("R");
+      for (var i = 0; i < 8; i++) rmbClear(i);
+      (ts || []).slice(0, 8).forEach(function(t, i){ $("rmbIn" + i).value = bhSafe(t); });
+      $("rmbWait").textContent = "grudge rumble loaded \u2014 insert your coins\u2026";
+      $("rmbGrid").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      Sound.engraveTick();
+    }
+    function rmbHistRow(r){
+      var ps = (r.ps || []).map(function(p){ return bhSafe(p.t); }).filter(Boolean);
+      var tie = r.w === "T", w = bhSafe(r.w);
+      var top = tie ? '<span class="bh-tie">DEAD HEAT</span>' : '<span class="bh-g">\uD83C\uDFC6 ' + w + '</span>';
+      return '<button class="bh-row" data-r="' + ps.join(",") + '"><span>\uD83D\uDCA5 RUMBLE \u00b7 ' + top
+        + ' \u00b7 ' + ps.length + ' fighters</span><em>' + fmtBt(r.ts || Date.now()) + '</em></button>';
+    }
+    function rmbFightGo(){
+      var my = bTok;
+      var entries = [];
+      for (var i = 0; i < 8; i++) if (rmbPick[i]) entries.push({ t: rmbPick[i].t, sc: gfmScore(rmbPick[i].d), ci: i });
+      if (entries.length < 3) return;
+      var rr = rumbleRank(entries.map(function(e){ return { t: e.t, sc: e.sc }; }));
+      var byT = {}; entries.forEach(function(e){ byT[e.t] = e; });
+      $("rmbFace").classList.remove("show");
+      $("rmbArena").classList.add("show");
+      $("rmbFight").classList.add("show");
+      Sound.leverCrank(); Sound.bonusSting();
+      $("battleLayer").scrollTop = 0;
+      var list = $("rmbList");
+      list.innerHTML = "";
+      var revealOrder = rr.ranked.slice().reverse(); /* worst reveals first */
+      revealOrder.forEach(function(rk){
+        var e = byT[rk.t], col = RMB_COLORS[e.ci], d = SEED[rk.t] || {};
+        var row = document.createElement("div");
+        row.className = "rmb-row";
+        row.style.setProperty("--rc", col.c);
+        row.innerHTML = '<span class="rdot"></span><span class="rtxt">#' + rk.place + ' \u00b7 ' + rk.t
+          + ' \u00b7 TIER ' + (d.tier || "?") + '</span><span class="rsc">' + rk.sc + '</span>';
+        list.appendChild(row);
+        rk._el = row;
+      });
+      setTimeout(function(){
+        if (my !== bTok) return;
+        $("rmbFight").classList.remove("show");
+        var step = reduceMotion ? 60 : 780;
+        revealOrder.forEach(function(rk, idx){
+          setTimeout(function(){
+            if (my !== bTok) return;
+            rk._el.classList.add("show");
+            Sound.reelStop();
+            if (idx === 0 && revealOrder.length > 1 && rk.place !== 1){
+              rk._el.classList.add("last"); trashDump(rk._el);
+            }
+            if (idx === revealOrder.length - 1){
+              setTimeout(function(){ if (my === bTok) rmbCrown(rr); }, 620);
+            }
+          }, 550 + idx * step);
+        });
+      }, 1100);
+    }
+    function rmbCrown(rr){
+      rr.ranked.forEach(function(rk){ if (rk.place === 1 && rk._el) rk._el.classList.add("champ"); });
+      var pod = $("rmbPodium");
+      var medals = { 1: "\uD83E\uDD47", 2: "\uD83E\uDD48", 3: "\uD83E\uDD49" };
+      var lastPlace = rr.ranked[rr.ranked.length - 1].place;
+      var h = '<div class="ptitle">' + (rr.tie ? "DEAD HEAT!" : "\uD83C\uDFC6 " + rr.champs[0] + " TAKES THE BELT!") + '</div>';
+      rr.ranked.forEach(function(rk){
+        var m = medals[rk.place] || (rk.place === lastPlace ? "\uD83D\uDDD1" : "\u00b7");
+        h += '<div class="pline">' + m + ' #' + rk.place + ' ' + rk.t + ' \u00b7 GFM ' + rk.sc + '</div>';
+      });
+      pod.innerHTML = h; pod.classList.add("show");
+      $("rmbActions").style.display = "";
+      if (rr.tie){ Sound.midWin(); } else { Sound.bonusSting(); }
+      Celebrate.confetti();
+      saveBattle({ k: "R", ps: rr.ranked.map(function(rk){ return { t: rk.t, sc: rk.sc }; }),
+        w: rr.tie ? "T" : rr.champs[0], ts: Date.now() });
+      renderBattles();
+    }
+    (function rmbInit(){
+      for (var i = 0; i < 8; i++){
+        (function(i){
+          var col = RMB_COLORS[i];
+          var av = $("rmbAva" + i);
+          if (av) av.src = col.src === "B" ? CONFIG.battleAvatarB : CONFIG.battleAvatarG;
+          $("rmbGo" + i).addEventListener("click", function(){ rmbInsert(i); });
+          $("rmbClr" + i).addEventListener("click", function(){ rmbClear(i); });
+          $("rmbIn" + i).addEventListener("keydown", function(e){ if (e.key === "Enter") rmbInsert(i); });
+          $("rmbIn" + i).addEventListener("focus", function(){ keepAboveKeyboard(this); });
+        })(i);
+      }
+      $("fmtClassic").addEventListener("click", function(){ fmtSet("C"); });
+      $("fmtRumble").addEventListener("click", function(){ fmtSet("R"); Sound.wake(); });
+      $("rmbFightBtn").addEventListener("click", function(){ if (rmbCount() >= 3) rmbFightGo(); });
+      $("rmbClearAll").addEventListener("click", function(){ for (var i = 0; i < 8; i++) rmbClear(i); Sound.engraveTick(); });
+      $("rmbAgain").addEventListener("click", function(){
+        bTok++; Sound.spinLoopStop();
+        var roster = rmbPick.filter(Boolean).map(function(p){ return p.t; });
+        rmbReset(); rmbLoadRoster(roster);
+      });
+      $("rmbExit2").addEventListener("click", function(){ stop(); });
+    })();
     return { open: open, stop: stop };
   })();
 
