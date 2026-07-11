@@ -1321,6 +1321,8 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
           <div class="rmw-grid" id="rmwGrid"></div>
           <div class="rmb-list" id="rmbList"></div>
           <div class="rmb-podium" id="rmbPodium"></div>
+          <button class="btl-prize" id="rmbPrizeBtn"></button>
+          <div class="btl-prizeslot" id="rmbPrizeSlot"></div>
           <div class="btl-actions" id="rmbActions" style="display:none"><button id="rmbAgain">RUMBLE AGAIN</button><button id="rmbNew">&#129529; NEW RUMBLE</button><button id="rmbExit2">EXIT BATTLE</button></div>
         </div>
       </div>
@@ -2411,7 +2413,7 @@ const Sound = (function(){
 
   /* ── celebrations ── */
   const Celebrate = (function(){
-    let touts = [], rainIv = null, onDone = null;
+    let touts = [], rainIv = null, onDone = null, papIv = null;
     function later(fn, ms){ touts.push(setTimeout(fn, ms)); }
     function clearShower(){
       ["rainLayer","confettiLayer","brandSlam"].forEach(function(id){ $(id).classList.remove("on"); });
@@ -2426,6 +2428,9 @@ const Sound = (function(){
       $("globeLayer").classList.remove("on");
       $("globeBall").classList.remove("has-map");
       $("skipHint").style.display = "none";
+      if (papIv){ clearInterval(papIv); papIv = null; }
+      $("papLayer").classList.remove("on");
+      $("papKicker").style.display = "none";
       if (onDone){ const f = onDone; onDone = null; f(); }
     }
     function coinRain(t){
@@ -2538,6 +2543,28 @@ const Sound = (function(){
       Sound.globeSwell();
       later(function(){ Sound.globeSwell(); }, 3800);
     }
+    function papShow(t){
+      $("papLayer").classList.add("on");
+      const nm = $("papName");
+      nm.innerHTML = "RRG LEADER<br>JACKPOT";
+      nm.className = "pap-name gside"; nm.style.display = "block";
+      const tk = $("papTicker");
+      tk.textContent = t;
+      tk.className = "pap-ticker gside"; tk.style.display = "block";
+      $("papKicker").style.display = "block";
+      let n = 0;
+      papIv = setInterval(function(){
+        const f = document.createElement("i");
+        f.className = "pap-flash";
+        const sz = 40 + Math.random() * 115;
+        f.style.width = sz + "px"; f.style.height = sz + "px";
+        f.style.left = (Math.random() * 92) + "%";
+        f.style.top = (Math.random() * 90) + "%";
+        f.addEventListener("animationend", function(){ f.remove(); });
+        $("papLayer").appendChild(f);
+        if (++n % 3 === 0) Sound.engraveTick();
+      }, 190);
+    }
     function run(t, d, globeMode, done){
       onDone = done;
       Sound.clubSting();
@@ -2552,6 +2579,7 @@ const Sound = (function(){
       later(function(){ confetti(); judges(); }, CONFIG.celebrate.coinsMs * 0.55);  /* cannon three rides with the judges */
       if (globeMode){
         later(globe, CONFIG.celebrate.coinsMs + 300);
+        later(function(){ papShow(t); }, CONFIG.celebrate.coinsMs + 300 + 2600);
         later(stopAll, CONFIG.celebrate.coinsMs + 300 + CONFIG.celebrate.globeMs);
       } else {
         later(stopAll, CONFIG.celebrate.coinsMs + 1800);
@@ -2799,12 +2827,12 @@ const Sound = (function(){
       Celebrate.globe();
       $("papLayer").classList.add("on");
       const nm = $("papName");
-      nm.innerHTML = (w === "G" ? "GREEN CORNER" : "RED CORNER") + "<br>CHAMPION";
-      nm.className = "pap-name " + (w === "G" ? "gside" : "bside");
+      nm.innerHTML = (w === "G" ? "GREEN CORNER" : w === "B" ? "RED CORNER" : "RUMBLE") + "<br>CHAMPION";
+      nm.className = "pap-name " + (w === "B" ? "bside" : "gside");
       nm.style.display = "none";
       const tk = $("papTicker");
       tk.textContent = wp.t;
-      tk.className = "pap-ticker " + (w === "G" ? "gside" : "bside");
+      tk.className = "pap-ticker " + (w === "B" ? "bside" : "gside");
       tk.style.display = "none";
       $("papKicker").style.display = "none";
       setTimeout(function(){                       /* the red carpet opens */
@@ -3064,11 +3092,19 @@ const Sound = (function(){
       }
     });
     $("papKicker").addEventListener("click", function(){
-      if (battleGlobeEnd) battleGlobeEnd();
-      if (prizePick){
-        $("btlPrizeSlot").appendChild($("kickerPanel"));
-        presentKicker(prizePick, "OPTIONS KICKER");
+      if ($("battleLayer").classList.contains("show")){
+        if (battleGlobeEnd) battleGlobeEnd();
+        if (prizePick){
+          var slot = $("rmbArena").classList.contains("show") ? $("rmbPrizeSlot") : $("btlPrizeSlot");
+          slot.appendChild($("kickerPanel"));
+          presentKicker(prizePick, "OPTIONS KICKER");
+        }
+        return;
       }
+      /* casino single-spin: close the show, then claim via the armed house kicker */
+      Celebrate.stopAll();
+      var bk = $("btnKicker");
+      if (bk && !bk.disabled) bk.click();
     });
     $("globeLayer").addEventListener("click", function(){
       if (btlGlobeOn && battleGlobeEnd) battleGlobeEnd();
@@ -3448,6 +3484,7 @@ const Sound = (function(){
       $("rmbPodium").classList.remove("show"); $("rmbPodium").innerHTML = "";
       $("rmbActions").style.display = "none";
       $("rmbFight").classList.remove("show");
+      $("rmbPrizeBtn").className = "btl-prize"; $("rmbPrizeBtn").textContent = "";
     }
     function fmtSet(mode){
       var rumble = mode === "R";
@@ -3522,7 +3559,19 @@ const Sound = (function(){
       }, 1100);
     }
     function rmbCrown(rr){
-      rr.ranked.forEach(function(rk){ if (rk.place !== 1) return; if (rk._el) rk._el.classList.add("champ"); if (rk._w) rk._w.classList.add("champ"); });
+      var my = bTok;
+      rr.ranked.forEach(function(rk){
+        if (rk.place !== 1) return;
+        if (rk._el) rk._el.classList.add("champ");
+        if (rk._w){
+          rk._w.classList.add("champ");
+          var d0 = SEED[rk.t], ft = rk._w.querySelector(".rmw-ft");
+          if (d0 && ft){
+            if (isGlobe(d0)) ft.textContent = "\uD83C\uDF0E " + ft.textContent;
+            else if (isPerfect(d0)) ft.textContent = "\u2663 " + ft.textContent;
+          }
+        }
+      });
       var pod = $("rmbPodium");
       var medals = { 1: "\uD83E\uDD47", 2: "\uD83E\uDD48", 3: "\uD83E\uDD49" };
       var lastPlace = rr.ranked[rr.ranked.length - 1].place;
@@ -3538,6 +3587,27 @@ const Sound = (function(){
       saveBattle({ k: "R", ps: rr.ranked.map(function(rk){ return { t: rk.t, sc: rk.sc }; }),
         w: rr.tie ? "T" : rr.champs[0], ts: Date.now() });
       renderBattles();
+      if (!rr.tie){
+        var cd = SEED[rr.champs[0]];
+        if (cd){
+          prizePick = { t: rr.champs[0], d: cd };
+          var pz = $("rmbPrizeBtn");
+          pz.className = "btl-prize show " + (cd.tier === 1 ? "p-kicker" : cd.tier === 2 ? "p-dream" : "p-hail");
+          pz.textContent = cd.tier === 1 ? "\uD83C\uDF9F CLAIM PRIZE: BONUS OPTIONS KICKER"
+            : cd.tier === 2 ? "\uD83D\uDCB5 CLAIM PRIZE: I HAVE A $ DREAM"
+            : "\u2660\uFE0E CLAIM PRIZE: HAIL MARY";
+          if (cd.tier === 1){
+            Celebrate.judges();
+            setTimeout(function(){ if (my === bTok) $("judgesLayer").classList.remove("on"); },
+              CONFIG.celebrate.judgesHoldMs + 900);
+          }
+          if (!reduceMotion && isGlobe(cd)){
+            setTimeout(function(){ if (my === bTok) Celebrate.confetti(); }, 3600);
+            setTimeout(function(){ if (my === bTok) battleUltimate("R", prizePick); },
+              CONFIG.celebrate.btlGlobeDelay);
+          }
+        }
+      }
     }
     var rmbMode = (function(){
       try { return localStorage.getItem("gfsRmbMode") === "C" ? "C" : "W"; } catch (e){ return "W"; }
@@ -3678,6 +3748,17 @@ const Sound = (function(){
         Sound.engraveTick();
       });
       $("rmbRain").addEventListener("click", rmbRainGo);
+      $("rmbPrizeBtn").addEventListener("click", function(){
+        if (!prizePick) return;
+        var slot = $("rmbPrizeSlot");
+        if (prizePick.d.tier <= 2){
+          slot.appendChild($("kickerPanel"));
+          presentKicker(prizePick, prizePick.d.tier === 1 ? "OPTIONS KICKER" : "I HAVE A $ DREAM");
+        } else {
+          slot.appendChild($("hmPanel"));
+          presentHailMary(prizePick);
+        }
+      });
       $("rmbModeW").addEventListener("click", function(){ rmbModeSet("W"); Sound.engraveTick(); });
       $("rmbModeC").addEventListener("click", function(){ rmbModeSet("C"); Sound.engraveTick(); });
       rmbModeSet(rmbMode);
