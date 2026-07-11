@@ -540,6 +540,11 @@ button{font-family:inherit;cursor:pointer;border:none}
 .rmw.champ .rmw-ft{color:var(--gold-lt)}
 .rmw.last{opacity:.9}
 @media (prefers-reduced-motion: reduce){.rmw-strip.spin{animation:none}.rain-coin{display:none}}
+.rmw-c .rsym{font-size:16px;line-height:1;margin:0 1px}
+#rmbActions{flex-wrap:wrap}
+#rmbActions button{flex:1 1 40%;min-height:46px}
+#rmbActions #rmbNew{border-color:var(--gold);color:var(--gold-lt)}
+#rmbActions #rmbExit2{flex-basis:100%}
 .btl-arena{display:none}
 .btl-arena.show{display:block}
 .btl-machine{position:relative;border-radius:14px;padding:10px;margin-top:10px;overflow:hidden}
@@ -3419,12 +3424,12 @@ const Sound = (function(){
       var rdy = $("rmbRdy" + i);
       if (!t || !SEED[t]){
         rdy.classList.add("err"); rdy.textContent = "NOT IN THIS UNIVERSE";
-        Sound.rejectClunk(); return;
+        Sound.rejectClunk(); return false;
       }
       for (var j = 0; j < 8; j++){
         if (rmbPick[j] && rmbPick[j].t === t){
           rdy.classList.add("err"); rdy.textContent = "ALREADY IN THE RING";
-          Sound.rejectClunk(); return;
+          Sound.rejectClunk(); return false;
         }
       }
       rdy.classList.remove("err");
@@ -3433,6 +3438,7 @@ const Sound = (function(){
       rdy.textContent = "\u2713 " + t + " \u2014 READY";
       Sound.coinInsert(); rmbSync();
       if (rmbCount() >= 3) Sound.bonusSting();
+      return true;
     }
     function rmbReset(){
       for (var i = 0; i < 8; i++) rmbClear(i);
@@ -3554,16 +3560,23 @@ const Sound = (function(){
       var grid = $("rmwGrid");
       grid.innerHTML = ""; $("rmbList").innerHTML = "";
       grid.style.display = "grid";
-      var pool = Object.keys(SEED);
+      var GL = {}; CONFIG.icons.forEach(function(ic){ GL[ic.id] = ic.glyph; });
+      var glyphPool = CONFIG.icons.map(function(ic){ return ic.glyph; });
+      function symRow(g5){ return '<span class="rsym">' + g5.join('</span><span class="rsym">') + '</span>'; }
       rr.ranked.forEach(function(rk){
-        var e = byT[rk.t], col = RMB_COLORS[e.ci];
+        var e = byT[rk.t], col = RMB_COLORS[e.ci], d = SEED[rk.t] || {};
+        var land = outcomeIcons(d).map(function(id){ return GL[id] || "\u2B50"; });
         var cells = [];
-        for (var k = 0; k < 9; k++) cells.push(pool[(Math.random() * pool.length) | 0]);
-        cells.push(rk.t); /* index 9 = landing cell */
+        for (var k = 0; k < 9; k++){
+          var row = [];
+          for (var q = 0; q < 5; q++) row.push(glyphPool[(Math.random() * glyphPool.length) | 0]);
+          cells.push(symRow(row));
+        }
+        cells.push(symRow(land)); /* index 9 = landing row = this fighter's REAL 5 signals */
         var w = document.createElement("div");
         w.className = "rmw";
         w.style.setProperty("--rc", col.c);
-        var inner = '<div class="rmw-brand">GREEN FLAG</div><div class="rmw-win"><div class="rmw-strip">';
+        var inner = '<div class="rmw-brand">GREEN FLAG \u00b7 ' + rk.t + '</div><div class="rmw-win"><div class="rmw-strip">';
         cells.concat(cells).forEach(function(c){ inner += '<div class="rmw-c">' + c + '</div>'; });
         inner += '</div></div><div class="rmw-ft"></div>';
         w.innerHTML = inner;
@@ -3594,6 +3607,18 @@ const Sound = (function(){
         });
       }, 1100);
     }
+    function rmbFocusNext(i){
+      for (var s = 1; s <= 8; s++){
+        var j = (i + s) % 8;
+        if (!rmbPick[j]){
+          var el = $("rmbIn" + j);
+          el.focus(); keepAboveKeyboard(el);
+          return;
+        }
+      }
+      $("rmbIn" + i).blur();
+      $("rmbFightBtn").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+    }
     function rmbRainGo(){
       var idxs = [];
       for (var i = 0; i < 8; i++){
@@ -3620,6 +3645,9 @@ const Sound = (function(){
         }
       }
       idxs.forEach(function(i, k){ setTimeout(function(){ rmbInsert(i); }, 120 + k * 140); });
+      setTimeout(function(){
+        $("rmbFightBtn").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      }, 300 + idxs.length * 140);
     }
     (function rmbInit(){
       for (var i = 0; i < 8; i++){
@@ -3629,7 +3657,7 @@ const Sound = (function(){
           if (av) av.src = col.src === "B" ? CONFIG.battleAvatarB : CONFIG.battleAvatarG;
           $("rmbGo" + i).addEventListener("click", function(){ rmbInsert(i); });
           $("rmbClr" + i).addEventListener("click", function(){ rmbClear(i); });
-          $("rmbIn" + i).addEventListener("keydown", function(e){ if (e.key === "Enter") rmbInsert(i); });
+          $("rmbIn" + i).addEventListener("keydown", function(e){ if (e.key === "Enter"){ e.preventDefault(); if (rmbInsert(i)) rmbFocusNext(i); } });
           $("rmbIn" + i).addEventListener("focus", function(){ keepAboveKeyboard(this); });
         })(i);
       }
