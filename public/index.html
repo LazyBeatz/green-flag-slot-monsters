@@ -510,6 +510,36 @@ button{font-family:inherit;cursor:pointer;border:none}
 .rmb-podium .ptitle{font-family:'Bungee';font-size:19px;color:var(--gold-lt);margin-bottom:8px}
 .rmb-podium .pline{font-size:13px;font-weight:800;color:var(--ink);margin:4px 0}
 @media (prefers-reduced-motion: reduce){.rmb-row.show{animation:none}}
+/* ── 🪙 make-it-rain + 🎡 wheel grid ── */
+.rmb-rain{width:100%;min-height:46px;border-radius:12px;background:#141019;border:2px solid var(--gold);
+  color:var(--gold-lt);font-family:'Bungee';font-size:11.5px;letter-spacing:.04em;cursor:pointer;
+  box-shadow:0 0 14px rgba(200,169,81,.3);margin-bottom:8px}
+.rmb-rain:active{transform:scale(.98)}
+.rmb-rain.shake{animation:rmbShake .4s ease}
+@keyframes rmbShake{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.rain-coin{position:fixed;left:var(--x);top:var(--y);font-size:22px;pointer-events:none;z-index:9999;
+  animation:rainFly var(--dur) cubic-bezier(.3,.1,.6,1) forwards}
+@keyframes rainFly{0%{transform:translate(0,0);opacity:1}30%{transform:translate(var(--dx),-160px);opacity:1}
+  100%{transform:translate(calc(var(--dx)*1.6),70vh);opacity:0}}
+.rmb-mode{display:flex;gap:8px;margin:0 0 10px}
+.rmm{flex:1;min-height:34px;border-radius:10px;background:#0A0B13;border:2px solid #55606E;
+  color:#9AA6B2;font-family:'Bungee';font-size:9.5px;cursor:pointer}
+.rmm.on{border-color:var(--gold);color:var(--gold-lt)}
+.rmm:active{transform:scale(.97)}
+.rmw-grid{display:none;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.rmw{position:relative;overflow:hidden;border:2px solid var(--rc,#55606E);border-radius:12px;
+  background:#0B0E17;padding:6px}
+.rmw-brand{font-family:'Bungee';font-size:7.5px;color:var(--gold-lt);text-align:center;letter-spacing:.14em}
+.rmw-win{height:44px;overflow:hidden;border-radius:8px;background:#070910;border:1px solid #222A38;margin-top:4px}
+.rmw-c{height:44px;display:flex;align-items:center;justify-content:center;font-family:'Bungee';
+  font-size:15px;color:var(--ink)}
+.rmw-strip.spin{animation:rmwLoop .5s linear infinite}
+@keyframes rmwLoop{from{transform:translateY(0)}to{transform:translateY(-440px)}}
+.rmw-ft{min-height:14px;font-size:10px;font-weight:800;text-align:center;color:var(--rc);margin-top:4px}
+.rmw.champ{border-color:var(--gold);box-shadow:0 0 16px rgba(200,169,81,.5)}
+.rmw.champ .rmw-ft{color:var(--gold-lt)}
+.rmw.last{opacity:.9}
+@media (prefers-reduced-motion: reduce){.rmw-strip.spin{animation:none}.rain-coin{display:none}}
 .btl-arena{display:none}
 .btl-arena.show{display:block}
 .btl-machine{position:relative;border-radius:14px;padding:10px;margin-top:10px;overflow:hidden}
@@ -1236,11 +1266,11 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
           </div>
           <div class="btl-wait" id="btlWait">waiting for both corners to insert their coins&#8230;</div>
           <button class="btl-fightbtn" id="btlFightBtn" disabled aria-disabled="true">FIGHT!</button>
-          <button class="btl-clearbtn" id="btlClearBtn">CLEAR RECENT BATTLES</button>
-          <div class="btl-hist" id="btlHist" style="display:none"></div>
         </div>
         <div class="rmb-face" id="rmbFace">
           <div class="btl-wait">3&#8211;8 fighters &#183; one rumble &#183; last place takes the pail &#128465;</div>
+          <button class="rmb-rain" id="rmbRain">&#129689; MAKE IT RAIN &#183; INSERT ALL COINS</button>
+          <div class="rmb-mode"><button class="rmm on" id="rmbModeW">&#127905; WHEELS</button><button class="rmm" id="rmbModeC">&#128203; CARDS</button></div>
           <div class="rmb-grid" id="rmbGrid">
             <div class="rmb-corner" style="--rc:#E53935;--hr:0deg"><b>RED</b><div class="rmb-ava"><img id="rmbAva0" alt=""></div><input id="rmbIn0" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="RED corner ticker"><button id="rmbGo0">INSERT COIN</button><button class="btl-cclear" id="rmbClr0" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy0"></div></div>
             <div class="rmb-corner" style="--rc:#35D96B;--hr:0deg"><b>GREEN</b><div class="rmb-ava"><img id="rmbAva1" alt=""></div><input id="rmbIn1" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="GREEN corner ticker"><button id="rmbGo1">INSERT COIN</button><button class="btl-cclear" id="rmbClr1" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy1"></div></div>
@@ -1254,6 +1284,10 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
           <div class="btl-wait" id="rmbWait">0 of 8 corners paid &#8212; need 3+ to rumble&#8230;</div>
           <button class="btl-fightbtn" id="rmbFightBtn" disabled aria-disabled="true">RUMBLE!</button>
           <button class="btl-clearbtn" id="rmbClearAll">CLEAR ALL CORNERS</button>
+        </div>
+        <div id="bhWrap">
+          <button class="btl-clearbtn" id="btlClearBtn">CLEAR RECENT BATTLES</button>
+          <div class="btl-hist" id="btlHist" style="display:none"></div>
         </div>
         <div class="btl-arena" id="btlArena">
           <div class="btl-fight" id="btlFight">FIGHT!</div>
@@ -1279,9 +1313,10 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
         </div>
         <div class="btl-arena" id="rmbArena">
           <div class="btl-fight" id="rmbFight">RUMBLE!</div>
+          <div class="rmw-grid" id="rmwGrid"></div>
           <div class="rmb-list" id="rmbList"></div>
           <div class="rmb-podium" id="rmbPodium"></div>
-          <div class="btl-actions" id="rmbActions" style="display:none"><button id="rmbAgain">RUMBLE AGAIN</button><button id="rmbExit2">EXIT BATTLE</button></div>
+          <div class="btl-actions" id="rmbActions" style="display:none"><button id="rmbAgain">RUMBLE AGAIN</button><button id="rmbNew">&#129529; NEW RUMBLE</button><button id="rmbExit2">EXIT BATTLE</button></div>
         </div>
       </div>
     </div>
@@ -2732,6 +2767,7 @@ const Sound = (function(){
       box.querySelectorAll(".bh-row").forEach(function(btn){
         btn.addEventListener("click", function(){
           if (btn.dataset.r){ rmbLoadRoster(btn.dataset.r.split(",")); return; }
+          fmtSet("C");
           clearCorners("grudge match loaded \u2014 insert your coins\u2026");
           $("btlInG").value = btn.dataset.g;
           $("btlInB").value = btn.dataset.b;
@@ -2825,7 +2861,7 @@ const Sound = (function(){
         $("btlBull" + sd).classList.remove("rise");
         $("btlMach" + sd).classList.remove("dim");
       });
-      $("btlFace").style.display = ""; $("btlArena").classList.remove("show");
+      $("btlFace").style.display = ""; $("bhWrap").style.display = ""; $("btlArena").classList.remove("show");
       $("btlSplash").classList.remove("show"); $("btlFight").classList.remove("show");
       $("btlWait").textContent = "waiting for both corners to insert their coins\u2026";
       const fb = $("btlFightBtn");
@@ -2930,6 +2966,7 @@ const Sound = (function(){
     function fight(){
       const my = bTok;
       $("btlFace").style.display = "none";
+      $("bhWrap").style.display = "none";
       $("btlArena").classList.add("show");
       $("btlHeadG").textContent = "GREEN CORNER \u2014 " + pick.G.t;
       $("btlHeadB").textContent = "RED CORNER \u2014 " + pick.B.t;
@@ -3401,6 +3438,7 @@ const Sound = (function(){
       for (var i = 0; i < 8; i++) rmbClear(i);
       $("rmbArena").classList.remove("show");
       $("rmbList").innerHTML = "";
+      $("rmwGrid").innerHTML = ""; $("rmwGrid").style.display = "none";
       $("rmbPodium").classList.remove("show"); $("rmbPodium").innerHTML = "";
       $("rmbActions").style.display = "none";
       $("rmbFight").classList.remove("show");
@@ -3411,6 +3449,7 @@ const Sound = (function(){
       $("fmtRumble").classList.toggle("on", rumble);
       $("btlFace").style.display = rumble ? "none" : "";
       $("rmbFace").classList.toggle("show", rumble);
+      $("bhWrap").style.display = "";
       $("btlArena").classList.remove("show");
       $("rmbArena").classList.remove("show");
     }
@@ -3437,11 +3476,14 @@ const Sound = (function(){
       var rr = rumbleRank(entries.map(function(e){ return { t: e.t, sc: e.sc }; }));
       var byT = {}; entries.forEach(function(e){ byT[e.t] = e; });
       $("rmbFace").classList.remove("show");
+      $("bhWrap").style.display = "none";
       $("rmbArena").classList.add("show");
       $("rmbFight").classList.add("show");
       Sound.leverCrank(); Sound.bonusSting();
       $("battleLayer").scrollTop = 0;
+      if (rmbMode === "W"){ rmbWheelsGo(rr, byT, my); return; }
       var list = $("rmbList");
+      $("rmwGrid").style.display = "none";
       list.innerHTML = "";
       var revealOrder = rr.ranked.slice().reverse(); /* worst reveals first */
       revealOrder.forEach(function(rk){
@@ -3474,7 +3516,7 @@ const Sound = (function(){
       }, 1100);
     }
     function rmbCrown(rr){
-      rr.ranked.forEach(function(rk){ if (rk.place === 1 && rk._el) rk._el.classList.add("champ"); });
+      rr.ranked.forEach(function(rk){ if (rk.place !== 1) return; if (rk._el) rk._el.classList.add("champ"); if (rk._w) rk._w.classList.add("champ"); });
       var pod = $("rmbPodium");
       var medals = { 1: "\uD83E\uDD47", 2: "\uD83E\uDD48", 3: "\uD83E\uDD49" };
       var lastPlace = rr.ranked[rr.ranked.length - 1].place;
@@ -3490,6 +3532,94 @@ const Sound = (function(){
       saveBattle({ k: "R", ps: rr.ranked.map(function(rk){ return { t: rk.t, sc: rk.sc }; }),
         w: rr.tie ? "T" : rr.champs[0], ts: Date.now() });
       renderBattles();
+    }
+    var rmbMode = (function(){
+      try { return localStorage.getItem("gfsRmbMode") === "C" ? "C" : "W"; } catch (e){ return "W"; }
+    })();
+    function rmbModeSet(m){
+      rmbMode = m;
+      $("rmbModeW").classList.toggle("on", m === "W");
+      $("rmbModeC").classList.toggle("on", m === "C");
+      try { localStorage.setItem("gfsRmbMode", m); } catch (e){}
+    }
+    function rmwStop(rk){
+      var s = rk._strip, CH = 44;
+      s.classList.remove("spin");
+      if (!reduceMotion) s.style.transition = "transform .5s cubic-bezier(.15,.85,.25,1.1)";
+      s.style.transform = "translateY(" + (-9 * CH) + "px)";
+      rk._w.classList.add("stopped");
+      rk._w.querySelector(".rmw-ft").textContent = "#" + rk.place + " \u00b7 GFM " + rk.sc;
+    }
+    function rmbWheelsGo(rr, byT, my){
+      var grid = $("rmwGrid");
+      grid.innerHTML = ""; $("rmbList").innerHTML = "";
+      grid.style.display = "grid";
+      var pool = Object.keys(SEED);
+      rr.ranked.forEach(function(rk){
+        var e = byT[rk.t], col = RMB_COLORS[e.ci];
+        var cells = [];
+        for (var k = 0; k < 9; k++) cells.push(pool[(Math.random() * pool.length) | 0]);
+        cells.push(rk.t); /* index 9 = landing cell */
+        var w = document.createElement("div");
+        w.className = "rmw";
+        w.style.setProperty("--rc", col.c);
+        var inner = '<div class="rmw-brand">GREEN FLAG</div><div class="rmw-win"><div class="rmw-strip">';
+        cells.concat(cells).forEach(function(c){ inner += '<div class="rmw-c">' + c + '</div>'; });
+        inner += '</div></div><div class="rmw-ft"></div>';
+        w.innerHTML = inner;
+        grid.appendChild(w);
+        rk._w = w;
+        rk._strip = w.querySelector(".rmw-strip");
+        if (!reduceMotion) rk._strip.classList.add("spin");
+      });
+      Sound.spinLoopStart && Sound.spinLoopStart();
+      setTimeout(function(){
+        if (my !== bTok) return;
+        $("rmbFight").classList.remove("show");
+        var revealOrder = rr.ranked.slice().reverse(); /* worst wheel lands first */
+        var step = reduceMotion ? 120 : 900;
+        revealOrder.forEach(function(rk, idx){
+          setTimeout(function(){
+            if (my !== bTok) return;
+            rmwStop(rk);
+            Sound.reelStop();
+            if (idx === 0 && revealOrder.length > 1 && rk.place !== 1){
+              rk._w.classList.add("last"); trashDump(rk._w);
+            }
+            if (idx === revealOrder.length - 1){
+              Sound.spinLoopStop && Sound.spinLoopStop();
+              setTimeout(function(){ if (my === bTok) rmbCrown(rr); }, 620);
+            }
+          }, 700 + idx * step);
+        });
+      }, 1100);
+    }
+    function rmbRainGo(){
+      var idxs = [];
+      for (var i = 0; i < 8; i++){
+        if (!rmbPick[i] && $("rmbIn" + i).value.trim()) idxs.push(i);
+      }
+      var btn = $("rmbRain");
+      if (!idxs.length){
+        Sound.rejectClunk();
+        btn.classList.remove("shake"); void btn.offsetWidth; btn.classList.add("shake");
+        return;
+      }
+      if (!reduceMotion){
+        var r = btn.getBoundingClientRect();
+        for (var c = 0; c < 14; c++){
+          var sp = document.createElement("span");
+          sp.className = "rain-coin";
+          sp.textContent = "\uD83E\uDE99";
+          sp.style.setProperty("--x", (r.left + Math.random() * r.width) + "px");
+          sp.style.setProperty("--y", (r.top + 6) + "px");
+          sp.style.setProperty("--dx", ((Math.random() * 160) - 80) + "px");
+          sp.style.setProperty("--dur", (0.9 + Math.random() * 0.7) + "s");
+          sp.addEventListener("animationend", function(){ this.remove(); });
+          document.body.appendChild(sp);
+        }
+      }
+      idxs.forEach(function(i, k){ setTimeout(function(){ rmbInsert(i); }, 120 + k * 140); });
     }
     (function rmbInit(){
       for (var i = 0; i < 8; i++){
@@ -3513,6 +3643,16 @@ const Sound = (function(){
         rmbReset(); rmbLoadRoster(roster);
       });
       $("rmbExit2").addEventListener("click", function(){ stop(); });
+      $("rmbNew").addEventListener("click", function(){
+        bTok++; Sound.spinLoopStop();
+        rmbReset(); fmtSet("R");
+        $("rmbGrid").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+        Sound.engraveTick();
+      });
+      $("rmbRain").addEventListener("click", rmbRainGo);
+      $("rmbModeW").addEventListener("click", function(){ rmbModeSet("W"); Sound.engraveTick(); });
+      $("rmbModeC").addEventListener("click", function(){ rmbModeSet("C"); Sound.engraveTick(); });
+      rmbModeSet(rmbMode);
     })();
     return { open: open, stop: stop };
   })();
@@ -3805,7 +3945,6 @@ const Sound = (function(){
   });
   mqLight.addEventListener("change", applyTheme);
   applyTheme();
-  
 
   /* ── audio lifecycle — never let sound run while the app is hidden ── */
   document.addEventListener("visibilitychange", function(){
