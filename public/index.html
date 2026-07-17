@@ -545,6 +545,35 @@ button{font-family:inherit;cursor:pointer;border:none}
 #rmbActions button{flex:1 1 40%;min-height:46px}
 #rmbActions #rmbNew{border-color:var(--gold);color:var(--gold-lt)}
 #rmbActions #rmbExit2{flex-basis:100%}
+/* ── 🏆 tournament bracket ── */
+.tny-round{font-family:'Bungee';font-size:12.5px;color:var(--gold-lt);text-align:center;margin:8px 0}
+.tny-hdr{font-family:'Bungee';font-size:10px;color:#9AA6B2;margin:8px 0 2px;text-align:center;letter-spacing:.08em}
+.tny-brk{display:flex;flex-direction:column;gap:8px}
+.tny-m{display:flex;align-items:center;gap:7px;border:2px solid #2A3242;border-radius:12px;
+  padding:9px 12px;background:#0B0E17;font-weight:800;font-size:12.5px;color:var(--ink)}
+.tny-m .tdot{width:12px;height:12px;border-radius:50%;flex:none;background:var(--tc,#55606E)}
+.tny-m .tvs{color:#9AA6B2;font-family:'Bungee';font-size:9px}
+.tny-m.done{border-color:var(--gold)}
+.tny-m .twin{color:var(--gold-lt)}
+.tny-m.next{border-color:#35D96B;box-shadow:0 0 12px rgba(53,217,107,.35)}
+.tny-champ{display:none;margin-top:12px;border:2px solid var(--gold);border-radius:14px;
+  padding:14px;text-align:center;background:#12141F}
+.tny-champ.show{display:block}
+.tny-champ .ctitle{font-family:'Bungee';font-size:18px;color:var(--gold-lt)}
+.tny-champ .cline{font-size:13px;font-weight:800;color:var(--ink);margin-top:6px}
+#tnyActions{flex-wrap:wrap}
+#tnyActions button{flex:1 1 40%;min-height:46px}
+#tnyActions #tnyNew{border-color:var(--gold);color:var(--gold-lt)}
+#tnyActions #tnyExit{flex-basis:100%}
+#tnyGo{margin-top:12px}
+/* ── 📣 battle share + journal ── */
+.bshare{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.bshare textarea{width:100%;min-height:54px;background:#070910;border:2px solid #2A3242;border-radius:10px;
+  color:var(--ink);font-family:'Jost';font-weight:600;font-size:13px;padding:8px 10px;resize:vertical}
+.bshare textarea::placeholder{color:#5B6675}
+.bshare button{min-height:42px;border-radius:10px;background:#0A0B13;border:2px solid var(--gold);
+  color:var(--gold-lt);font-family:'Bungee';font-size:10.5px;letter-spacing:.05em;cursor:pointer}
+.bshare button:active{transform:scale(.98)}
 .btl-arena{display:none}
 .btl-arena.show{display:block}
 .btl-machine{position:relative;border-radius:14px;padding:10px;margin-top:10px;overflow:hidden}
@@ -1245,7 +1274,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
         <div class="fmt-strip">
           <button class="fmt-chip on" id="fmtClassic">&#9876;&#65039; CLASSIC 1v1</button>
           <button class="fmt-chip" id="fmtRumble">&#128165; RUMBLE</button>
-          <button class="fmt-chip" id="fmtTourney" disabled>&#127942; TOURNEY &#183; SOON</button>
+          <button class="fmt-chip" id="fmtTourney">&#127942; TOURNEY</button>
         </div>
         <div class="btl-face" id="btlFace">
           <div class="btl-vs">
@@ -1311,8 +1340,10 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
           <div class="btl-splash" id="btlSplash">
             <div class="btl-winner" id="btlWinnerTxt"></div>
             <div class="btl-scoreline" id="btlScoreTxt"></div>
+            <div class="bshare"><textarea id="btlMemo" rows="2" placeholder="Battle journal &#8212; criteria, filters, sectors&#8230;"></textarea><button id="btlShare">&#128227; SHARE RESULT</button></div>
             <button class="btl-prize" id="btlPrizeBtn"></button>
-            <div class="btl-actions"><button id="btlRematch">REMATCH</button><button id="btlClose">EXIT BATTLE</button></div>
+            <button class="btl-fightbtn armed" id="tnyNext" style="display:none">CONTINUE TO BRACKET &#9654;</button>
+            <div class="btl-actions" id="btlActionsRow"><button id="btlRematch">REMATCH</button><button id="btlClose">EXIT BATTLE</button></div>
           </div>
           <div class="btl-prizeslot" id="btlPrizeSlot"></div>
         </div>
@@ -1321,9 +1352,21 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
           <div class="rmw-grid" id="rmwGrid"></div>
           <div class="rmb-list" id="rmbList"></div>
           <div class="rmb-podium" id="rmbPodium"></div>
+          <div class="bshare" id="rmbShareWrap" style="display:none"><textarea id="rmbMemo" rows="2" placeholder="Battle journal &#8212; criteria, filters, sectors&#8230;"></textarea><button id="rmbShare">&#128227; SHARE RUMBLE</button></div>
           <button class="btl-prize" id="rmbPrizeBtn"></button>
           <div class="btl-prizeslot" id="rmbPrizeSlot"></div>
           <div class="btl-actions" id="rmbActions" style="display:none"><button id="rmbAgain">RUMBLE AGAIN</button><button id="rmbNew">&#129529; NEW RUMBLE</button><button id="rmbExit2">EXIT BATTLE</button></div>
+        </div>
+        <div class="btl-arena" id="tnyArena">
+          <div class="btl-fight" id="tnyFightBanner">TOURNEY!</div>
+          <div class="tny-round" id="tnyRound"></div>
+          <div class="tny-brk" id="tnyBrk"></div>
+          <div class="tny-champ" id="tnyChamp"></div>
+          <div class="bshare" id="tnyShareWrap" style="display:none"><textarea id="tnyMemo" rows="2" placeholder="Tourney journal &#8212; criteria, filters, sectors&#8230;"></textarea><button id="tnyShare">&#128227; SHARE TOURNEY</button></div>
+          <button class="btl-fightbtn" id="tnyGo">FIGHT NEXT MATCH &#9654;</button>
+          <button class="btl-prize" id="tnyPrizeBtn"></button>
+          <div class="btl-prizeslot" id="tnyPrizeSlot"></div>
+          <div class="btl-actions" id="tnyActions" style="display:none"><button id="tnyNew">&#127942; NEW TOURNEY</button><button id="tnyExit">EXIT BATTLE</button></div>
         </div>
       </div>
     </div>
@@ -1728,6 +1771,22 @@ function rumbleRank(entries){
   return { ranked: ranked, champs: champs, tie: champs.length > 1 };
 }
 
+/* TOURNAMENT: 4 or 8 fighters, no byes, random-shuffle seeding */
+function tnyShuffle(list, rnd){
+  const a = list.slice(), r = rnd || Math.random;
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(r() * (i + 1));
+    const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+function tnyPairs(list){
+  const p = [];
+  for (let i = 0; i < list.length; i += 2) p.push([list[i], list[i + 1]]);
+  return p;
+}
+function tnyRoundName(sz){ return sz === 8 ? "QUARTER-FINALS" : sz === 4 ? "SEMI-FINALS" : "THE FINAL"; }
+
 /* Session share: compact payload = tickers + timestamps + memo; the importer's
    machine recomputes every verdict from its OWN seed (short codes, future-proof). */
 function buildSessionPayload(spinsArr, memo, day){
@@ -1926,7 +1985,7 @@ function mirrorDrift(r, snap){
 }
 
 if (typeof module !== "undefined" && module.exports){
-  module.exports = { CONFIG, SEED, rumbleRank, iconFor, outcomeIcons, momoStars, isFiveStarStud,
+  module.exports = { CONFIG, SEED, rumbleRank, tnyShuffle, tnyPairs, tnyRoundName, iconFor, outcomeIcons, momoStars, isFiveStarStud,
     verdictFor, levenshtein, closestTicker, normalizeTicker,
     isClub, isGlobe, isPerfect, logoCandidates, encodeShare, decodeShare, resolveQuery, buildSessionPayload, sessionRows, gfmScore, isStud, parseMoney, parseCapUsd, strikeIncrement, firstOtmCall, modeledIV, bsCall, kickerTrade, kickerLiq, atmStrike, hailMaryTrade, hmVerdict, battleWinner,
     MSEED, MRRG, MANCHOR, MANCHOR_ISO, mirrorStud, mirrorClub, mirrorGlobe,
@@ -2785,7 +2844,7 @@ const Sound = (function(){
       box.style.display = "";
       let h = '<div class="bh-head">RECENT BATTLES \u2014 TAP TO REMATCH</div>';
       list.slice(0, 8).forEach(function(r){
-        if (r.k === "R"){ h += rmbHistRow(r); return; }
+        if (r.k === "R" || r.k === "Y"){ h += rmbHistRow(r); return; }
         const g = bhSafe(r.g), b = bhSafe(r.b), sg = (+r.sg || 0), sb = (+r.sb || 0);
         const tie = r.w === "T";
         const wt = r.w === "B" ? b : g, ws = r.w === "B" ? sb : sg;
@@ -2799,7 +2858,7 @@ const Sound = (function(){
       box.innerHTML = h;
       box.querySelectorAll(".bh-row").forEach(function(btn){
         btn.addEventListener("click", function(){
-          if (btn.dataset.r){ rmbLoadRoster(btn.dataset.r.split(",")); return; }
+          if (btn.dataset.r){ rmbLoadRoster(btn.dataset.r.split(","), btn.dataset.f); return; }
           fmtSet("C");
           clearCorners("grudge match loaded \u2014 insert your coins\u2026");
           $("btlInG").value = btn.dataset.g;
@@ -2827,7 +2886,7 @@ const Sound = (function(){
       Celebrate.globe();
       $("papLayer").classList.add("on");
       const nm = $("papName");
-      nm.innerHTML = (w === "G" ? "GREEN CORNER" : w === "B" ? "RED CORNER" : "RUMBLE") + "<br>CHAMPION";
+      nm.innerHTML = (w === "G" ? "GREEN CORNER" : w === "B" ? "RED CORNER" : w === "Y" ? "TOURNAMENT" : "RUMBLE") + "<br>CHAMPION";
       nm.className = "pap-name " + (w === "B" ? "bside" : "gside");
       nm.style.display = "none";
       const tk = $("papTicker");
@@ -2896,6 +2955,7 @@ const Sound = (function(){
       });
       $("btlFace").style.display = ""; $("bhWrap").style.display = ""; $("btlArena").classList.remove("show");
       $("btlSplash").classList.remove("show"); $("btlFight").classList.remove("show");
+      $("btlActionsRow").style.display = ""; $("tnyNext").style.display = "none";
       $("btlWait").textContent = "waiting for both corners to insert their coins\u2026";
       const fb = $("btlFightBtn");
       fb.disabled = true; fb.classList.remove("armed");
@@ -3026,6 +3086,10 @@ const Sound = (function(){
       saveBattle({ g: pick.G.t, b: pick.B.t, sg: r.g, sb: r.b,
         w: r.winner === "TIE" ? "T" : r.winner, ts: Date.now() });
       const wtxt = $("btlWinnerTxt"), stxt = $("btlScoreTxt");
+      btlShareTxt = r.winner === "TIE"
+        ? "\u2694\uFE0F BATTLE \u00b7 DEAD HEAT \u2014 " + pick.G.t + " & " + pick.B.t + " \u00b7 GFM " + r.g + " APIECE"
+        : "\u2694\uFE0F BATTLE \u00b7 \uD83C\uDFC6 " + pick[r.winner].t + " (GFM " + (r.winner === "G" ? r.g : r.b) + ") DEF. "
+          + pick[r.winner === "G" ? "B" : "G"].t + " (GFM " + (r.winner === "G" ? r.b : r.g) + ")";
       setTimeout(function(){
         if (my !== bTok) return;
         if (r.winner === "TIE"){
@@ -3095,7 +3159,8 @@ const Sound = (function(){
       if ($("battleLayer").classList.contains("show")){
         if (battleGlobeEnd) battleGlobeEnd();
         if (prizePick){
-          var slot = $("rmbArena").classList.contains("show") ? $("rmbPrizeSlot") : $("btlPrizeSlot");
+          var slot = $("tnyArena").classList.contains("show") ? $("tnyPrizeSlot")
+          : $("rmbArena").classList.contains("show") ? $("rmbPrizeSlot") : $("btlPrizeSlot");
           slot.appendChild($("kickerPanel"));
           presentKicker(prizePick, "OPTIONS KICKER");
         }
@@ -3434,6 +3499,8 @@ const Sound = (function(){
 
     /* ── 💥 RUMBLE — 3-8 fighter battle royale ── */
     var rmbPick = [null, null, null, null, null, null, null, null];
+    var btlFmt = "C";
+    var btlShareTxt = "";
     var RMB_COLORS = [
       { n: "RED", c: "#E53935", src: "B" }, { n: "GREEN", c: "#35D96B", src: "G" },
       { n: "TEAL", c: "#26C6DA", src: "B" }, { n: "GOLD", c: "#E8C35A", src: "G" },
@@ -3441,9 +3508,16 @@ const Sound = (function(){
       { n: "ORANGE", c: "#FF9142", src: "B" }, { n: "PINK", c: "#FF7BAC", src: "G" }];
     function rmbCount(){ return rmbPick.filter(Boolean).length; }
     function rmbSync(){
-      var n = rmbCount();
-      $("rmbWait").textContent = n + " of 8 corners paid" + (n >= 3 ? " \u2014 ready to RUMBLE!" : " \u2014 need 3+ to rumble\u2026");
-      var fb = $("rmbFightBtn"), ok = n >= 3;
+      var n = rmbCount(), ok, msg;
+      if (btlFmt === "T"){
+        ok = n === 4 || n === 8;
+        msg = n + " of 8 corners paid" + (ok ? " \u2014 bracket is SET!" : " \u2014 a bracket needs exactly 4 or 8\u2026");
+      } else {
+        ok = n >= 3;
+        msg = n + " of 8 corners paid" + (ok ? " \u2014 ready to RUMBLE!" : " \u2014 need 3+ to rumble\u2026");
+      }
+      $("rmbWait").textContent = msg;
+      var fb = $("rmbFightBtn");
       fb.disabled = !ok;
       fb.classList.toggle("armed", ok);
       fb.setAttribute("aria-disabled", ok ? "false" : "true");
@@ -3485,19 +3559,26 @@ const Sound = (function(){
       $("rmbActions").style.display = "none";
       $("rmbFight").classList.remove("show");
       $("rmbPrizeBtn").className = "btl-prize"; $("rmbPrizeBtn").textContent = "";
+      $("rmbShareWrap").style.display = "none";
+      tnyReset();
     }
     function fmtSet(mode){
-      var rumble = mode === "R";
-      $("fmtClassic").classList.toggle("on", !rumble);
-      $("fmtRumble").classList.toggle("on", rumble);
-      $("btlFace").style.display = rumble ? "none" : "";
-      $("rmbFace").classList.toggle("show", rumble);
+      btlFmt = mode;
+      $("fmtClassic").classList.toggle("on", mode === "C");
+      $("fmtRumble").classList.toggle("on", mode === "R");
+      $("fmtTourney").classList.toggle("on", mode === "T");
+      $("btlFace").style.display = mode === "C" ? "" : "none";
+      $("rmbFace").classList.toggle("show", mode !== "C");
       $("bhWrap").style.display = "";
       $("btlArena").classList.remove("show");
       $("rmbArena").classList.remove("show");
+      $("tnyArena").classList.remove("show");
+      document.querySelector(".rmb-mode").style.display = mode === "T" ? "none" : "";
+      $("rmbFightBtn").textContent = mode === "T" ? "START TOURNAMENT" : "RUMBLE!";
+      if (mode !== "C") rmbSync();
     }
-    function rmbLoadRoster(ts){
-      fmtSet("R");
+    function rmbLoadRoster(ts, fm){
+      fmtSet(fm === "T" ? "T" : "R");
       for (var i = 0; i < 8; i++) rmbClear(i);
       (ts || []).slice(0, 8).forEach(function(t, i){ $("rmbIn" + i).value = bhSafe(t); });
       $("rmbWait").textContent = "grudge rumble loaded \u2014 insert your coins\u2026";
@@ -3508,7 +3589,8 @@ const Sound = (function(){
       var ps = (r.ps || []).map(function(p){ return bhSafe(p.t); }).filter(Boolean);
       var tie = r.w === "T", w = bhSafe(r.w);
       var top = tie ? '<span class="bh-tie">DEAD HEAT</span>' : '<span class="bh-g">\uD83C\uDFC6 ' + w + '</span>';
-      return '<button class="bh-row" data-r="' + ps.join(",") + '"><span>\uD83D\uDCA5 RUMBLE \u00b7 ' + top
+      var lbl = r.k === "Y" ? "\uD83C\uDFC6 TOURNEY" : "\uD83D\uDCA5 RUMBLE";
+      return '<button class="bh-row" data-r="' + ps.join(",") + '" data-f="' + (r.k === "Y" ? "T" : "R") + '"><span>' + lbl + ' \u00b7 ' + top
         + ' \u00b7 ' + ps.length + ' fighters</span><em>' + fmtBt(r.ts || Date.now()) + '</em></button>';
     }
     function rmbFightGo(){
@@ -3581,6 +3663,12 @@ const Sound = (function(){
         h += '<div class="pline">' + m + ' #' + rk.place + ' ' + rk.t + ' \u00b7 GFM ' + rk.sc + '</div>';
       });
       pod.innerHTML = h; pod.classList.add("show");
+      btlShareTxt = "\uD83D\uDCA5 RUMBLE \u00b7 " + rr.ranked.length + " FIGHTERS" + (rr.tie ? " \u00b7 DEAD HEAT!" : "");
+      rr.ranked.forEach(function(rk){
+        var sm = medals[rk.place] || (rk.place === lastPlace ? "\uD83D\uDDD1" : "\u00b7");
+        btlShareTxt += "\n" + sm + " #" + rk.place + " " + rk.t + " \u00b7 GFM " + rk.sc;
+      });
+      $("rmbShareWrap").style.display = "";
       $("rmbActions").style.display = "";
       if (rr.tie){ Sound.midWin(); } else { Sound.bonusSting(); }
       Celebrate.confetti();
@@ -3719,6 +3807,220 @@ const Sound = (function(){
         $("rmbFightBtn").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
       }, 300 + idxs.length * 140);
     }
+    var APPURL = (location.protocol === "http:" || location.protocol === "https:")
+      ? location.origin : "https://green-flag-slot-monsters.lexbeatz.workers.dev";
+    function btlMemoLoad(){
+      var m = "";
+      try { m = localStorage.getItem("gfsBtlMemo") || ""; } catch (e){}
+      ["btlMemo","rmbMemo","tnyMemo"].forEach(function(id){ $(id).value = m; });
+    }
+    function btlMemoSync(src){
+      var v = src.value;
+      ["btlMemo","rmbMemo","tnyMemo"].forEach(function(id){
+        var el = $(id); if (el !== src) el.value = v;
+      });
+      try { localStorage.setItem("gfsBtlMemo", v); } catch (e){}
+    }
+    function shareGo(btn){
+      var memo = $("btlMemo").value.trim();
+      var txt = btlShareTxt + (memo ? "\n\uD83D\uDCDD " + memo : "")
+        + "\n\u25B6 Green Flag Slot Monsters \u00b7 " + APPURL;
+      var done = function(msg){
+        var keep = btn.textContent;
+        btn.textContent = msg;
+        setTimeout(function(){ btn.textContent = keep; }, 1600);
+      };
+      if (navigator.share){
+        navigator.share({ text: txt }).catch(function(){});
+      } else if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){ done("COPIED!"); }, function(){ done("COPY FAILED"); });
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = txt; document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); done("COPIED!"); } catch (e){ done("COPY FAILED"); }
+        ta.remove();
+      }
+      Sound.engraveTick();
+    }
+    var tny = null;
+    function tnyStart(){
+      var n = rmbCount();
+      if (n !== 4 && n !== 8) return;
+      var entrants = [];
+      for (var i = 0; i < 8; i++) if (rmbPick[i]) entrants.push({ t: rmbPick[i].t, ci: i });
+      tny = { size: n, entrants: entrants, rounds: [], results: [], mi: 0, champ: null };
+      tny.rounds.push(tnyPairs(tnyShuffle(entrants)));   /* random seeding, no byes */
+      tny.results.push([]);
+      $("rmbFace").classList.remove("show");
+      $("bhWrap").style.display = "none";
+      $("tnyArena").classList.add("show");
+      var bn = $("tnyFightBanner");
+      bn.classList.add("show");
+      Sound.leverCrank(); Sound.bonusSting();
+      $("battleLayer").scrollTop = 0;
+      setTimeout(function(){ bn.classList.remove("show"); tnyRender(); }, 1100);
+    }
+    function tnyRoundOf(){ return tny.rounds[tny.rounds.length - 1]; }
+    function tnyRender(){
+      if (!tny) return;
+      $("tnyRound").textContent = "\uD83C\uDFC6 " + tny.size + "-FIGHTER BRACKET \u00b7 " + tnyRoundName(tnyRoundOf().length * 2);
+      var hh = "";
+      tny.rounds.forEach(function(rd, ri){
+        hh += '<div class="tny-hdr">' + tnyRoundName(rd.length * 2) + '</div>';
+        rd.forEach(function(m, mi){
+          var res = tny.results[ri][mi];
+          var isNext = ri === tny.rounds.length - 1 && mi === tny.mi && !res && tny.champ == null;
+          hh += '<div class="tny-m' + (res ? " done" : "") + (isNext ? " next" : "") + '">'
+            + '<span class="tdot" style="--tc:' + RMB_COLORS[m[0].ci].c + '"></span>'
+            + '<span class="' + (res && res.w === 0 ? "twin" : "") + '">' + m[0].t + (res && res.w === 0 ? " \uD83C\uDFC6" : "") + '</span>'
+            + '<span class="tvs">VS</span>'
+            + '<span class="tdot" style="--tc:' + RMB_COLORS[m[1].ci].c + '"></span>'
+            + '<span class="' + (res && res.w === 1 ? "twin" : "") + '">' + m[1].t + (res && res.w === 1 ? " \uD83C\uDFC6" : "") + '</span>'
+            + (res ? '<span style="margin-left:auto;font-size:10.5px;color:#9AA6B2">' + res.sa + "\u2013" + res.sb + '</span>' : "")
+            + '</div>';
+        });
+      });
+      $("tnyBrk").innerHTML = hh;
+      var done = tny.champ != null;
+      $("tnyGo").style.display = done ? "none" : "";
+      $("tnyGo").classList.add("armed");
+      if (!done){
+        var m = tnyRoundOf()[tny.mi];
+        $("tnyGo").textContent = "FIGHT: " + m[0].t + " VS " + m[1].t + " \u25B6";
+      }
+    }
+    function tnyFight(){
+      if (!tny || tny.champ != null) return;
+      var my = bTok;
+      var m = tnyRoundOf()[tny.mi];
+      var A = m[0], B = m[1];
+      var dA = SEED[A.t], dB = SEED[B.t];
+      $("tnyArena").classList.remove("show");
+      $("btlArena").classList.add("show");
+      $("btlHeadB").textContent = "RED CORNER \u2014 " + A.t;
+      $("btlHeadG").textContent = "GREEN CORNER \u2014 " + B.t;
+      ["G","B"].forEach(function(sd){
+        $("btlVer" + sd).textContent = "";
+        $("btlBull" + sd).classList.remove("rise");
+        $("btlMach" + sd).classList.remove("dim");
+      });
+      $("btlSplash").classList.remove("show");
+      $("btlActionsRow").style.display = "none";
+      $("btlPrizeBtn").className = "btl-prize";
+      var sB = buildReels($("btlWinB")), sG = buildReels($("btlWinG"));
+      $("btlFight").classList.add("show");
+      Sound.leverCrank(); Sound.bonusSting();
+      $("battleLayer").scrollTop = 0;
+      setTimeout(function(){
+        if (my !== bTok) return;
+        $("btlFight").classList.remove("show");
+        Sound.spinLoopStart();
+        var ct = 0;
+        var sideDone = function(sd, d){
+          $("btlVer" + sd).textContent = "TIER " + d.tier + " \u00b7 GFM SCORE " + gfmScore(d);
+          if (++ct === 2){ Sound.spinLoopStop(); tnySettle(A, B, dA, dB, my); }
+        };
+        battleSpin(sB, dA, function(){ sideDone("B", dA); });
+        battleSpin(sG, dB, function(){ sideDone("G", dB); });
+      }, 1100);
+    }
+    function tnySettle(A, B, dA, dB, my){
+      var sa = gfmScore(dA), sb = gfmScore(dB);
+      var wIdx, judged = false;
+      if (sa > sb) wIdx = 0; else if (sb > sa) wIdx = 1;
+      else { wIdx = Math.random() < 0.5 ? 0 : 1; judged = true; }  /* dead heat: judges' decision */
+      var W = wIdx === 0 ? A : B, L = wIdx === 0 ? B : A;
+      var sd = wIdx === 0 ? "B" : "G", ld = wIdx === 0 ? "G" : "B";
+      var l_d = wIdx === 0 ? dB : dA;
+      setTimeout(function(){
+        if (my !== bTok) return;
+        var wtxt = $("btlWinnerTxt"), stxt = $("btlScoreTxt");
+        wtxt.textContent = W.t + " ADVANCES!" + (judged ? " \u00b7 JUDGES\u2019 DECISION" : "");
+        wtxt.className = "btl-winner " + (sd === "G" ? "gwin" : "bwin");
+        stxt.textContent = "\uD83C\uDFC6 " + W.t + " " + (wIdx === 0 ? sa : sb) + "  \u2014  " + L.t + " " + (wIdx === 0 ? sb : sa);
+        var bull = $("btlBull" + sd);
+        if (CONFIG.bullArt){
+          bull.querySelector("svg").style.display = "none";
+          var im = bull.querySelector("img"); im.src = CONFIG.bullArt; im.style.display = "block";
+        }
+        bull.classList.add("rise");
+        $("btlMach" + ld).classList.add("dim");
+        if (l_d.tier >= 3) trashDump($("btlMach" + ld));
+        Sound.tada(); Celebrate.confetti();
+        $("tnyNext").style.display = "";
+        $("btlSplash").classList.add("show");
+        $("btlSplash").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+        tny.results[tny.rounds.length - 1][tny.mi] = { w: wIdx, sa: sa, sb: sb };
+      }, 650);
+    }
+    function tnyAdvance(){
+      $("tnyNext").style.display = "none";
+      $("btlActionsRow").style.display = "";
+      $("btlSplash").classList.remove("show");
+      $("btlArena").classList.remove("show");
+      var rd = tnyRoundOf(), ri = tny.rounds.length - 1;
+      tny.mi++;
+      if (tny.mi >= rd.length){
+        var winners = rd.map(function(m, i){ return m[tny.results[ri][i].w]; });
+        if (winners.length === 1){ tnyCrown(winners[0]); return; }
+        tny.rounds.push(tnyPairs(winners));
+        tny.results.push([]);
+        tny.mi = 0;
+      }
+      $("tnyArena").classList.add("show");
+      Sound.bonusSting();
+      tnyRender();
+      $("tnyArena").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    }
+    function tnyCrown(W){
+      var my = bTok;
+      tny.champ = W;
+      var cd = SEED[W.t];
+      $("tnyArena").classList.add("show");
+      tnyRender();
+      var ch = $("tnyChamp");
+      ch.innerHTML = '<div class="ctitle">\uD83C\uDFC6 ' + W.t + ' TAKES THE TOURNAMENT!</div>'
+        + '<div class="cline">' + tny.size + ' entered \u00b7 one champion \u00b7 GFM ' + gfmScore(cd) + '</div>';
+      ch.classList.add("show");
+      btlShareTxt = "\uD83C\uDFC6 TOURNAMENT CHAMPION \u00b7 " + W.t + " (GFM " + gfmScore(cd) + ")"
+        + "\n" + tny.size + "-fighter bracket: " + tny.entrants.map(function(e){ return e.t; }).join(" \u00b7 ");
+      $("tnyShareWrap").style.display = "";
+      $("tnyActions").style.display = "";
+      Sound.tada(); Celebrate.confetti();
+      setTimeout(function(){ if (my === bTok) Celebrate.confetti(); }, 900);
+      saveBattle({ k: "Y", ps: tny.entrants.map(function(e){ return { t: e.t }; }), w: W.t, ts: Date.now() });
+      renderBattles();
+      if (cd){
+        prizePick = { t: W.t, d: cd };
+        var pz = $("tnyPrizeBtn");
+        pz.className = "btl-prize show " + (cd.tier === 1 ? "p-kicker" : cd.tier === 2 ? "p-dream" : "p-hail");
+        pz.textContent = cd.tier === 1 ? "\uD83C\uDF9F CLAIM PRIZE: BONUS OPTIONS KICKER"
+          : cd.tier === 2 ? "\uD83D\uDCB5 CLAIM PRIZE: I HAVE A $ DREAM"
+          : "\u2660\uFE0E CLAIM PRIZE: HAIL MARY";
+        if (cd.tier === 1){
+          Celebrate.judges();
+          setTimeout(function(){ if (my === bTok) $("judgesLayer").classList.remove("on"); },
+            CONFIG.celebrate.judgesHoldMs + 900);
+        }
+        if (!reduceMotion && isGlobe(cd)){
+          setTimeout(function(){ if (my === bTok) Celebrate.confetti(); }, 3600);
+          setTimeout(function(){ if (my === bTok) battleUltimate("Y", prizePick); },
+            CONFIG.celebrate.btlGlobeDelay);
+        }
+      }
+    }
+    function tnyReset(){
+      tny = null;
+      $("tnyArena").classList.remove("show");
+      $("tnyBrk").innerHTML = ""; $("tnyRound").textContent = "";
+      $("tnyChamp").classList.remove("show"); $("tnyChamp").innerHTML = "";
+      $("tnyActions").style.display = "none";
+      $("tnyGo").style.display = ""; $("tnyGo").textContent = "FIGHT NEXT MATCH \u25B6";
+      $("tnyNext").style.display = "none";
+      $("tnyPrizeBtn").className = "btl-prize"; $("tnyPrizeBtn").textContent = "";
+      $("tnyShareWrap").style.display = "none";
+      $("tnyFightBanner").classList.remove("show");
+    }
     (function rmbInit(){
       for (var i = 0; i < 8; i++){
         (function(i){
@@ -3733,7 +4035,28 @@ const Sound = (function(){
       }
       $("fmtClassic").addEventListener("click", function(){ fmtSet("C"); });
       $("fmtRumble").addEventListener("click", function(){ fmtSet("R"); Sound.wake(); });
-      $("rmbFightBtn").addEventListener("click", function(){ if (rmbCount() >= 3) rmbFightGo(); });
+      $("fmtTourney").addEventListener("click", function(){ fmtSet("T"); Sound.wake(); });
+      $("tnyGo").addEventListener("click", tnyFight);
+      $("tnyNext").addEventListener("click", tnyAdvance);
+      $("tnyNew").addEventListener("click", function(){
+        bTok++; Sound.spinLoopStop();
+        rmbReset(); fmtSet("T");
+        $("rmbGrid").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+        Sound.engraveTick();
+      });
+      $("tnyExit").addEventListener("click", function(){ stop(); });
+      $("tnyPrizeBtn").addEventListener("click", function(){
+        if (!prizePick) return;
+        var slot = $("tnyPrizeSlot");
+        if (prizePick.d.tier <= 2){
+          slot.appendChild($("kickerPanel"));
+          presentKicker(prizePick, prizePick.d.tier === 1 ? "OPTIONS KICKER" : "I HAVE A $ DREAM");
+        } else {
+          slot.appendChild($("hmPanel"));
+          presentHailMary(prizePick);
+        }
+      });
+      $("rmbFightBtn").addEventListener("click", function(){ if (btlFmt === "T") tnyStart(); else if (rmbCount() >= 3) rmbFightGo(); });
       $("rmbClearAll").addEventListener("click", function(){ for (var i = 0; i < 8; i++) rmbClear(i); Sound.engraveTick(); });
       $("rmbAgain").addEventListener("click", function(){
         bTok++; Sound.spinLoopStop();
@@ -3761,6 +4084,13 @@ const Sound = (function(){
       });
       $("rmbModeW").addEventListener("click", function(){ rmbModeSet("W"); Sound.engraveTick(); });
       $("rmbModeC").addEventListener("click", function(){ rmbModeSet("C"); Sound.engraveTick(); });
+      ["btlMemo","rmbMemo","tnyMemo"].forEach(function(id){
+        $(id).addEventListener("input", function(){ btlMemoSync(this); });
+      });
+      $("btlShare").addEventListener("click", function(){ shareGo(this); });
+      $("rmbShare").addEventListener("click", function(){ shareGo(this); });
+      $("tnyShare").addEventListener("click", function(){ shareGo(this); });
+      btlMemoLoad();
       rmbModeSet(rmbMode);
     })();
     return { open: open, stop: stop };
