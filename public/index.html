@@ -1180,7 +1180,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
     </div>
     <div class="credits" aria-hidden="true">
       <div class="ccell"><small>GFM Score</small><b id="crUni">&#8212;</b></div>
-      <div class="ccell"><small>Anchor</small><b>08-Jl-26</b></div>
+      <div class="ccell"><small>Anchor</small><b>02&#183;03-Jl-26</b></div>
       <div class="ccell"><small>Spins</small><b id="crSpins">0</b></div>
       <div class="ccell gold"><small>Tier</small><b id="crTier">&#8212;</b></div>
     </div>
@@ -1384,7 +1384,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
     <input id="tickerIn" inputmode="text" enterkeyhint="go" autocomplete="off" spellcheck="false" maxlength="10" placeholder="Ticker or company &#8212; try LLY or Aritzia" aria-label="Stock ticker">
     <button class="btn-insert" id="btnInsert">INSERT<br>COIN</button>
   </div>
-  <div class="hint" id="hint">Universe: <b>950 names &#8212; full S&amp;P 500 + full Nasdaq-100 + full TSX Composite</b> &#183; US + CAD anchored 08-Jl-2026 &#8212; try LLY or TRV for the &#9827; bonus, RRG77777 for the full &#127758; demo</div>
+  <div class="hint" id="hint">Universe: <b>950 names &#8212; full S&amp;P 500 + full Nasdaq-100 + full TSX Composite</b> &#183; US 02-Jl / CAD 03-Jl-2026 &#8212; try LLY or TRV for the &#9827; bonus, RRG77777 for the full &#127758; demo</div>
   <div class="bonus" id="bonusRow"><button id="btnBonus"></button></div>
 </section>
 
@@ -1469,7 +1469,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 <div class="skiphint" id="skipHint">TAP TO SKIP &#9656;</div>
 
 <footer>
-  <div class="pill">950-NAME UNIVERSE &#183; S&amp;P 500 + NDX + TSX COMPOSITE &#183; US + CAD 08-Jl-2026</div>
+  <div class="pill">950-NAME UNIVERSE &#183; S&amp;P 500 + NDX + TSX COMPOSITE &#183; US 02-Jl &#183; CAD 03-Jl-2026</div>
   <div class="disc">For informational and educational purposes only. Not investment advice. Signals describe historical chart conditions, not future results, and nothing here promises winnings or investment performance. Past performance is not indicative of future results. Consult a licensed financial professional before making any investment decisions.</div>
 </footer>
 
@@ -2449,7 +2449,7 @@ const Sound = (function(){
     $("cardQ").innerHTML = "Profit margin <b>" + (d.npm || "\u2014")
       + "</b> \u00b7 Growth+profit score <b>" + (d.ro40 || "\u2014")
       + "</b> \u00b7 Dividend <b>" + (d.div || "\u2014") + "</b>";
-    $("cardAsof").textContent = "Signals from confirmed Yahoo history \u00b7 US + CAD anchor 08-Jl-2026 \u00b7 mcap+earnings confirmed at anchor \u00b7 margins backfill-pending";
+    $("cardAsof").textContent = "Signals from confirmed Yahoo history \u00b7 US anchor 02-Jl \u00b7 CAD anchor 03-Jl-2026 \u00b7 mcap+earnings confirmed 06-Jl-2026 \u00b7 margins backfill-pending";
   }
   function reveal(t, d){
     const v = verdictFor(d);
@@ -2757,7 +2757,7 @@ const Sound = (function(){
     $("kpBe").textContent = cur + K.be.toFixed(2);
     $("kpBePct").textContent = (K.bePct >= 0 ? "+" : "") + K.bePct.toFixed(1) + "%";
     $("kpCap").textContent = "Black-Scholes \u00b7 " + K.dte + " DTE \u00b7 r 4% \u00b7 spot " + d.price
-      + " \u00b7 Tier 1 \u00b7 liquidity: " + kickerLiq(d) + " \u00b7 IV modeled per O2 (0.62\u00b7rv + 0.38\u00b7size baseline) \u00b7 anchor 08-Jl-26 \u00b7 signal language, not advice";
+      + " \u00b7 Tier 1 \u00b7 liquidity: " + kickerLiq(d) + " \u00b7 IV modeled per O2 (0.62\u00b7rv + 0.38\u00b7size baseline) \u00b7 anchor 02\u00b703-Jl-26 \u00b7 signal language, not advice";
     $("kickerPanel").classList.add("show");
     $("kickerPanel").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
   }
@@ -3880,7 +3880,7 @@ const Sound = (function(){
         + "\n\u25B6 Green Flag Slot Monsters \u00b7 " + APPURL;
       if (btlSharePayload){
         txt += "\nBattle code: " + battleCode(btlSharePayload.mode, btlSharePayload.corners,
-          btlSharePayload.win, memo, (typeof MANCHOR !== "undefined" ? MANCHOR : "08-Jl-26"),
+          btlSharePayload.win, memo, "02\u00b703-Jl-26",
           btlSharePayload.prize || null);
       }
       var done = function(msg){
