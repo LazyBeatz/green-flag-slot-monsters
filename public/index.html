@@ -1340,7 +1340,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
           <div class="btl-splash" id="btlSplash">
             <div class="btl-winner" id="btlWinnerTxt"></div>
             <div class="btl-scoreline" id="btlScoreTxt"></div>
-            <div class="bshare"><textarea id="btlMemo" rows="2" placeholder="Battle journal &#8212; criteria, filters, sectors&#8230;"></textarea><button id="btlShare">&#128227; SHARE RESULT</button></div>
+            <div class="bshare" id="btlShareWrap"><textarea id="btlMemo" rows="2" placeholder="Battle journal &#8212; criteria, filters, sectors&#8230;"></textarea><button id="btlShare">&#128227; SHARE RESULT</button></div>
             <button class="btl-prize" id="btlPrizeBtn"></button>
             <button class="btl-fightbtn armed" id="tnyNext" style="display:none">CONTINUE TO BRACKET &#9654;</button>
             <div class="btl-actions" id="btlActionsRow"><button id="btlRematch">REMATCH</button><button id="btlClose">EXIT BATTLE</button></div>
@@ -2955,7 +2955,7 @@ const Sound = (function(){
       });
       $("btlFace").style.display = ""; $("bhWrap").style.display = ""; $("btlArena").classList.remove("show");
       $("btlSplash").classList.remove("show"); $("btlFight").classList.remove("show");
-      $("btlActionsRow").style.display = ""; $("tnyNext").style.display = "none";
+      $("btlActionsRow").style.display = ""; $("btlShareWrap").style.display = ""; $("tnyNext").style.display = "none";
       $("btlWait").textContent = "waiting for both corners to insert their coins\u2026";
       const fb = $("btlFightBtn");
       fb.disabled = true; fb.classList.remove("armed");
@@ -3906,6 +3906,7 @@ const Sound = (function(){
       });
       $("btlSplash").classList.remove("show");
       $("btlActionsRow").style.display = "none";
+      $("btlShareWrap").style.display = "none";
       $("btlPrizeBtn").className = "btl-prize";
       var sB = buildReels($("btlWinB")), sG = buildReels($("btlWinG"));
       $("btlFight").classList.add("show");
@@ -3955,7 +3956,7 @@ const Sound = (function(){
     }
     function tnyAdvance(){
       $("tnyNext").style.display = "none";
-      $("btlActionsRow").style.display = "";
+      $("btlActionsRow").style.display = ""; $("btlShareWrap").style.display = "";
       $("btlSplash").classList.remove("show");
       $("btlArena").classList.remove("show");
       var rd = tnyRoundOf(), ri = tny.rounds.length - 1;
