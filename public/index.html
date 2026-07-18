@@ -1647,6 +1647,26 @@ function decodeShare(code){
   } catch(e){ return null; }
 }
 
+/* BATTLE SHARE CODE — GFSB1 (v1): mode "1v1"/"rumble"/"tourney",
+   corners = array of { t, sc, tier } (scales 2..8), win = index into corners
+   (-1 = dead heat), m = memo (2000-char staple), anchor = dataset anchor date.
+   base64url (browser-safe), padding stripped. */
+function battleCode(mode, corners, win, memo, anchor){
+  const p = { v: 1, mode: mode, corners: corners, win: win,
+    m: String(memo || "").slice(0, 2000), anchor: anchor || "" };
+  const b = btoa(unescape(encodeURIComponent(JSON.stringify(p))));
+  return "GFSB1-" + b.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function battleDecode(code){
+  try {
+    const raw = String(code).trim().replace(/^GFSB\d*-/, "")
+      .replace(/-/g, "+").replace(/_/g, "/");
+    const pad = raw + "=".repeat((4 - raw.length % 4) % 4);
+    const o = JSON.parse(decodeURIComponent(escape(atob(pad))));
+    return (o && typeof o === "object" && o.v >= 1 && Array.isArray(o.corners)) ? o : null;
+  } catch(e){ return null; }
+}
+
 /* BONUS OPTIONS KICKER — locked GFM Top-Trade Option recipe:
    first OTM call ~6mo out (series 18-De-2026), increment-rule strike,
    O2 modeled IV (0.62*rv + 0.38*size baseline, floor 0.75*baseline),
@@ -1985,7 +2005,7 @@ function mirrorDrift(r, snap){
 }
 
 if (typeof module !== "undefined" && module.exports){
-  module.exports = { CONFIG, SEED, rumbleRank, tnyShuffle, tnyPairs, tnyRoundName, iconFor, outcomeIcons, momoStars, isFiveStarStud,
+  module.exports = { CONFIG, SEED, rumbleRank, tnyShuffle, tnyPairs, tnyRoundName, battleCode, battleDecode, iconFor, outcomeIcons, momoStars, isFiveStarStud,
     verdictFor, levenshtein, closestTicker, normalizeTicker,
     isClub, isGlobe, isPerfect, logoCandidates, encodeShare, decodeShare, resolveQuery, buildSessionPayload, sessionRows, gfmScore, isStud, parseMoney, parseCapUsd, strikeIncrement, firstOtmCall, modeledIV, bsCall, kickerTrade, kickerLiq, atmStrike, hailMaryTrade, hmVerdict, battleWinner,
     MSEED, MRRG, MANCHOR, MANCHOR_ISO, mirrorStud, mirrorClub, mirrorGlobe,
@@ -3090,6 +3110,12 @@ const Sound = (function(){
         ? "\u2694\uFE0F BATTLE \u00b7 DEAD HEAT \u2014 " + pick.G.t + " & " + pick.B.t + " \u00b7 GFM " + r.g + " APIECE"
         : "\u2694\uFE0F BATTLE \u00b7 \uD83C\uDFC6 " + pick[r.winner].t + " (GFM " + (r.winner === "G" ? r.g : r.b) + ") DEF. "
           + pick[r.winner === "G" ? "B" : "G"].t + " (GFM " + (r.winner === "G" ? r.b : r.g) + ")";
+      btlSharePayload = { mode: "1v1",
+        corners: [
+          { t: pick.G.t, sc: r.g, tier: pick.G.d.tier },
+          { t: pick.B.t, sc: r.b, tier: pick.B.d.tier }
+        ],
+        win: r.winner === "TIE" ? -1 : (r.winner === "G" ? 0 : 1) };
       setTimeout(function(){
         if (my !== bTok) return;
         if (r.winner === "TIE"){
@@ -3501,6 +3527,7 @@ const Sound = (function(){
     var rmbPick = [null, null, null, null, null, null, null, null];
     var btlFmt = "C";
     var btlShareTxt = "";
+    var btlSharePayload = null;
     var RMB_COLORS = [
       { n: "RED", c: "#E53935", src: "B" }, { n: "GREEN", c: "#35D96B", src: "G" },
       { n: "TEAL", c: "#26C6DA", src: "B" }, { n: "GOLD", c: "#E8C35A", src: "G" },
@@ -3669,6 +3696,12 @@ const Sound = (function(){
         btlShareTxt += "\n" + sm + " #" + rk.place + " " + rk.t + " \u00b7 GFM " + rk.sc;
       });
       $("rmbShareWrap").style.display = "";
+      btlSharePayload = { mode: "rumble",
+        corners: rr.ranked.map(function(rk){
+          var dd = SEED[rk.t] || {};
+          return { t: rk.t, sc: rk.sc, tier: dd.tier || 0 };
+        }),
+        win: rr.tie ? -1 : 0 };
       $("rmbActions").style.display = "";
       if (rr.tie){ Sound.midWin(); } else { Sound.bonusSting(); }
       Celebrate.confetti();
@@ -3825,6 +3858,10 @@ const Sound = (function(){
       var memo = $("btlMemo").value.trim();
       var txt = btlShareTxt + (memo ? "\n\uD83D\uDCDD " + memo : "")
         + "\n\u25B6 Green Flag Slot Monsters \u00b7 " + APPURL;
+      if (btlSharePayload){
+        txt += "\nBattle code: " + battleCode(btlSharePayload.mode, btlSharePayload.corners,
+          btlSharePayload.win, memo, (typeof MANCHOR !== "undefined" ? MANCHOR : "08-Jl-26"));
+      }
       var done = function(msg){
         var keep = btn.textContent;
         btn.textContent = msg;
@@ -3986,6 +4023,12 @@ const Sound = (function(){
       btlShareTxt = "\uD83C\uDFC6 TOURNAMENT CHAMPION \u00b7 " + W.t + " (GFM " + gfmScore(cd) + ")"
         + "\n" + tny.size + "-fighter bracket: " + tny.entrants.map(function(e){ return e.t; }).join(" \u00b7 ");
       $("tnyShareWrap").style.display = "";
+      btlSharePayload = { mode: "tourney",
+        corners: tny.entrants.map(function(e2){
+          var dd = SEED[e2.t] || {};
+          return { t: e2.t, sc: gfmScore(dd), tier: dd.tier || 0 };
+        }),
+        win: tny.entrants.indexOf(W) };
       $("tnyActions").style.display = "";
       Sound.tada(); Celebrate.confetti();
       setTimeout(function(){ if (my === bTok) Celebrate.confetti(); }, 900);
