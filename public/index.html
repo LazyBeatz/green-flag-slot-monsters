@@ -1408,7 +1408,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
           <div class="bshare" id="rmbShareWrap" style="display:none"><textarea id="rmbMemo" rows="2" placeholder="Battle journal &#8212; criteria, filters, sectors&#8230;"></textarea><button id="rmbShare">&#128227; SHARE RUMBLE</button></div>
           <button class="btl-prize" id="rmbPrizeBtn"></button>
           <div class="btl-prizeslot" id="rmbPrizeSlot"></div>
-          <div class="btl-actions" id="rmbActions" style="display:none"><button id="rmbAgain">RUMBLE AGAIN</button><button id="rmbNew">&#129529; NEW RUMBLE</button><button id="rmbExit2">EXIT BATTLE</button></div>
+          <div class="btl-actions" id="rmbActions" style="display:none"><button id="rmbRematch">⚡ REMATCH</button><button id="rmbAgain">RUMBLE AGAIN</button><button id="rmbNew">&#129529; NEW RUMBLE</button><button id="rmbExit2">EXIT BATTLE</button></div>
         </div>
         <div class="btl-arena" id="tnyArena">
           <div class="btl-fight" id="tnyFightBanner">TOURNEY!</div>
@@ -1419,7 +1419,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
           <button class="btl-fightbtn" id="tnyGo">FIGHT NEXT MATCH &#9654;</button>
           <button class="btl-prize" id="tnyPrizeBtn"></button>
           <div class="btl-prizeslot" id="tnyPrizeSlot"></div>
-          <div class="btl-actions" id="tnyActions" style="display:none"><button id="tnyNew">&#127942; NEW TOURNEY</button><button id="tnyExit">EXIT BATTLE</button></div>
+          <div class="btl-actions" id="tnyActions" style="display:none"><button id="tnyRematch">⚡ REMATCH</button><button id="tnyNew">&#127942; NEW TOURNEY</button><button id="tnyExit">EXIT BATTLE</button></div>
         </div>
       </div>
     </div>
@@ -4273,6 +4273,15 @@ const Sound = (function(){
       $("fmtTourney").addEventListener("click", function(){ fmtSet("T"); Sound.wake(); });
       $("tnyGo").addEventListener("click", tnyFight);
       $("tnyNext").addEventListener("click", tnyAdvance);
+      $("tnyRematch").addEventListener("click", function(){
+        bTok++; Sound.spinLoopStop();
+        if (!tny || !tny.entrants || !tny.entrants.length) return;
+        var slots = tny.entrants.map(function(e){ return { t: e.t, ci: e.ci }; });
+        rmbReset(); fmtSet("T");
+        slots.forEach(function(s){ $("rmbIn" + s.ci).value = s.t; rmbInsert(s.ci); });
+        var n = rmbCount();
+        if (n === 4 || n === 8) tnyStart();   /* fresh random draw inside tnyStart */
+      });
       $("tnyNew").addEventListener("click", function(){
         bTok++; Sound.spinLoopStop();
         rmbReset(); fmtSet("T");
@@ -4293,6 +4302,14 @@ const Sound = (function(){
       });
       $("rmbFightBtn").addEventListener("click", function(){ if (btlFmt === "T") tnyStart(); else if (rmbCount() >= 3) rmbFightGo(); });
       $("rmbClearAll").addEventListener("click", function(){ for (var i = 0; i < 8; i++) rmbClear(i); Sound.engraveTick(); });
+      $("rmbRematch").addEventListener("click", function(){
+        bTok++; Sound.spinLoopStop();
+        var slots = rmbPick.map(function(p){ return p ? p.t : null; });
+        if (slots.filter(Boolean).length < 3) return;
+        rmbReset(); fmtSet("R");
+        slots.forEach(function(t, i){ if (t){ $("rmbIn" + i).value = t; rmbInsert(i); } });
+        if (rmbCount() >= 3) rmbFightGo();
+      });
       $("rmbAgain").addEventListener("click", function(){
         bTok++; Sound.spinLoopStop();
         var roster = rmbPick.filter(Boolean).map(function(p){ return p.t; });
@@ -4631,4 +4648,3 @@ const Sound = (function(){
 </script>
 </body>
 </html>
-
