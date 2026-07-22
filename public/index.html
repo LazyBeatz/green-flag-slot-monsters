@@ -447,6 +447,20 @@ button{font-family:inherit;cursor:pointer;border:none}
   cursor:pointer;animation:kicker3D .8s linear infinite}
 .pap-kicker:active{transform:translateX(-50%) translateY(1.5px) scale(.985)}
 .btl-trash{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:3}
+.tmato-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:4}
+.tmato-fly{position:fixed;left:var(--x);top:var(--y);font-size:26px;pointer-events:none;z-index:9999;
+  animation:tmatoFly var(--dur) cubic-bezier(.25,.1,.5,1) forwards}
+@keyframes tmatoFly{0%{transform:translate(0,0) rotate(0) scale(.7)}
+  100%{transform:translate(var(--dx),var(--dy)) rotate(var(--rr)) scale(1.15)}}
+.tmato-splat{position:absolute;width:var(--sz);height:calc(var(--sz)*.82);
+  background:radial-gradient(closest-side,#D6402E 0%,#B93222 55%,rgba(185,50,34,.55) 75%,rgba(185,50,34,0) 100%);
+  border-radius:58% 42% 55% 45%/48% 60% 40% 52%;transform:rotate(var(--sr));
+  animation:tmatoPlap .22s ease-out;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.tmato-splat::before,.tmato-splat::after{content:"";position:absolute;background:#B93222;border-radius:50%}
+.tmato-splat::before{width:22%;height:22%;left:-14%;top:30%}
+.tmato-splat::after{width:15%;height:15%;right:-10%;bottom:-6%}
+@keyframes tmatoPlap{0%{transform:rotate(var(--sr)) scale(1.55,.45)}
+  60%{transform:rotate(var(--sr)) scale(.88,1.18)}100%{transform:rotate(var(--sr)) scale(1,1)}}
 .btl-pail{position:absolute;top:-6px;right:10px;font-size:44px;
   animation:pailDump 2.4s ease forwards;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
 @keyframes pailDump{0%{transform:translateY(-72px) rotate(0)}
@@ -544,6 +558,8 @@ button{font-family:inherit;cursor:pointer;border:none}
 #rmbActions{flex-wrap:wrap}
 #rmbActions button{flex:1 1 40%;min-height:46px}
 #rmbActions #rmbNew{border-color:var(--gold);color:var(--gold-lt)}
+    #rmbActions button,#tnyActions button{border:2px solid #55606E;color:#C9D4E2}
+    #rmbActions #rmbRematch,#tnyActions #tnyRematch{border-color:var(--gold);color:var(--gold-lt);background:#141007}
 #rmbActions #rmbExit2{flex-basis:100%}
 /* ── 🏆 tournament bracket ── */
 .tny-round{font-family:'Bungee';font-size:12.5px;color:var(--gold-lt);text-align:center;margin:8px 0}
@@ -2103,6 +2119,7 @@ const Sound = (function(){
     engraveTick(){ tone(1500 + Math.random()*700, .05, "square", .035); },
     coinInsert(){ tone(880, .09, "triangle", .09); tone(1320, .12, "triangle", .07, .07); },
     rejectClunk(){ tone(160, .22, "square", .1); tone(110, .3, "square", .09, .1); },
+    plap(){ tone(300, .04, "sine", .13); tone(150, .07, "sine", .16, .02); tone(85, .1, "sine", .1, .05); },
     bonusSting(){ [520,660,780].forEach((f,i)=>tone(f, .12, "triangle", .07, i*.09)); },
     leverCrank(){ tone(220, .16, "sawtooth", .06); tone(180, .2, "sawtooth", .05, .12); },
     spinLoopStart(){
@@ -2903,6 +2920,55 @@ const Sound = (function(){
       }
       machEl.appendChild(box);
       Sound.rejectClunk();
+      tomatoPelt(machEl);
+    }
+    function tomatoPelt(machEl){
+      var my = bTok;
+      var layer = document.createElement("div");
+      layer.className = "tmato-layer";
+      machEl.appendChild(layer);
+      function splat(px, py, anim){
+        var s = document.createElement("span");
+        s.className = "tmato-splat";
+        s.style.left = px + "%"; s.style.top = py + "%";
+        s.style.setProperty("--sz", (22 + Math.random() * 16) + "px");
+        s.style.setProperty("--sr", (Math.random() * 360) + "deg");
+        if (!anim) s.style.animation = "none";
+        layer.appendChild(s);
+      }
+      if (reduceMotion){
+        for (var k = 0; k < 3; k++) splat(12 + Math.random() * 66, 15 + Math.random() * 60, false);
+        Sound.plap();
+        return;
+      }
+      var thrown = 0;
+      function throwOne(){
+        if (my !== bTok || !machEl.isConnected) return;
+        var r = machEl.getBoundingClientRect();
+        var txp = 12 + Math.random() * 66, typ = 15 + Math.random() * 60;
+        var tx = r.left + r.width * (txp / 100), ty = r.top + r.height * (typ / 100);
+        var sx = (Math.random() < 0.5) ? -44 : (window.innerWidth + 44);
+        var sy = ty + 80 + Math.random() * 160;
+        var fl = document.createElement("span");
+        fl.className = "tmato-fly";
+        fl.textContent = "\uD83C\uDF45";
+        fl.style.setProperty("--x", sx + "px");
+        fl.style.setProperty("--y", sy + "px");
+        fl.style.setProperty("--dx", (tx - sx) + "px");
+        fl.style.setProperty("--dy", (ty - sy) + "px");
+        fl.style.setProperty("--rr", (Math.random() * 720 - 360) + "deg");
+        fl.style.setProperty("--dur", (0.45 + Math.random() * 0.25) + "s");
+        document.body.appendChild(fl);
+        fl.addEventListener("animationend", function(){
+          fl.remove();
+          if (my !== bTok || !machEl.isConnected) return;
+          splat(txp, typ, true);
+          Sound.plap();
+        });
+        thrown++;
+        if (thrown < 8) setTimeout(throwOne, 300 + Math.random() * 250);
+      }
+      setTimeout(throwOne, 600);
     }
     function loadBattles(){
       try { return JSON.parse(localStorage.getItem("gfsBattles") || "[]"); } catch(e){ return []; }
