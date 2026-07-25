@@ -461,6 +461,112 @@ button{font-family:inherit;cursor:pointer;border:none}
 .tmato-splat::after{width:15%;height:15%;right:-10%;bottom:-6%}
 @keyframes tmatoPlap{0%{transform:rotate(var(--sr)) scale(1.55,.45)}
   60%{transform:rotate(var(--sr)) scale(.88,1.18)}100%{transform:rotate(var(--sr)) scale(1,1)}}
+.jchip[role="button"]{cursor:pointer}
+.jchip.c-gold{border-color:var(--gold)}.jchip.c-gold small{color:#EED9A0}.jchip.c-gold b{color:#EED9A0}
+.jack-chips .jchip small{font-size:7.5px;letter-spacing:.1em}
+.rlx-br{flex:0 0 auto;width:44px;border-radius:12px;background:#0A0B13;border:2px solid var(--neon-dk);
+  color:#8FD4F5;font-size:19px;padding:0;cursor:pointer}
+.rlx-inrow{display:flex;gap:4px}
+.rlx-inrow input{flex:1;min-width:0}
+.rlx-inrow .rlx-br{width:44px;min-height:44px;border-radius:10px;font-size:1rem}
+#rlxLayer{position:fixed;inset:0;z-index:80;display:none;background:rgba(4,6,10,.66)}
+#rlxLayer.on{display:block}
+.rlx-sheet{position:absolute;left:0;right:0;bottom:0;max-height:78vh;display:flex;flex-direction:column;
+  background:#10131C;border-top:2px solid var(--gold);border-radius:16px 16px 0 0;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));animation:rlxUp .22s ease-out}
+@keyframes rlxUp{0%{transform:translateY(40px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.rlx-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+#rlxTitle{flex:1;color:#EED9A0;font-weight:800;font-size:1rem;letter-spacing:.08em}
+#rlxClose{width:44px;height:44px;border-radius:10px;background:#0A0B13;border:2px solid #55606E;
+  color:#C9D4E2;font-size:1.0625rem;cursor:pointer}
+#rlxFilter{width:100%;background:#070910;border:2px solid var(--neon-dk);border-radius:10px;
+  color:#E9F5FD;font-size:1rem;font-weight:700;padding:11px 10px;margin-bottom:8px;box-sizing:border-box}
+#rlxList{overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1;min-height:120px}
+.rlx-row{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:none;border:0;
+  border-bottom:1px solid #1C2230;color:#DCE4EF;padding:11px 4px;font-size:1rem;min-height:44px;cursor:pointer}
+.rlx-row b{color:#EED9A0;margin-left:auto;font-weight:800;white-space:nowrap}
+.rlx-bg{flex:0 0 auto;font-size:0.875rem;color:#EED9A0}
+.rlx-bgc{flex:0 0 auto;font-size:0.875rem;color:#55D08A}
+.rlx-empty{color:#9AA6B6;font-size:1rem;line-height:1.5;padding:14px 6px}
+@keyframes rlxPulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 4px rgba(200,169,81,.45)}}
+.rlx-pulse{animation:rlxPulse 1s ease 2}
+@media (prefers-reduced-motion: reduce){.rlx-sheet{animation:none}.rlx-pulse{animation:none}}
+html{scrollbar-gutter:stable;font-size:100%}
+html.hut-lock,html.hut-lock body{overflow:hidden}
+.hut-pair{position:fixed;top:calc(8px + env(safe-area-inset-top));right:calc(8px + env(safe-area-inset-right));
+  z-index:58;display:flex;flex-direction:column;gap:8px}
+.hut-pair button{width:44px;height:44px;border-radius:50%;background:rgba(10,11,19,.85);
+  border:2px solid var(--gold);color:#EED9A0;font-size:19px;font-weight:800;cursor:pointer;padding:0;
+  line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.45)}
+.pmirr .mtop{padding-right:64px}
+.btl-head{padding-right:64px}
+#hlpLayer{position:fixed;inset:0;z-index:84;display:none;background:rgba(4,6,10,.78)}
+#hlpLayer.on{display:block}
+.hlp-sheet{position:absolute;inset:0;display:flex;flex-direction:column;background:#10131C;
+  padding:calc(10px + env(safe-area-inset-top)) 14px calc(12px + env(safe-area-inset-bottom))}
+.hlp-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+#hlpTitle{flex:1;color:#EED9A0;font-weight:800;font-size:1rem;letter-spacing:.08em}
+#hlpClose,#bakClose{width:44px;height:44px;border-radius:10px;background:#0A0B13;border:2px solid #55606E;
+  color:#C9D4E2;font-size:1.0625rem;cursor:pointer;flex:0 0 auto}
+.hlp-nav{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px;
+  border-bottom:1px solid #1C2230;margin-bottom:6px}
+.hlp-nav button{flex:0 0 auto;background:#0A0B13;border:1.5px solid var(--neon-dk);border-radius:999px;
+  color:#8FD4F5;font-size:0.875rem;font-weight:800;padding:10px 14px;min-height:44px;cursor:pointer;white-space:nowrap}
+#hlpBody{overflow-y:auto;-webkit-overflow-scrolling:touch;flex:1}
+#hlpBody h3{color:#EED9A0;font-size:1.25rem;letter-spacing:.06em;margin:18px 0 8px;
+  border-bottom:1px solid #2A3040;padding-bottom:5px;line-height:1.5}
+#hlpBody h4{color:#8FD4F5;font-size:1.0625rem;margin:12px 0 4px;line-height:1.5}
+#hlpBody p{color:#DCE4EF;font-size:1.125rem;line-height:1.6;margin:0 0 12px}
+#hlpBody .hlp-note{color:#9AA6B6;font-size:0.875rem;line-height:1.5}
+#bakLayer{position:fixed;inset:0;z-index:82;display:none;background:rgba(4,6,10,.72);
+  align-items:center;justify-content:center;padding:20px}
+#bakLayer.on{display:flex}
+.bak-card{width:100%;max-width:340px;background:#10131C;border:2px solid var(--gold);border-radius:16px;
+  padding:14px}
+.bak-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+#bakTitle{flex:1;color:#EED9A0;font-weight:800;font-size:1rem;letter-spacing:.08em}
+.bak-card .bak-act{display:block;width:100%;margin:0 0 8px;padding:12px;border-radius:11px;cursor:pointer;
+  background:#0A0B13;border:2px solid var(--neon-dk);color:#C9E9FA;font-size:1.0625rem;font-weight:800;min-height:44px}
+.bak-card .bak-act.gold{border-color:var(--gold);color:#EED9A0}
+#bakMsg{color:#9AA6B6;font-size:0.875rem;line-height:1.5;min-height:18px}
+#bakMsg.ok{color:#55D08A}
+#bakMsg.err{color:#F5A3A3}
+#bakFile{display:none}
+.btl-corner input,.rmb-corner input,.bshare textarea{font-size:1rem}
+.mshare button{min-height:44px}
+#tutChoose{position:fixed;inset:0;z-index:83;display:none;background:rgba(4,6,10,.72);
+  align-items:center;justify-content:center;padding:20px}
+#tutChoose.on{display:flex}
+.tut-card-c{width:100%;max-width:340px;background:#10131C;border:2px solid var(--gold);border-radius:16px;padding:14px}
+.tut-card-c .bak-head{margin-bottom:10px}
+.tut-choice{display:block;width:100%;margin:0 0 8px;padding:14px;border-radius:11px;cursor:pointer;
+  background:#0A0B13;border:2px solid var(--neon-dk);color:#C9E9FA;font-size:1.0625rem;font-weight:800;
+  min-height:44px;text-align:left;line-height:1.5}
+.tut-choice small{display:block;color:#9AA6B6;font-size:0.875rem;font-weight:400;margin-top:2px}
+.tut-choice.blue{border-color:#2980B9}
+#tutLayer{position:fixed;inset:0;z-index:59;pointer-events:none;display:none}
+#tutLayer.on{display:block}
+.tut-dot{position:fixed;width:44px;height:44px;pointer-events:auto;background:none;border:0;cursor:pointer;padding:0}
+.tut-dot i{position:absolute;left:12px;top:12px;width:20px;height:20px;border-radius:50%;
+  background:#2980B9;border:2px solid #BFE3FF;box-shadow:0 0 0 0 rgba(41,128,185,.55);
+  animation:tutPulse 1.6s ease-out infinite}
+.tut-dot.hit i{background:#EED9A0;border-color:#8B6914;animation:none}
+@keyframes tutPulse{0%{box-shadow:0 0 0 0 rgba(41,128,185,.55)}70%{box-shadow:0 0 0 11px rgba(41,128,185,0)}
+  100%{box-shadow:0 0 0 0 rgba(41,128,185,0)}}
+#tutCard{position:fixed;left:8px;right:8px;bottom:calc(64px + env(safe-area-inset-bottom));z-index:62;
+  display:none;background:#10131C;border:2px solid #2980B9;border-radius:14px;padding:12px 14px;
+  box-shadow:0 6px 20px rgba(0,0,0,.5)}
+#tutCard.on{display:block}
+#tutCardT{color:#BFE3FF;font-weight:800;font-size:1rem;line-height:1.5;margin:0 0 4px}
+#tutCardX{color:#DCE4EF;font-size:1.0625rem;line-height:1.6;margin:0 0 8px}
+#tutCardMore{background:#0A0B13;border:2px solid var(--neon-dk);border-radius:9px;color:#8FD4F5;
+  font-size:0.9375rem;font-weight:800;padding:9px 13px;min-height:44px;cursor:pointer}
+#tutExit{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));
+  z-index:62;display:none;background:#1F5F8F;border:2px solid #BFE3FF;border-radius:999px;color:#FFFFFF;
+  font-size:1rem;font-weight:800;padding:11px 22px;min-height:44px;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.5)}
+#tutExit.on{display:block}
+@media (prefers-reduced-motion: reduce){.tut-dot i{animation:none}}
 .btl-pail{position:absolute;top:-6px;right:10px;font-size:44px;
   animation:pailDump 2.4s ease forwards;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
 @keyframes pailDump{0%{transform:translateY(-72px) rotate(0)}
@@ -1181,6 +1287,10 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
     <button id="mirToggle" class="mir-toggle" type="button">🪞 PORTFOLIO MIRROR</button>
   <div class="lights" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 </header>
+<div class="hut-pair">
+  <button type="button" id="hutHelp" aria-label="Help and glossary">?</button>
+  <button type="button" id="hutSave" aria-label="Backup and restore">&#128190;</button>
+</div>
 
 <section class="stage">
   <div class="coin-area">
@@ -1239,9 +1349,11 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
         <span class="tt-label" aria-hidden="true">Hail Mary</span>
       </div>
     </div>
-    <div class="jack-chips" aria-hidden="true">
-      <div class="jchip c-green"><small>5&#9733; Studs</small><b id="chipStuds">&#8212;</b></div>
-      <div class="jchip c-blue"><small>&#9827; RRG Leaders</small><b id="chipClub">&#8212;</b></div>
+    <div class="jack-chips">
+      <div class="jchip c-green" role="button" tabindex="0" aria-label="Show all five-star studs"><small>5&#9733; Studs</small><b id="chipStuds">&#8212;</b></div>
+      <div class="jchip c-green" role="button" tabindex="0" aria-label="Show all one-star studs"><small>1&#9733; Studs</small><b id="chipOne">&#8212;</b></div>
+      <div class="jchip c-blue" role="button" tabindex="0" aria-label="Show RRG leaders"><small>&#9827; Leaders</small><b id="chipClub">&#8212;</b></div>
+      <div class="jchip c-gold" role="button" tabindex="0" aria-label="Show perfect leaders"><small>&#127758; Perfect</small><b id="chipGlobe">&#8212;</b></div>
     </div>
     <div class="reel-labels" id="reelLabels"></div>
     <div class="reel-window" id="reelWindow">
@@ -1354,14 +1466,14 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
           <div class="btl-corners">
             <div class="btl-corner b">
               <b>RED CORNER</b>
-              <input id="btlInB" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="Red corner ticker">
+              <div class="rlx-inrow"><input id="btlInB" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="Red corner ticker"><button type="button" class="rlx-br" data-rlx="btlB" aria-label="Browse companies">&#128214;</button></div>
               <button id="btlGoB">INSERT COIN</button>
               <button class="btl-cclear" id="btlClrB" type="button">CLEAR</button>
               <div class="btl-ready" id="btlRdyB"></div>
             </div>
             <div class="btl-corner g">
               <b>GREEN CORNER</b>
-              <input id="btlInG" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="Green corner ticker">
+              <div class="rlx-inrow"><input id="btlInG" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="Green corner ticker"><button type="button" class="rlx-br" data-rlx="btlG" aria-label="Browse companies">&#128214;</button></div>
               <button id="btlGoG">INSERT COIN</button>
               <button class="btl-cclear" id="btlClrG" type="button">CLEAR</button>
               <div class="btl-ready" id="btlRdyG"></div>
@@ -1375,14 +1487,14 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
           <button class="rmb-rain" id="rmbRain">&#129689; MAKE IT RAIN &#183; INSERT ALL COINS</button>
           <div class="rmb-mode"><button class="rmm on" id="rmbModeW">&#127905; WHEELS</button><button class="rmm" id="rmbModeC">&#128203; CARDS</button></div>
           <div class="rmb-grid" id="rmbGrid">
-            <div class="rmb-corner" style="--rc:#E53935;--hr:0deg"><b>RED</b><div class="rmb-ava"><img id="rmbAva0" alt=""></div><input id="rmbIn0" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="RED corner ticker"><button id="rmbGo0">INSERT COIN</button><button class="btl-cclear" id="rmbClr0" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy0"></div></div>
-            <div class="rmb-corner" style="--rc:#35D96B;--hr:0deg"><b>GREEN</b><div class="rmb-ava"><img id="rmbAva1" alt=""></div><input id="rmbIn1" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="GREEN corner ticker"><button id="rmbGo1">INSERT COIN</button><button class="btl-cclear" id="rmbClr1" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy1"></div></div>
-            <div class="rmb-corner" style="--rc:#26C6DA;--hr:165deg"><b>TEAL</b><div class="rmb-ava"><img id="rmbAva2" alt=""></div><input id="rmbIn2" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="TEAL corner ticker"><button id="rmbGo2">INSERT COIN</button><button class="btl-cclear" id="rmbClr2" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy2"></div></div>
-            <div class="rmb-corner" style="--rc:#E8C35A;--hr:275deg"><b>GOLD</b><div class="rmb-ava"><img id="rmbAva3" alt=""></div><input id="rmbIn3" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="GOLD corner ticker"><button id="rmbGo3">INSERT COIN</button><button class="btl-cclear" id="rmbClr3" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy3"></div></div>
-            <div class="rmb-corner" style="--rc:#AB7BF5;--hr:255deg"><b>PURPLE</b><div class="rmb-ava"><img id="rmbAva4" alt=""></div><input id="rmbIn4" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="PURPLE corner ticker"><button id="rmbGo4">INSERT COIN</button><button class="btl-cclear" id="rmbClr4" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy4"></div></div>
-            <div class="rmb-corner" style="--rc:#5B9BFF;--hr:105deg"><b>BLUE</b><div class="rmb-ava"><img id="rmbAva5" alt=""></div><input id="rmbIn5" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="BLUE corner ticker"><button id="rmbGo5">INSERT COIN</button><button class="btl-cclear" id="rmbClr5" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy5"></div></div>
-            <div class="rmb-corner" style="--rc:#FF9142;--hr:35deg"><b>ORANGE</b><div class="rmb-ava"><img id="rmbAva6" alt=""></div><input id="rmbIn6" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="ORANGE corner ticker"><button id="rmbGo6">INSERT COIN</button><button class="btl-cclear" id="rmbClr6" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy6"></div></div>
-            <div class="rmb-corner" style="--rc:#FF7BAC;--hr:215deg"><b>PINK</b><div class="rmb-ava"><img id="rmbAva7" alt=""></div><input id="rmbIn7" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="PINK corner ticker"><button id="rmbGo7">INSERT COIN</button><button class="btl-cclear" id="rmbClr7" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy7"></div></div>
+            <div class="rmb-corner" style="--rc:#E53935;--hr:0deg"><b>RED</b><div class="rmb-ava"><img id="rmbAva0" alt=""></div><div class="rlx-inrow"><input id="rmbIn0" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="RED corner ticker"><button type="button" class="rlx-br" data-rlx="rmb0" aria-label="Browse companies">&#128214;</button></div><button id="rmbGo0">INSERT COIN</button><button class="btl-cclear" id="rmbClr0" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy0"></div></div>
+            <div class="rmb-corner" style="--rc:#35D96B;--hr:0deg"><b>GREEN</b><div class="rmb-ava"><img id="rmbAva1" alt=""></div><div class="rlx-inrow"><input id="rmbIn1" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="GREEN corner ticker"><button type="button" class="rlx-br" data-rlx="rmb1" aria-label="Browse companies">&#128214;</button></div><button id="rmbGo1">INSERT COIN</button><button class="btl-cclear" id="rmbClr1" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy1"></div></div>
+            <div class="rmb-corner" style="--rc:#26C6DA;--hr:165deg"><b>TEAL</b><div class="rmb-ava"><img id="rmbAva2" alt=""></div><div class="rlx-inrow"><input id="rmbIn2" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="TEAL corner ticker"><button type="button" class="rlx-br" data-rlx="rmb2" aria-label="Browse companies">&#128214;</button></div><button id="rmbGo2">INSERT COIN</button><button class="btl-cclear" id="rmbClr2" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy2"></div></div>
+            <div class="rmb-corner" style="--rc:#E8C35A;--hr:275deg"><b>GOLD</b><div class="rmb-ava"><img id="rmbAva3" alt=""></div><div class="rlx-inrow"><input id="rmbIn3" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="GOLD corner ticker"><button type="button" class="rlx-br" data-rlx="rmb3" aria-label="Browse companies">&#128214;</button></div><button id="rmbGo3">INSERT COIN</button><button class="btl-cclear" id="rmbClr3" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy3"></div></div>
+            <div class="rmb-corner" style="--rc:#AB7BF5;--hr:255deg"><b>PURPLE</b><div class="rmb-ava"><img id="rmbAva4" alt=""></div><div class="rlx-inrow"><input id="rmbIn4" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="PURPLE corner ticker"><button type="button" class="rlx-br" data-rlx="rmb4" aria-label="Browse companies">&#128214;</button></div><button id="rmbGo4">INSERT COIN</button><button class="btl-cclear" id="rmbClr4" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy4"></div></div>
+            <div class="rmb-corner" style="--rc:#5B9BFF;--hr:105deg"><b>BLUE</b><div class="rmb-ava"><img id="rmbAva5" alt=""></div><div class="rlx-inrow"><input id="rmbIn5" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="BLUE corner ticker"><button type="button" class="rlx-br" data-rlx="rmb5" aria-label="Browse companies">&#128214;</button></div><button id="rmbGo5">INSERT COIN</button><button class="btl-cclear" id="rmbClr5" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy5"></div></div>
+            <div class="rmb-corner" style="--rc:#FF9142;--hr:35deg"><b>ORANGE</b><div class="rmb-ava"><img id="rmbAva6" alt=""></div><div class="rlx-inrow"><input id="rmbIn6" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="ORANGE corner ticker"><button type="button" class="rlx-br" data-rlx="rmb6" aria-label="Browse companies">&#128214;</button></div><button id="rmbGo6">INSERT COIN</button><button class="btl-cclear" id="rmbClr6" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy6"></div></div>
+            <div class="rmb-corner" style="--rc:#FF7BAC;--hr:215deg"><b>PINK</b><div class="rmb-ava"><img id="rmbAva7" alt=""></div><div class="rlx-inrow"><input id="rmbIn7" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="PINK corner ticker"><button type="button" class="rlx-br" data-rlx="rmb7" aria-label="Browse companies">&#128214;</button></div><button id="rmbGo7">INSERT COIN</button><button class="btl-cclear" id="rmbClr7" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy7"></div></div>
             </div>
           <div class="btl-wait" id="rmbWait">0 of 8 corners paid &#8212; need 3+ to rumble&#8230;</div>
           <button class="btl-fightbtn" id="rmbFightBtn" disabled aria-disabled="true">RUMBLE!</button>
@@ -1450,7 +1562,8 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
   <div class="brandbar"><b>GREEN FLAG SLOT MONSTERS</b><span>Digital Stock Ticker Slot Machine</span></div>
   <div class="deck-badges"><i class="b-coin" aria-hidden="true">Type Ticker</i><button class="dream" id="btnDream" disabled aria-disabled="true" title="Arms on Tier 2 or better">I HAVE A $ DREAM<i class="bring"><s></s></i></button><i class="b-tkr" aria-hidden="true">Insert Ticker</i></div>
   <div class="in-row">
-    <input id="tickerIn" inputmode="text" enterkeyhint="go" autocomplete="off" spellcheck="false" maxlength="10" placeholder="Ticker or company &#8212; try LLY or Aritzia" aria-label="Stock ticker">
+    <input id="tickerIn" inputmode="text" enterkeyhint="go" autocomplete="off" spellcheck="false" maxlength="10" placeholder="Ticker or company &#8212; try EA or Aritzia" aria-label="Stock ticker">
+    <button type="button" class="rlx-br" data-rlx="cas" aria-label="Browse all companies">&#128214;</button>
     <button class="btn-insert" id="btnInsert">INSERT<br>COIN</button>
   </div>
   <div class="hint" id="hint">Universe: <b>949 names &#8212; full S&amp;P 500 + full Nasdaq-100 + full TSX Composite</b> &#183; anchor 17-Jl-2026 &#8212; try EA or NWSA for the &#9827; bonus, RRG77777 for the full &#127758; demo</div>
@@ -2243,7 +2356,359 @@ const Sound = (function(){
     const ks = Object.keys(SEED).filter(function(k){ return k !== "RRG77777"; });
 
     $("chipStuds").textContent = ks.filter(function(k){ return isFiveStarStud(SEED[k]); }).length;
+    $("chipOne").textContent = ks.filter(function(k){ return isStud(SEED[k]) && !isFiveStarStud(SEED[k]); }).length;
     $("chipClub").textContent = ks.filter(function(k){ return isPerfect(SEED[k]); }).length;
+    $("chipGlobe").textContent = ks.filter(function(k){ return isGlobe(SEED[k]); }).length;
+
+    /* ── Universe Rolodex ── */
+    const ROWS = ks.map(function(k){
+      const d = SEED[k];
+      const nm = (d.name && d.name !== k) ? d.name : "";
+      return { t: k, n: nm, s: (nm + " " + k).toUpperCase(),
+        b5: isFiveStarStud(d), b1: isStud(d) && !isFiveStarStud(d),
+        bc: isClub(d), bg: isGlobe(d) };
+    }).sort(function(a, b){ return (a.n || a.t).localeCompare(b.n || b.t); });
+    const TITLES = { all: "ALL 949 COMPANIES", five: "\u2605\u2605\u2605\u2605\u2605 FIVE-STAR STUDS",
+      one: "\u2605 ONE-STAR STUDS", club: "\u2663 RRG LEADERS", globe: "\uD83C\uDF0E PERFECT LEADERS" };
+    let rlxMode = "all", rlxTgt = { kind: "cas", auto: false }, rlxDeb = null;
+    function rlxEsc(s){ return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+    function rlxBuild(){
+      if ($("rlxLayer")) return;
+      const L = document.createElement("div"); L.id = "rlxLayer";
+      L.innerHTML = '<div class="rlx-sheet" role="dialog" aria-label="Company browser">' +
+        '<div class="rlx-head"><span id="rlxTitle"></span>' +
+        '<button type="button" id="rlxClose" aria-label="Close">\u2715</button></div>' +
+        '<input id="rlxFilter" placeholder="Filter by company or ticker" autocomplete="off" spellcheck="false">' +
+        '<div id="rlxList"></div></div>';
+      document.body.appendChild(L);
+      L.addEventListener("click", function(e){ if (e.target === L) rlxClose(); });
+      $("rlxClose").addEventListener("click", rlxClose);
+      $("rlxFilter").addEventListener("input", function(){
+        clearTimeout(rlxDeb); rlxDeb = setTimeout(rlxRender, 120);
+      });
+      document.addEventListener("keydown", function(e){
+        if (e.key === "Escape" && L.classList.contains("on")) rlxClose();
+      });
+      $("rlxList").addEventListener("click", function(e){
+        const b = e.target.closest ? e.target.closest(".rlx-row") : null;
+        if (b && b.getAttribute("data-t")) rlxApply(b.getAttribute("data-t"));
+      });
+    }
+    function rlxRows(){
+      if (rlxMode === "five") return ROWS.filter(function(r){ return r.b5; });
+      if (rlxMode === "one") return ROWS.filter(function(r){ return r.b1; });
+      if (rlxMode === "club") return ROWS.filter(function(r){ return isPerfect(SEED[r.t]); });
+      if (rlxMode === "globe") return ROWS.filter(function(r){ return r.bg; });
+      return ROWS;
+    }
+    function rlxRender(){
+      const q = ($("rlxFilter").value || "").trim().toUpperCase();
+      let rows = rlxRows();
+      if (q) rows = rows.filter(function(r){ return r.s.indexOf(q) !== -1; });
+      let h = "";
+      for (var i = 0; i < rows.length; i++){
+        const r = rows[i];
+        let bg = "";
+        if (r.b5) bg += '<span class="rlx-bg">\u2605\u2605\u2605\u2605\u2605</span>';
+        else if (r.b1) bg += '<span class="rlx-bg">\u2605</span>';
+        if (r.bg) bg += '<span class="rlx-bg">\uD83C\uDF0E</span>';
+        else if (r.bc) bg += '<span class="rlx-bgc">\u2663</span>';
+        h += '<button type="button" class="rlx-row" data-t="' + rlxEsc(r.t) + '">' + bg +
+          '<span>' + rlxEsc(r.n || r.t) + '</span><b>' + rlxEsc(r.t) + '</b></button>';
+      }
+      if (rlxMode === "globe"){
+        if (!rows.length && !q)
+          h = '<div class="rlx-empty">No perfect leaders this tape \u2014 daily (XLC) and weekly (XLK) leadership don\u2019t overlap. When these align, the wind is at somebody\u2019s back. Meanwhile\u2026</div>' + h;
+        if (!q || "RRG77777".indexOf(q) !== -1)
+          h += '<button type="button" class="rlx-row" data-t="RRG77777"><span class="rlx-bg">\uD83C\uDF0E</span>' +
+            '<span>Demo machine \u2014 full globe ceremony</span><b>RRG77777</b></button>';
+      }
+      if (!h) h = '<div class="rlx-empty">No matches.</div>';
+      $("rlxList").innerHTML = h;
+    }
+    function rlxOpen(m, tgt){
+      rlxBuild(); rlxMode = m || "all"; rlxTgt = tgt || { kind: "cas", auto: false };
+      $("rlxTitle").textContent = TITLES[rlxMode] || TITLES.all;
+      $("rlxFilter").value = "";
+      rlxRender();
+      $("rlxLayer").classList.add("on");
+      $("rlxList").scrollTop = 0;
+    }
+    function rlxClose(){ const L = $("rlxLayer"); if (L) L.classList.remove("on"); }
+    function rlxApply(t){
+      rlxClose();
+      if (rlxTgt.kind === "rmb"){ $("rmbIn" + rlxTgt.i).value = t; $("rmbGo" + rlxTgt.i).click(); return; }
+      if (rlxTgt.kind === "btl"){ $("btlIn" + rlxTgt.sd).value = t; $("btlGo" + rlxTgt.sd).click(); return; }
+      const inp = $("tickerIn"); inp.value = t;
+      if (rlxTgt.auto){ $("btnInsert").click(); return; }
+      inp.scrollIntoView({ block: "center", behavior: "smooth" });
+      const b = $("btnInsert");
+      b.classList.remove("rlx-pulse"); void b.offsetWidth; b.classList.add("rlx-pulse");
+    }
+    [["chipStuds","five"],["chipOne","one"],["chipClub","club"],["chipGlobe","globe"]].forEach(function(p){
+      const el = $(p[0]).parentNode;
+      el.addEventListener("click", function(){ rlxOpen(p[1], { kind: "cas", auto: false }); });
+      el.addEventListener("keydown", function(e){
+        if (e.key === "Enter" || e.key === " "){ e.preventDefault(); rlxOpen(p[1], { kind: "cas", auto: false }); }
+      });
+    });
+    document.addEventListener("click", function(e){
+      const b = e.target.closest ? e.target.closest(".rlx-br") : null;
+      if (!b) return;
+      const v = b.getAttribute("data-rlx");
+      if (v === "cas") rlxOpen("all", { kind: "cas", auto: true });
+      else if (v === "btlB" || v === "btlG") rlxOpen("all", { kind: "btl", sd: v.slice(3) });
+      else if (v && v.indexOf("rmb") === 0) rlxOpen("all", { kind: "rmb", i: +v.slice(3) });
+    });
+  })();
+
+  /* ── Header utilities: ? Help + \uD83D\uDCBE Backup ── */
+  (function(){
+    const SECS = [
+      ["hlp-machine", "The Machine"], ["hlp-signals", "Signals"], ["hlp-badges", "Stars & Badges"],
+      ["hlp-rolodex", "Rolodex"], ["hlp-bonus", "Bonus Round"], ["hlp-battle", "Battle"],
+      ["hlp-mirror", "Mirror"], ["hlp-numbers", "The Numbers"], ["hlp-honesty", "Data Honesty"]];
+    function lock(on){ document.documentElement.classList.toggle("hut-lock", !!on); }
+    function hlpHtml(){
+      return '' +
+      '<h3 id="hlp-machine">\uD83C\uDFB0 The Machine</h3><p>Type a ticker or a company name. Or tap \uD83D\uDCD6 to browse the list. Then press INSERT COIN.</p><p>The machine reads that stock\u2019s real market signals. It shows them as a slot spin. The five reels are five checks: <b>Trend</b>, <b>Momentum</b>, <b>Strength</b>, <b>PPO</b>, and <b>Tier</b>. Green across the board means a strong stock.</p><p><b>GFM Score</b> compares the stock to all 949 names. A score of 90 beats 90% of the board. The <b>3% target</b> is today\u2019s price plus 3%. It is a first checkpoint, not a promise.</p><h3 id="hlp-signals">\uD83D\uDCC8 Reading the Signals</h3><h4>Tier (1\u20134)</h4><p>Tier is the overall grade. Tier 1 is the green flag: price above all four trend lines, with rising momentum. Tier 2 is close. Tier 3 is mixed. Tier 4 shows red flags.</p><h4>Momentum (MACD)</h4><p>This asks: is the price engine speeding up? <b>Surging</b> means full speed. <b>Easing off</b> means still positive, but cooling. <b>Tapping gas</b> means negative, but improving. <b>Slowing</b> means losing power.</p><h4>Strength (DMI)</h4><p>This shows who wins each day: buyers (+DI) or sellers (\u2212DI). ADX above 25 means the trend is real, not noise. <b>Strong up</b> means buyers are in control.</p><h4>PPO trend</h4><p>This checks the momentum of the momentum. <b>Strengthening</b> means the move is still gaining. <b>Weakening</b> means it is fading.</p><h4>Trend lines (N of 4)</h4><p>This counts how many moving averages sit below the price. Four of four is the full staircase.</p><h4>52-wk high \u00b7 New</h4><p>\u201cNew\u201d means the high was set in the last 14 days. Fresh air up there.</p><h3 id="hlp-badges">\u2B50 Stars &amp; Badges</h3><p>A <b>five-star stud</b> (\u2605\u2605\u2605\u2605\u2605) has the full green stack: Tier 1, surging MACD, strong-up DMI, and strengthening PPO. A <b>one-star stud</b> (\u2605) has the same stack, but its PPO has not turned green yet.</p><p><b>\u2663</b> means the stock\u2019s sector leads the market today, on the daily rotation map (RRG). <b>\uD83C\uDF0E</b> means it leads on both the daily and the weekly maps. That is rare. An empty \uD83C\uDF0E list is itself a clue.</p><p><b>RRG77777</b> is the demo machine. Spin it to see the full globe show.</p><h3 id="hlp-rolodex">\uD83D\uDCD6 Chips &amp; the Rolodex</h3><p>The four chips on the machine are buttons. Tap one to see that list: 5\u2605 studs, 1\u2605 studs, \u2663 leaders, or \uD83C\uDF0E perfect leaders. Tap any company and it loads into the spin box.</p><p>The \uD83D\uDCD6 buttons open the full 949-name list. It has a search box. Pick a name there and the coin inserts itself.</p><h3 id="hlp-bonus">\uD83C\uDF40 Bonus Round</h3><p>After a strong spin, the house may show one call-option idea. It lists the strike, the expiry date, the modeled IV, and the break-even. The break-even is how far the stock must climb before the bet pays.</p><p><b>IV</b> means implied volatility. It is the price of the bet. Higher IV makes the option cost more. Our IV is a model, not a live quote. Always check the real market first.</p><p><b>\u2660 Hail Mary</b> is a joke name. It hunts the opposite of a long shot: cheap calls that need only a small, realistic move to pay. <b>I HAVE A $ DREAM</b> arms on quality stocks and dreams bigger.</p><h3 id="hlp-battle">\uD83E\uDD4A Battle Modes</h3><p><b>\u2694\uFE0F Classic 1v1</b>: two stocks fight. The higher GFM score wins. <b>\uD83D\uDCA5 Rumble</b>: 3 to 8 fighters. Results show worst first. Last place gets the trash pail \u2014 and the tomatoes. <b>\uD83C\uDFC6 Tourney</b>: 4 or 8 fighters in a random bracket. No byes.</p><p><b>\u26A1 REMATCH</b> runs the same fighters again right away. In Tourney, it deals a fresh bracket. <b>Battle codes</b> (GFSB1\u2026) carry the full result, so a friend can import it. Prizes are modeled option ideas. The same honesty rules apply.</p><h3 id="hlp-mirror">\uD83E\uDE9E Portfolio Mirror</h3><p>Add your real holdings. The mirror grades each one with the same signals as the casino. It gives calm buy, sell, or hold reads.</p><p>Pick a style. <b>LEVERAGED</b> exits fast. <b>SWING</b> rides the trend until it bends. <b>PREMIUM</b> is patient. SHARE exports your list as a code. IMPORT merges a friend\u2019s list without erasing yours.</p><h3 id="hlp-numbers">\uD83D\uDD22 The Numbers</h3><p><b>Market cap</b>: the company\u2019s total price tag. <b>Dividend</b>: yearly cash paid out, as a percent. <b>Profit margin</b>: cents of profit per dollar of sales.</p><p><b>Growth+profit score</b>: growth percent plus margin percent. A score of 40 or more is the classic bar for a healthy grower. <b>vs S&amp;P 500 / VFV</b>: how far the stock ran ahead of its benchmark in 12 months. <b>Realized vol</b>: how wild the stock\u2019s real swings have been.</p><h3 id="hlp-honesty">\uD83E\uDDFE Data Honesty</h3><p>All signals come from real market data. The data is frozen at the anchor date shown on the machine. It is not live. Option numbers are models, never live quotes.</p><p>This app is for learning and fun. It is not investment advice. The trend is your friend until the end, when it bends.</p>';
+    }
+    function hlpBuild(){
+      if ($("hlpLayer")) return;
+      const L = document.createElement("div"); L.id = "hlpLayer";
+      let nav = "";
+      for (var i = 0; i < SECS.length; i++)
+        nav += '<button type="button" data-sec="' + SECS[i][0] + '">' + SECS[i][1] + '</button>';
+      L.innerHTML = '<div class="hlp-sheet" role="dialog" aria-label="Help and glossary">' +
+        '<div class="hlp-head"><span id="hlpTitle">❓ HOW TO READ THE MACHINE</span>' +
+        '<button type="button" id="hlpClose" aria-label="Close help">✕</button></div>' +
+        '<div class="hlp-nav">' + nav + '</div>' +
+        '<div id="hlpBody">' + hlpHtml() + '</div></div>';
+      document.body.appendChild(L);
+      L.addEventListener("click", function(e){ if (e.target === L) hlpClose(); });
+      $("hlpClose").addEventListener("click", hlpClose);
+      L.querySelector(".hlp-nav").addEventListener("click", function(e){
+        const b = e.target.closest ? e.target.closest("button[data-sec]") : null;
+        if (!b) return;
+        const s = document.getElementById(b.getAttribute("data-sec"));
+        if (s) s.scrollIntoView({ block: "start", behavior: "smooth" });
+      });
+    }
+    function hlpOpen(sec){
+      hlpBuild();
+      $("hlpLayer").classList.add("on"); lock(true);
+      if (sec){
+        const s = document.getElementById(sec);
+        if (s) setTimeout(function(){ s.scrollIntoView({ block: "start" }); }, 40);
+      } else { $("hlpBody").scrollTop = 0; }
+    }
+    function hlpClose(){ const L = $("hlpLayer"); if (L) L.classList.remove("on"); lock(false); }
+    window.gfsHelpOpen = hlpOpen; /* deep-link hook for future UI terms */
+
+    /* ── Backup & Restore ── */
+    function bakBuild(){
+      if ($("bakLayer")) return;
+      const L = document.createElement("div"); L.id = "bakLayer";
+      L.innerHTML = '<div class="bak-card" role="dialog" aria-label="Backup and restore">' +
+        '<div class="bak-head"><span id="bakTitle">\uD83D\uDCBE BACKUP &amp; RESTORE</span>' +
+        '<button type="button" id="bakClose" aria-label="Close">✕</button></div>' +
+        '<button type="button" class="bak-act gold" id="bakDown">⬇ BACKUP — download my data</button>' +
+        '<button type="button" class="bak-act" id="bakUp">⬆ RESTORE — load a backup file</button>' +
+        '<input type="file" id="bakFile" accept=".json,application/json">' +
+        '<div id="bakMsg">Backs up battles, memos, mirror holdings, and settings.</div></div>';
+      document.body.appendChild(L);
+      L.addEventListener("click", function(e){ if (e.target === L) bakClose(); });
+      $("bakClose").addEventListener("click", bakClose);
+      $("bakDown").addEventListener("click", bakExport);
+      $("bakUp").addEventListener("click", function(){ $("bakFile").click(); });
+      $("bakFile").addEventListener("change", bakImport);
+    }
+    function bakOpen(){ bakBuild(); msg("Backs up battles, memos, mirror holdings, and settings.", ""); $("bakLayer").classList.add("on"); lock(true); }
+    function bakClose(){ const L = $("bakLayer"); if (L) L.classList.remove("on"); lock(false); }
+    function msg(t, cls){ const m = $("bakMsg"); if (m){ m.textContent = t; m.className = cls || ""; } }
+    function bakExport(){
+      try {
+        const data = {};
+        for (var i = 0; i < localStorage.length; i++){
+          const k = localStorage.key(i);
+          if (k && k.indexOf("gfs") === 0) data[k] = localStorage.getItem(k);
+        }
+        /* strip transient open/collapsed flags from mirror holdings */
+        if (data.gfsMirror){
+          try {
+            const h = JSON.parse(data.gfsMirror);
+            if (Array.isArray(h)){ h.forEach(function(o){ if (o && typeof o === "object") delete o.open; }); data.gfsMirror = JSON.stringify(h); }
+          } catch(e){}
+        }
+        const payload = { app: "GFSM", v: 1, anchor: (typeof MANCHOR !== "undefined" ? MANCHOR : ""), exported: new Date().toISOString(), data: data };
+        const d = new Date(), pad = function(n){ return (n < 10 ? "0" : "") + n; };
+        const fname = "green-flag-slot-monsters-backup-" + d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + ".json";
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob); a.download = fname;
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 800);
+        msg("Backup downloaded: " + fname, "ok");
+      } catch(e){ msg("Backup failed — your browser blocked the download.", "err"); }
+    }
+    function bakImport(){
+      const f = $("bakFile").files && $("bakFile").files[0];
+      $("bakFile").value = "";
+      if (!f) return;
+      const rd = new FileReader();
+      rd.onerror = function(){ msg("Couldn\u2019t read that file.", "err"); };
+      rd.onload = function(){
+        let obj = null;
+        try { obj = JSON.parse(rd.result); } catch(e){ msg("That file isn\u2019t valid JSON — nothing was changed.", "err"); return; }
+        if (!obj || obj.app !== "GFSM" || obj.v !== 1 || !obj.data || typeof obj.data !== "object" || Array.isArray(obj.data)){
+          msg("That doesn\u2019t look like a Green Flag backup — nothing was changed.", "err"); return;
+        }
+        const ks = Object.keys(obj.data);
+        if (!ks.length){ msg("That backup is empty — nothing was changed.", "err"); return; }
+        for (var i = 0; i < ks.length; i++){
+          if (ks[i].indexOf("gfs") !== 0 || typeof obj.data[ks[i]] !== "string"){
+            msg("That backup contains unknown data — nothing was changed.", "err"); return;
+          }
+        }
+        try { for (var j = 0; j < ks.length; j++) localStorage.setItem(ks[j], obj.data[ks[j]]); }
+        catch(e){ msg("Your browser blocked storage — restore not applied.", "err"); return; }
+        msg("Restored " + ks.length + " item(s). Reloading…", "ok");
+        setTimeout(function(){ location.reload(); }, 900);
+      };
+      rd.readAsText(f);
+    }
+
+    /* identifier-free community tally: {event, ticker} only — no IDs, ever */
+    window.gfsTally = function(e, t){
+      try {
+        if (!t || t === "RRG77777") return;
+        var pay = JSON.stringify({ e: e, t: t });
+        if (navigator.sendBeacon){
+          navigator.sendBeacon("/api/tally", new Blob([pay], { type: "application/json" }));
+        } else {
+          fetch("/api/tally", { method: "POST", body: pay, keepalive: true,
+            headers: { "content-type": "application/json" } }).catch(function(){});
+        }
+      } catch (err) {}
+    };
+    /* \u2500\u2500 Tutorial Mode \u2014 registry-driven blue dots \u2500\u2500 */
+    const TUT = [
+      { sel: "#tickerIn", t: "Ticker box", x: "Type any company name or ticker here. The machine finds it in the 949-name universe.", sec: "hlp-machine" },
+      { sel: '.rlx-br[data-rlx="cas"]', t: "Browse button", x: "No ticker in mind? Tap this to browse every company, with a search box. Pick one and the coin inserts itself.", sec: "hlp-rolodex" },
+      { sel: "#btnInsert", t: "INSERT COIN", x: "This starts the spin. The reels reveal the stock\u2019s real market signals.", sec: "hlp-machine" },
+      { sel: "#chipStuds", up: 1, t: "5\u2605 Studs chip", x: "Tap to see every five-star stud \u2014 stocks with the full green signal stack. Tap a name to load it.", sec: "hlp-badges" },
+      { sel: "#chipOne", up: 1, t: "1\u2605 Studs chip", x: "One-star studs have the same strong stack, but one signal has not turned green yet.", sec: "hlp-badges" },
+      { sel: "#chipClub", up: 1, t: "\u2663 Leaders chip", x: "Stocks whose sector leads the market today, on the rotation map.", sec: "hlp-badges" },
+      { sel: "#chipGlobe", up: 1, t: "\uD83C\uDF0E Perfect chip", x: "The rare list: sectors leading on both the daily and weekly maps. Empty is a clue, too.", sec: "hlp-badges" },
+      { sel: "#btnKicker", t: "Bonus Options Kicker", x: "Arms after a top-grade spin. Shows one ready-made call-option idea, with modeled numbers.", sec: "hlp-bonus" },
+      { sel: "#btnDream", t: "I HAVE A $ DREAM", x: "Arms on quality stocks and dreams bigger. Same honest, modeled numbers.", sec: "hlp-bonus" },
+      { sel: "#btnSpade", t: "\u2660 Hail Mary", x: "A joke name. It hunts cheap calls that need only a small, realistic move to pay.", sec: "hlp-bonus" },
+      { sel: "#btnBattle", t: "Battle Mode", x: "Challenge a friend. Two stocks fight \u2014 or 3 to 8 in a Rumble, or a full Tourney bracket.", sec: "hlp-battle" },
+      { sel: "#mirToggle", t: "Portfolio Mirror", x: "Add your real holdings and get calm buy, sell, or hold reads \u2014 same signals as the casino.", sec: "hlp-mirror" },
+      { sel: "#btnShare", t: "Share", x: "Sends your spin result to a friend, with your memo attached.", sec: "hlp-machine" },
+      { sel: "#btnExpand", t: "Full signal card", x: "Opens every number behind the spin: all the averages, momentum, and strength readings.", sec: "hlp-signals" },
+      { sel: "#btnBonus", t: "Bonus pick", x: "When the house spots a related play, it appears here. Tap to spin it.", sec: "hlp-bonus" },
+      { sel: "#hutHelp", t: "Help button", x: "You are here. Read the guide, or run this tutorial any time.", sec: "hlp-machine" },
+      { sel: "#hutSave", t: "Backup &amp; restore", x: "Downloads all your battles, memos, and holdings as one file. Restore it on any device.", sec: "hlp-honesty" }
+    ];
+    let tutOn = false, tutDots = [], tutTimer = null;
+    function tutTarget(r){
+      let el = document.querySelector(r.sel);
+      for (let u = 0; el && u < (r.up || 0); u++) el = el.parentNode;
+      return el;
+    }
+    function tutBuild(){
+      if ($("tutLayer")) return;
+      const L = document.createElement("div"); L.id = "tutLayer";
+      document.body.appendChild(L);
+      const card = document.createElement("div"); card.id = "tutCard";
+      card.innerHTML = '<p id="tutCardT"></p><p id="tutCardX"></p>' +
+        '<button type="button" id="tutCardMore">More in the guide \u2192</button>';
+      document.body.appendChild(card);
+      const ex = document.createElement("button"); ex.type = "button"; ex.id = "tutExit";
+      ex.textContent = "EXIT TUTORIAL"; document.body.appendChild(ex);
+      ex.addEventListener("click", tutStop);
+      $("tutCardMore").addEventListener("click", function(){
+        const sec = $("tutCardMore").getAttribute("data-sec");
+        if (sec) hlpOpen(sec);
+      });
+      TUT.forEach(function(r, i){
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "tut-dot";
+        b.setAttribute("aria-label", "Explain: " + r.t.replace(/&amp;/g, "&"));
+        b.innerHTML = "<i></i>";
+        b.addEventListener("click", function(){
+          tutDots.forEach(function(d){ d.el.classList.remove("hit"); });
+          b.classList.add("hit");
+          $("tutCardT").innerHTML = r.t;
+          $("tutCardX").innerHTML = r.x;
+          $("tutCardMore").setAttribute("data-sec", r.sec);
+          $("tutCard").classList.add("on");
+        });
+        L.appendChild(b);
+        tutDots.push({ el: b, reg: r });
+      });
+    }
+    function tutPlace(){
+      if (!tutOn) return;
+      const covered = ["hlpLayer","bakLayer","rlxLayer","battleLayer"].some(function(id){
+        const l = $(id); return l && l.classList.contains("on") || (l && l.classList.contains("show"));
+      });
+      tutDots.forEach(function(d){
+        const el = tutTarget(d.reg);
+        if (covered || !el || !el.offsetParent && el.tagName !== "BODY"){
+          d.el.style.display = "none"; return;
+        }
+        const rc = el.getBoundingClientRect();
+        if (rc.width < 2 || rc.height < 2 || rc.bottom < 0 || rc.top > innerHeight){
+          d.el.style.display = "none"; return;
+        }
+        d.el.style.display = "block";
+        d.el.style.left = Math.min(innerWidth - 46, Math.max(2, rc.right - 30)) + "px";
+        d.el.style.top = Math.max(2, rc.top - 8) + "px";
+      });
+    }
+    function tutStart(){
+      tutBuild(); tutOn = true;
+      $("tutLayer").classList.add("on"); $("tutExit").classList.add("on");
+      tutPlace();
+      addEventListener("scroll", tutPlace, { passive: true });
+      addEventListener("resize", tutPlace);
+      tutTimer = setInterval(tutPlace, 600);
+    }
+    function tutStop(){
+      tutOn = false;
+      removeEventListener("scroll", tutPlace); removeEventListener("resize", tutPlace);
+      clearInterval(tutTimer);
+      ["tutLayer","tutExit","tutCard"].forEach(function(id){ const e = $(id); if (e) e.classList.remove("on"); });
+      tutDots.forEach(function(d){ d.el.classList.remove("hit"); });
+    }
+    function chooseBuild(){
+      if ($("tutChoose")) return;
+      const L = document.createElement("div"); L.id = "tutChoose";
+      L.innerHTML = '<div class="tut-card-c" role="dialog" aria-label="Help options">' +
+        '<div class="bak-head"><span id="tutChooseT" style="flex:1;color:#EED9A0;font-weight:800;font-size:1rem;letter-spacing:.08em">\u2753 HOW CAN WE HELP?</span>' +
+        '<button type="button" id="tutChooseX" aria-label="Close" style="width:44px;height:44px;border-radius:10px;background:#0A0B13;border:2px solid #55606E;color:#C9D4E2;font-size:1.0625rem;cursor:pointer;flex:0 0 auto">\u2715</button></div>' +
+        '<button type="button" class="tut-choice" id="tutPickGuide">\uD83D\uDCD6 Read the Guide<small>Every feature and term, in plain words</small></button>' +
+        '<button type="button" class="tut-choice blue" id="tutPickTut">\uD83D\uDD35 Tutorial Mode<small>Tap the blue dots to learn each button on screen</small></button></div>';
+      document.body.appendChild(L);
+      L.addEventListener("click", function(e){ if (e.target === L) L.classList.remove("on"); });
+      $("tutChooseX").addEventListener("click", function(){ L.classList.remove("on"); });
+      $("tutPickGuide").addEventListener("click", function(){ L.classList.remove("on"); hlpOpen(); });
+      $("tutPickTut").addEventListener("click", function(){ L.classList.remove("on"); tutStart(); });
+    }
+    $("hutHelp").addEventListener("click", function(){
+      chooseBuild(); $("tutChoose").classList.add("on");
+    });
+    $("hutSave").addEventListener("click", bakOpen);
+    document.addEventListener("keydown", function(e){
+      if (e.key !== "Escape") return;
+      const H = $("hlpLayer"), B = $("bakLayer"), C = $("tutChoose");
+      if (B && B.classList.contains("on")) bakClose();
+      else if (H && H.classList.contains("on")) hlpClose();
+      else if (C && C.classList.contains("on")) C.classList.remove("on");
+      else if (tutOn) tutStop();
+    });
   })();
 
   /* ── GFM Score percentile board (universe-wide, computed once) ── */
@@ -2419,6 +2884,7 @@ const Sound = (function(){
     });
   }
   function spin(t, d){
+    if (window.gfsTally) gfsTally("spin", t);
     const targets = outcomeIcons(d).map(function(id){
       for (let i = 0; i < NI; i++) if (ICONS[i].id === id) return i;
       return 0;
@@ -3130,6 +3596,7 @@ const Sound = (function(){
       }
       rdy.classList.remove("err");
       pick[sd] = { t: t, d: SEED[t] };
+      if (window.gfsTally) gfsTally("battle", t);
       $("btlIn" + sd).value = t; $("btlIn" + sd).disabled = true;
       $("btlGo" + sd).disabled = true;
       const nm = (SEED[t].name || "").slice(0, 22);
@@ -3706,6 +4173,7 @@ const Sound = (function(){
       }
       rdy.classList.remove("err");
       rmbPick[i] = { t: t, d: SEED[t] };
+      if (window.gfsTally) gfsTally("battle", t);
       $("rmbIn" + i).value = t; $("rmbIn" + i).disabled = true; $("rmbGo" + i).disabled = true;
       rdy.textContent = "\u2713 " + t + " \u2014 READY";
       Sound.coinInsert(); rmbSync();
