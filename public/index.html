@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Green Flag Slot Monsters — Digital Stock Ticker Slot Machine</title>
-<meta name="description" content="Spin the market. 1078 real stocks, live GFM signals, zero emotion. The Trend Is Your Friend Until The End When It Bends. Educational signals — not investment advice.">
+<meta name="description" content="Spin the market. 1149 real stocks, live GFM signals, zero emotion. The Trend Is Your Friend Until The End When It Bends. Educational signals — not investment advice.">
 <meta property="og:title" content="Green Flag Slot Monsters 🎰">
-<meta property="og:description" content="Spin the market. 1078 real stocks, live GFM signals, zero emotion. Buy, Sell, Hold indicators — educational, not investment advice.">
+<meta property="og:description" content="Spin the market. 1149 real stocks, live GFM signals, zero emotion. Buy, Sell, Hold indicators — educational, not investment advice.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Green Flag Slot Monsters">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Green Flag Slot Monsters 🎰">
-<meta name="twitter:description" content="Spin the market. 1078 real stocks, live GFM signals, zero emotion.">
+<meta name="twitter:description" content="Spin the market. 1149 real stocks, live GFM signals, zero emotion.">
 <meta name="theme-color" content="#0E1220">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8E%B0</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1273,12 +1273,13 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
   flex-direction:column;gap:8px;align-items:center}
 .pill{font-size:9.5px;font-weight:800;letter-spacing:.1em;color:var(--gold-dk);
   border:1px solid var(--gold-dk);border-radius:12px;padding:3px 12px}
+.xcab{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-dk)}
 .disc{font-size:9.5px;color:var(--ink-dim);line-height:1.55;max-width:380px}
 @media (prefers-reduced-motion:reduce){
   .lights i{animation:none}
   .coin.show,.verdict.show,.card.open{animation:none}
 }
-</style>
+.edu{color:#EED9A0;text-decoration:none;font-size:.8em;font-weight:700;margin-left:3px;vertical-align:super;opacity:.9}.edu:hover{opacity:1;text-decoration:underline}.edu:focus-visible{outline:2px solid #EED9A0;outline-offset:2px;border-radius:2px;opacity:1}</style>
 </head>
 <body>
 <header class="marquee">
@@ -1566,7 +1567,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
     <button type="button" class="rlx-br" data-rlx="cas" aria-label="Browse all companies">&#128214;</button>
     <button class="btn-insert" id="btnInsert">INSERT<br>COIN</button>
   </div>
-  <div class="hint" id="hint">Universe: <b>1078 names &#8212; full S&amp;P 500 + full Nasdaq-100 + full TSX Composite</b> &#183; anchor 06-Au-2026 &#8212; try O or WELL for the &#9827; bonus, RRG77777 for the full &#127758; demo</div>
+  <div class="hint" id="hint">Universe: <b>1149 names &#8212; full S&amp;P 500 + full Nasdaq-100 + full TSX Composite</b> &#183; anchor 06-Au-2026 &#8212; try O or WELL for the &#9827; bonus, RRG77777 for the full &#127758; demo</div>
   <div class="bonus" id="bonusRow"><button id="btnBonus"></button></div>
 </section>
 
@@ -1651,7 +1652,8 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 <div class="skiphint" id="skipHint">TAP TO SKIP &#9656;</div>
 
 <footer>
-  <div class="pill">1078-NAME UNIVERSE &#183; S&amp;P 500 + NDX + TSX COMPOSITE &#183; 06-Au-2026</div>
+  <div class="pill">1149-NAME UNIVERSE &#183; S&amp;P 500 + NDX + TSX COMPOSITE &#183; 06-Au-2026</div>
+  <a class="xcab" id="xcabTS" href="https://green-flag-slot-monsters.lexbeatz.workers.dev/trendspotter.html" rel="noopener">&#127905; Play Green Flag Trend Spotter &#8594;</a>
   <div class="disc">For informational and educational purposes only. Not investment advice. Signals describe historical chart conditions, not future results, and nothing here promises winnings or investment performance. Past performance is not indicative of future results. Consult a licensed financial professional before making any investment decisions.</div>
 </footer>
 
@@ -2373,7 +2375,7 @@ const Sound = (function(){
         b5: isFiveStarStud(d), b1: isStud(d) && !isFiveStarStud(d),
         bc: isClub(d), bg: isGlobe(d) };
     }).sort(function(a, b){ return (a.n || a.t).localeCompare(b.n || b.t); });
-    const TITLES = { all: "ALL 1078 COMPANIES", five: "\u2605\u2605\u2605\u2605\u2605 FIVE-STAR STUDS",
+    const TITLES = { all: "ALL 1149 COMPANIES", five: "\u2605\u2605\u2605\u2605\u2605 FIVE-STAR STUDS",
       one: "\u2605 ONE-STAR STUDS", club: "\u2663 RRG LEADERS", globe: "\uD83C\uDF0E PERFECT LEADERS" };
     let rlxMode = "all", rlxTgt = { kind: "cas", auto: false }, rlxDeb = null;
     function rlxEsc(s){ return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
@@ -2476,7 +2478,7 @@ const Sound = (function(){
     function lock(on){ document.documentElement.classList.toggle("hut-lock", !!on); }
     function hlpHtml(){
       return '' +
-      '<h3 id="hlp-machine">\uD83C\uDFB0 The Machine</h3><p>Type a ticker or a company name. Or tap \uD83D\uDCD6 to browse the list. Then press INSERT COIN.</p><p>The machine reads that stock\u2019s real market signals. It shows them as a slot spin. The five reels are five checks: <b>Trend</b>, <b>Momentum</b>, <b>Strength</b>, <b>PPO</b>, and <b>Tier</b>. Green across the board means a strong stock.</p><p><b>GFM Score</b> compares the stock to all 1078 names. A score of 90 beats 90% of the board. The <b>3% target</b> is today\u2019s price plus 3%. It is a first checkpoint, not a promise.</p><h3 id="hlp-signals">\uD83D\uDCC8 Reading the Signals</h3><h4>Tier (1\u20134)</h4><p>Tier is the overall grade. Tier 1 is the green flag: price above all four trend lines, with rising momentum. Tier 2 is close. Tier 3 is mixed. Tier 4 shows red flags.</p><h4>Momentum (MACD)</h4><p>This asks: is the price engine speeding up? <b>Surging</b> means full speed. <b>Easing off</b> means still positive, but cooling. <b>Tapping gas</b> means negative, but improving. <b>Slowing</b> means losing power.</p><h4>Strength (DMI)</h4><p>This shows who wins each day: buyers (+DI) or sellers (\u2212DI). ADX above 25 means the trend is real, not noise. <b>Strong up</b> means buyers are in control.</p><h4>PPO trend</h4><p>This checks the momentum of the momentum. <b>Strengthening</b> means the move is still gaining. <b>Weakening</b> means it is fading.</p><h4>Trend lines (N of 4)</h4><p>This counts how many moving averages sit below the price. Four of four is the full staircase.</p><h4>52-wk high \u00b7 New</h4><p>\u201cNew\u201d means the high was set in the last 14 days. Fresh air up there.</p><h3 id="hlp-badges">\u2B50 Stars &amp; Badges</h3><p>A <b>five-star stud</b> (\u2605\u2605\u2605\u2605\u2605) has the full green stack: Tier 1, surging MACD, strong-up DMI, and strengthening PPO. A <b>one-star stud</b> (\u2605) has the same stack, but its PPO has not turned green yet.</p><p><b>\u2663</b> means the stock\u2019s sector leads the market today, on the daily rotation map (RRG). <b>\uD83C\uDF0E</b> means it leads on both the daily and the weekly maps. That is rare. An empty \uD83C\uDF0E list is itself a clue.</p><p><b>RRG77777</b> is the demo machine. Spin it to see the full globe show.</p><h3 id="hlp-rolodex">\uD83D\uDCD6 Chips &amp; the Rolodex</h3><p>The four chips on the machine are buttons. Tap one to see that list: 5\u2605 studs, 1\u2605 studs, \u2663 leaders, or \uD83C\uDF0E perfect leaders. Tap any company and it loads into the spin box.</p><p>The \uD83D\uDCD6 buttons open the full 1078-name list. It has a search box. Pick a name there and the coin inserts itself.</p><h3 id="hlp-bonus">\uD83C\uDF40 Bonus Round</h3><p>After a strong spin, the house may show one call-option idea. It lists the strike, the expiry date, the modeled IV, and the break-even. The break-even is how far the stock must climb before the bet pays.</p><p><b>IV</b> means implied volatility. It is the price of the bet. Higher IV makes the option cost more. Our IV is a model, not a live quote. Always check the real market first.</p><p><b>\u2660 Hail Mary</b> is a joke name. It hunts the opposite of a long shot: cheap calls that need only a small, realistic move to pay. <b>I HAVE A $ DREAM</b> arms on quality stocks and dreams bigger.</p><h3 id="hlp-battle">\uD83E\uDD4A Battle Modes</h3><p><b>\u2694\uFE0F Classic 1v1</b>: two stocks fight. The higher GFM score wins. <b>\uD83D\uDCA5 Rumble</b>: 3 to 8 fighters. Results show worst first. Last place gets the trash pail \u2014 and the tomatoes. <b>\uD83C\uDFC6 Tourney</b>: 4 or 8 fighters in a random bracket. No byes.</p><p><b>\u26A1 REMATCH</b> runs the same fighters again right away. In Tourney, it deals a fresh bracket. <b>Battle codes</b> (GFSB1\u2026) carry the full result, so a friend can import it. Prizes are modeled option ideas. The same honesty rules apply.</p><h3 id="hlp-mirror">\uD83E\uDE9E Portfolio Mirror</h3><p>Add your real holdings. The mirror grades each one with the same signals as the casino. It gives calm buy, sell, or hold reads.</p><p>Pick a style. <b>LEVERAGED</b> exits fast. <b>SWING</b> rides the trend until it bends. <b>PREMIUM</b> is patient. SHARE exports your list as a code. IMPORT merges a friend\u2019s list without erasing yours.</p><h3 id="hlp-numbers">\uD83D\uDD22 The Numbers</h3><p><b>Market cap</b>: the company\u2019s total price tag. <b>Dividend</b>: yearly cash paid out, as a percent. <b>Profit margin</b>: cents of profit per dollar of sales.</p><p><b>Growth+profit score</b>: growth percent plus margin percent. A score of 40 or more is the classic bar for a healthy grower. <b>vs S&amp;P 500 / VFV</b>: how far the stock ran ahead of its benchmark in 12 months. <b>Realized vol</b>: how wild the stock\u2019s real swings have been.</p><h3 id="hlp-honesty">\uD83E\uDDFE Data Honesty</h3><p>All signals come from real market data. The data is frozen at the anchor date shown on the machine. It is not live. Option numbers are models, never live quotes.</p><p>This app is for learning and fun. It is not investment advice. The trend is your friend until the end, when it bends.</p>';
+      '<h3 id="hlp-machine">\uD83C\uDFB0 The Machine</h3><p>Type a ticker or a company name. Or tap \uD83D\uDCD6 to browse the list. Then press INSERT COIN.</p><p>The machine reads that stock\u2019s real market signals. It shows them as a slot spin. The five reels are five checks: <b>Trend</b>, <b>Momentum</b>, <b>Strength</b>, <b>PPO</b>, and <b>Tier</b>. Green across the board means a strong stock.</p><p><b>GFM Score</b> compares the stock to all 1149 names. A score of 90 beats 90% of the board. The <b>3% target</b> is today\u2019s price plus 3%. It is a first checkpoint, not a promise.</p><h3 id="hlp-signals">\uD83D\uDCC8 Reading the Signals</h3><h4>Tier (1\u20134)</h4><p>Tier is the overall grade. Tier 1 is the green flag: price above all four trend lines, with rising momentum. Tier 2 is close. Tier 3 is mixed. Tier 4 shows red flags.</p><h4>Momentum (MACD) <a class=\"edu\" data-term=\"MACD\" href=\"https://www.investopedia.com/terms/m/macd.asp\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Learn more about MACD on Investopedia (opens in a new tab)\">&#8599;</a></h4><p>This asks: is the price engine speeding up? <b>Surging</b> means full speed. <b>Easing off</b> means still positive, but cooling. <b>Tapping gas</b> means negative, but improving. <b>Slowing</b> means losing power.</p><h4>Strength (DMI) <a class=\"edu\" data-term=\"DMI\" href=\"https://www.investopedia.com/terms/d/dmi.asp\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Learn more about DMI on Investopedia (opens in a new tab)\">&#8599;</a></h4><p>This shows who wins each day: buyers (+DI) or sellers (\u2212DI). ADX above 25 means the trend is real, not noise. <b>Strong up</b> means buyers are in control.</p><h4>PPO trend <a class=\"edu\" data-term=\"PPO\" href=\"https://www.investopedia.com/terms/p/ppo.asp\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Learn more about PPO on Investopedia (opens in a new tab)\">&#8599;</a></h4><p>This checks the momentum of the momentum. <b>Strengthening</b> means the move is still gaining. <b>Weakening</b> means it is fading.</p><h4>Trend lines (N of 4) <a class=\"edu\" data-term=\"SMA\" href=\"https://www.investopedia.com/terms/s/sma.asp\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"Learn more about SMA on Investopedia (opens in a new tab)\">&#8599;</a></h4><p>This counts how many moving averages sit below the price. Four of four is the full staircase.</p><h4>52-wk high \u00b7 New</h4><p>\u201cNew\u201d means the high was set in the last 14 days. Fresh air up there.</p><h3 id="hlp-badges">\u2B50 Stars &amp; Badges</h3><p>A <b>five-star stud</b> (\u2605\u2605\u2605\u2605\u2605) has the full green stack: Tier 1, surging MACD, strong-up DMI, and strengthening PPO. A <b>one-star stud</b> (\u2605) has the same stack, but its PPO has not turned green yet.</p><p><b>\u2663</b> means the stock\u2019s sector leads the market today, on the daily rotation map (RRG). <b>\uD83C\uDF0E</b> means it leads on both the daily and the weekly maps. That is rare. An empty \uD83C\uDF0E list is itself a clue.</p><p><b>RRG77777</b> is the demo machine. Spin it to see the full globe show.</p><h3 id="hlp-rolodex">\uD83D\uDCD6 Chips &amp; the Rolodex</h3><p>The four chips on the machine are buttons. Tap one to see that list: 5\u2605 studs, 1\u2605 studs, \u2663 leaders, or \uD83C\uDF0E perfect leaders. Tap any company and it loads into the spin box.</p><p>The \uD83D\uDCD6 buttons open the full 1149-name list. It has a search box. Pick a name there and the coin inserts itself.</p><h3 id="hlp-bonus">\uD83C\uDF40 Bonus Round</h3><p>After a strong spin, the house may show one call-option idea. It lists the strike, the expiry date, the modeled IV, and the break-even. The break-even is how far the stock must climb before the bet pays.</p><p><b>IV</b> means implied volatility. It is the price of the bet. Higher IV makes the option cost more. Our IV is a model, not a live quote. Always check the real market first.</p><p><b>\u2660 Hail Mary</b> is a joke name. It hunts the opposite of a long shot: cheap calls that need only a small, realistic move to pay. <b>I HAVE A $ DREAM</b> arms on quality stocks and dreams bigger.</p><h3 id="hlp-battle">\uD83E\uDD4A Battle Modes</h3><p><b>\u2694\uFE0F Classic 1v1</b>: two stocks fight. The higher GFM score wins. <b>\uD83D\uDCA5 Rumble</b>: 3 to 8 fighters. Results show worst first. Last place gets the trash pail \u2014 and the tomatoes. <b>\uD83C\uDFC6 Tourney</b>: 4 or 8 fighters in a random bracket. No byes.</p><p><b>\u26A1 REMATCH</b> runs the same fighters again right away. In Tourney, it deals a fresh bracket. <b>Battle codes</b> (GFSB1\u2026) carry the full result, so a friend can import it. Prizes are modeled option ideas. The same honesty rules apply.</p><h3 id="hlp-mirror">\uD83E\uDE9E Portfolio Mirror</h3><p>Add your real holdings. The mirror grades each one with the same signals as the casino. It gives calm buy, sell, or hold reads.</p><p>Pick a style. <b>LEVERAGED</b> exits fast. <b>SWING</b> rides the trend until it bends. <b>PREMIUM</b> is patient. SHARE exports your list as a code. IMPORT merges a friend\u2019s list without erasing yours.</p><h3 id="hlp-numbers">\uD83D\uDD22 The Numbers</h3><p><b>Market cap</b>: the company\u2019s total price tag. <b>Dividend</b>: yearly cash paid out, as a percent. <b>Profit margin</b>: cents of profit per dollar of sales.</p><p><b>Growth+profit score</b>: growth percent plus margin percent. A score of 40 or more is the classic bar for a healthy grower. <b>vs S&amp;P 500 / VFV</b>: how far the stock ran ahead of its benchmark in 12 months. <b>Realized vol</b>: how wild the stock\u2019s real swings have been.</p><h3 id="hlp-honesty">\uD83E\uDDFE Data Honesty</h3><p>All signals come from real market data. The data is frozen at the anchor date shown on the machine. It is not live. Option numbers are models, never live quotes.</p><p>This app is for learning and fun. It is not investment advice. The trend is your friend until the end, when it bends.</p>';
     }
     function hlpBuild(){
       if ($("hlpLayer")) return;
@@ -2584,6 +2586,27 @@ const Sound = (function(){
     }
 
     /* identifier-free community tally: {event, ticker} only — no IDs, ever */
+    /* -- "Learn more" encyclopedia links; Phase 1 live; edu_click beacon Phase 2/DORMANT -- */
+var EDU_LINKS = {
+  SMA:  { iv: "https://www.investopedia.com/terms/s/sma.asp",  wiki: "https://en.wikipedia.org/wiki/Moving_average" },
+  MACD: { iv: "https://www.investopedia.com/terms/m/macd.asp", wiki: "https://en.wikipedia.org/wiki/MACD" },
+  DMI:  { iv: "https://www.investopedia.com/terms/d/dmi.asp",  wiki: "https://en.wikipedia.org/wiki/Average_directional_movement_index" },
+  ADX:  { iv: "https://www.investopedia.com/terms/a/adx.asp",  wiki: "https://en.wikipedia.org/wiki/Average_directional_movement_index" },
+  PPO:  { iv: "https://www.investopedia.com/terms/p/ppo.asp",  wiki: "https://en.wikipedia.org/wiki/MACD" }
+};
+var EDU_TALLY_ON = false; /* Phase 2 / Part B: flip true ONLY when the D1 telemetry stack un-parks */
+function eduClick(term){
+  if (!EDU_TALLY_ON) return; /* DORMANT in Phase 1: sends nothing, stores nothing */
+  try {
+    var pay = JSON.stringify({ e: "edu_click", t: term });
+    if (navigator.sendBeacon) navigator.sendBeacon("/api/tally", new Blob([pay], { type: "application/json" }));
+    else fetch("/api/tally", { method: "POST", body: pay, keepalive: true, headers: { "content-type": "application/json" } }).catch(function(){});
+  } catch (err) {}
+}
+document.addEventListener("click", function(ev){
+  var a = (ev.target && ev.target.closest) ? ev.target.closest("a.edu[data-term]") : null;
+  if (a) eduClick(a.getAttribute("data-term"));
+});
     window.gfsTally = function(e, t){
       try {
         if (!t || t === "RRG77777") return;
@@ -2598,7 +2621,7 @@ const Sound = (function(){
     };
     /* \u2500\u2500 Tutorial Mode \u2014 registry-driven blue dots \u2500\u2500 */
     const TUT = [
-      { sel: "#tickerIn", t: "Ticker box", x: "Type any company name or ticker here. The machine finds it in the 1078-name universe.", sec: "hlp-machine" },
+      { sel: "#tickerIn", t: "Ticker box", x: "Type any company name or ticker here. The machine finds it in the 1149-name universe.", sec: "hlp-machine" },
       { sel: '.rlx-br[data-rlx="cas"]', t: "Browse button", x: "No ticker in mind? Tap this to browse every company, with a search box. Pick one and the coin inserts itself.", sec: "hlp-rolodex" },
       { sel: "#btnInsert", t: "INSERT COIN", x: "This starts the spin. The reels reveal the stock\u2019s real market signals.", sec: "hlp-machine" },
       { sel: "#chipStuds", up: 1, t: "5\u2605 Studs chip", x: "Tap to see every five-star stud \u2014 stocks with the full green signal stack. Tap a name to load it.", sec: "hlp-badges" },
