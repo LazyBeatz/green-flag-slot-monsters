@@ -1279,7 +1279,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
   .lights i{animation:none}
   .coin.show,.verdict.show,.card.open{animation:none}
 }
-.edu{color:#EED9A0;text-decoration:underline;text-underline-offset:2px}.edu:hover{color:#F5E9C0}.edu:focus-visible{outline:2px solid #EED9A0;outline-offset:2px;border-radius:2px}</style>
+.edu{color:#EED9A0;text-decoration:underline;text-underline-offset:2px}.edu:hover{color:#F5E9C0}.edu:focus-visible{outline:2px solid #EED9A0;outline-offset:2px;border-radius:2px}#tutNav{display:flex;align-items:center;gap:10px;margin-top:10px}.tut-arr{flex:0 0 auto;min-width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(180deg,#E3C979,#C8A951);color:#1A1206;font-size:1rem;font-weight:800;display:flex;align-items:center;justify-content:center;transition:transform .12s}.tut-arr:active{transform:translateY(1px)}.tut-arr:focus-visible{outline:2px solid #E3C979;outline-offset:2px}.tut-arr[disabled]{opacity:.35;cursor:default}.tut-arr.done{border-radius:999px;padding:0 16px;width:auto;letter-spacing:.06em}#tutStep{flex:1;text-align:center;font-size:.8rem;color:#9AA6B6;letter-spacing:.06em}#tutCard.top{top:calc(8px + env(safe-area-inset-top));bottom:auto}</style>
 </head>
 <body>
 <header class="marquee">
@@ -2651,7 +2651,7 @@ document.addEventListener("click", function(ev){
       document.body.appendChild(L);
       const card = document.createElement("div"); card.id = "tutCard";
       card.innerHTML = '<p id="tutCardT"></p><p id="tutCardX"></p>' +
-        '<button type="button" id="tutCardMore">More in the guide \u2192</button>';
+        '<button type="button" id="tutCardMore">More in the guide \u2192</button>' + '<div id="tutNav"><button type="button" class="tut-arr" id="tutPrev" aria-label="Previous tip">\u25C0</button><span id="tutStep"></span><button type="button" class="tut-arr" id="tutNext" aria-label="Next tip">\u25B6</button></div>';
       document.body.appendChild(card);
       const ex = document.createElement("button"); ex.type = "button"; ex.id = "tutExit";
       ex.textContent = "EXIT TUTORIAL"; document.body.appendChild(ex);
@@ -2665,14 +2665,7 @@ document.addEventListener("click", function(ev){
         b.type = "button"; b.className = "tut-dot";
         b.setAttribute("aria-label", "Explain: " + r.t.replace(/&amp;/g, "&"));
         b.innerHTML = "<i></i>";
-        b.addEventListener("click", function(){
-          tutDots.forEach(function(d){ d.el.classList.remove("hit"); });
-          b.classList.add("hit");
-          $("tutCardT").innerHTML = r.t;
-          $("tutCardX").innerHTML = r.x;
-          $("tutCardMore").setAttribute("data-sec", r.sec);
-          $("tutCard").classList.add("on");
-        });
+        b.addEventListener("click", function(){ var p = tutOrd.indexOf(i); if (p >= 0) tutShow(p, 1); });
         L.appendChild(b);
         tutDots.push({ el: b, reg: r });
       });
@@ -2696,20 +2689,77 @@ document.addEventListener("click", function(ev){
         d.el.style.top = Math.max(2, rc.top - 8) + "px";
       });
     }
+    function tutPosCmp(a, b){
+      var ay = Math.round(a.y / 24), by = Math.round(b.y / 24);
+      return (ay - by) || (a.x - b.x);
+    }
+    function tutNextVis(n, vis, i, dir){
+      var j = i + dir;
+      while (j >= 0 && j < n && !vis[j]) j += dir;
+      return (j >= 0 && j < n) ? j : i;
+    }
+    let tutOrd = [];
+    function tutOrdBuild(){
+      /* R16b: stations number by MEASURED position -- highest = 1, downward; shared rows left-to-right.
+         Targets with no box right now sort to the end (they can appear later; the walk skips them). */
+      const keys = tutDots.map(function(d, i){
+        const el = tutTarget(d.reg);
+        const rc = el && el.getBoundingClientRect ? el.getBoundingClientRect() : null;
+        const ok = rc && rc.width >= 2 && rc.height >= 2;
+        return { i: i, y: ok ? rc.top + window.scrollY : Infinity, x: ok ? rc.left + window.scrollX : i };
+      });
+      keys.sort(tutPosCmp);
+      tutOrd = keys.map(function(k){ return k.i; });
+    }
+    function tutShow(p, dir){
+      if (!tutOn || !tutOrd.length) return;
+      if (p < 0 || p >= tutOrd.length) return;
+      const vis = tutOrd.map(function(di){ return tutDots[di].el.style.display !== "none"; });
+      if (!vis[p]){
+        const q = tutNextVis(tutOrd.length, vis, p, dir || 1);
+        if (q === p || !vis[q]) return;
+        p = q;
+      }
+      const di = tutOrd[p], d = tutDots[di], r = d.reg;
+      tutDots.forEach(function(o){ o.el.classList.remove("hit"); });
+      d.el.classList.add("hit");
+      const el = tutTarget(r);
+      if (el && el.scrollIntoView){
+        try { el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" }); }
+        catch (e){ el.scrollIntoView(); }
+      }
+      $("tutCardT").innerHTML = r.t;
+      $("tutCardX").innerHTML = r.x;
+      $("tutCardMore").setAttribute("data-sec", r.sec);
+      const last = (p === tutOrd.length - 1);
+      $("tutStep").textContent = (p + 1) + " / " + tutOrd.length;
+      const pv = $("tutPrev"), nx = $("tutNext");
+      if (p === 0) pv.setAttribute("disabled", ""); else pv.removeAttribute("disabled");
+      nx.classList.toggle("done", last);
+      nx.textContent = last ? "\u2713 DONE" : "\u25B6";
+      nx.setAttribute("aria-label", last ? "Finish tutorial" : "Next tip");
+      pv.onclick = function(){ tutShow(p - 1, -1); };
+      nx.onclick = last ? tutStop : function(){ tutShow(p + 1, 1); };
+      /* smart dock: target in the LOWER half -> card docks TOP so it never covers its own dot */
+      const rc = el ? el.getBoundingClientRect() : null;
+      $("tutCard").classList.toggle("top", !!(rc && (rc.top + rc.height / 2) > innerHeight * 0.55));
+      $("tutCard").classList.add("on");
+    }
     function tutStart(){
       tutBuild(); tutOn = true;
       $("tutLayer").classList.add("on"); $("tutExit").classList.add("on");
-      tutPlace();
+      tutPlace(); tutOrdBuild();
       addEventListener("scroll", tutPlace, { passive: true });
       addEventListener("resize", tutPlace);
       tutTimer = setInterval(tutPlace, 600);
+      if (tutOrd.length) tutShow(0, 1);
     }
     function tutStop(){
       tutOn = false;
       removeEventListener("scroll", tutPlace); removeEventListener("resize", tutPlace);
       clearInterval(tutTimer);
       ["tutLayer","tutExit","tutCard"].forEach(function(id){ const e = $(id); if (e) e.classList.remove("on"); });
-      tutDots.forEach(function(d){ d.el.classList.remove("hit"); });
+      tutDots.forEach(function(d){ d.el.classList.remove("hit"); }); var tc = $("tutCard"); if (tc) tc.classList.remove("top");
     }
     function chooseBuild(){
       if ($("tutChoose")) return;
