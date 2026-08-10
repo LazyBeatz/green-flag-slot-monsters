@@ -176,7 +176,7 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .ts-tend{position:fixed;top:10px;right:10px;z-index:37;background:#0C1019;border:1.5px solid #3FA9F5;color:#9FD8FF;border-radius:999px;padding:10px 16px;font-family:'Jost',system-ui,sans-serif;font-size:13px;font-weight:700;letter-spacing:.06em;cursor:pointer;pointer-events:auto;box-shadow:0 4px 16px rgba(0,0,0,.55)}
 
 .ts-hempty{font-size:12.5px;color:var(--ts-dim2);padding:6px 2px}
-#tsChoose{position:fixed;inset:0;z-index:45;display:none;background:rgba(4,6,10,.72);align-items:center;justify-content:center;padding:20px}#tsChoose.on{display:flex}.ts-chcard{width:100%;max-width:340px;background:#0C1019;border:2px solid var(--ts-gold);border-radius:16px;padding:14px}.ts-chhead{display:flex;align-items:center;gap:8px;margin-bottom:10px}.ts-chtitle{flex:1;color:var(--ts-gold);font-family:'Jost',system-ui,sans-serif;font-weight:800;font-size:15px;letter-spacing:.08em}.ts-choice{display:block;width:100%;margin:0 0 8px;padding:14px;border-radius:11px;cursor:pointer;background:#0A0E17;border:2px solid var(--ts-teal2);color:var(--ts-ink);font-family:'Jost',system-ui,sans-serif;font-size:16px;font-weight:800;min-height:44px;text-align:left;line-height:1.5}.ts-choice.blue{border-color:#2077C8}.ts-choice small{display:block;color:var(--ts-dim2);font-size:13px;font-weight:400;margin-top:2px}.ts-choice:active{transform:translateY(1px)}.ts-choice:focus-visible{outline:2px solid var(--ts-teal);outline-offset:2px}</style>
+#tsChoose{position:fixed;inset:0;z-index:45;display:none;background:rgba(4,6,10,.72);align-items:center;justify-content:center;padding:20px}#tsChoose.on{display:flex}.ts-chcard{width:100%;max-width:340px;background:#0C1019;border:2px solid var(--ts-gold);border-radius:16px;padding:14px}.ts-chhead{display:flex;align-items:center;gap:8px;margin-bottom:10px}.ts-chtitle{flex:1;color:var(--ts-gold);font-family:'Jost',system-ui,sans-serif;font-weight:800;font-size:15px;letter-spacing:.08em}.ts-choice{display:block;width:100%;margin:0 0 8px;padding:14px;border-radius:11px;cursor:pointer;background:#0A0E17;border:2px solid var(--ts-teal2);color:var(--ts-ink);font-family:'Jost',system-ui,sans-serif;font-size:16px;font-weight:800;min-height:44px;text-align:left;line-height:1.5}.ts-choice.blue{border-color:#2077C8}.ts-choice small{display:block;color:var(--ts-dim2);font-size:13px;font-weight:400;margin-top:2px}.ts-choice:active{transform:translateY(1px)}.ts-choice:focus-visible{outline:2px solid var(--ts-teal);outline-offset:2px}.ts-tnav{display:flex;align-items:center;gap:10px;margin-top:10px}.ts-tarr{flex:0 0 auto;min-width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(180deg,var(--ts-teal),var(--ts-teal2));color:#04110E;font-family:'Jost',system-ui,sans-serif;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;transition:transform .12s}.ts-tarr:active{transform:translateY(1px)}.ts-tarr:focus-visible{outline:2px solid var(--ts-teal);outline-offset:2px}.ts-tarr[disabled]{opacity:.35;cursor:default}.ts-tarr.done{border-radius:999px;padding:0 16px;width:auto;letter-spacing:.06em}.ts-tstep{flex:1;text-align:center;font-size:12.5px;color:var(--ts-dim2);letter-spacing:.06em}.ts-tdot.on{animation:none;transform:scale(1.18);box-shadow:0 0 0 5px rgba(32,119,200,.55),0 2px 10px rgba(0,0,0,.7)}</style>
 </head>
 <body>
 <div class="ts-wrap">
@@ -990,8 +990,9 @@ land = function(key, rec){ lastSpinKey = key; lastSpin = rec; _land(key, rec); }
       $("tsResetWrap").hidden = true;
       $("tsTk").value = ""; $("tsTk").focus();
     };
-    /* -- R11 BLUE-DOT TOUR: tap ? -> "show me around" -> dots on the real UI -- */
-    var tourOn = false;
+    /* -- R16 BLUE-DOT TOUR v2: guided walker -- arrows + step counter + smart placement.
+       Free dot-taps still jump anywhere; the arrows walk the defined order. -- */
+    var tourOn = false, tourDots = [], tourIdx = -1;
     var TOUR_STOPS = [
       { id: "tsTk",       tip: "Type any <b>ticker or company name</b> \u2014 1,149 real stocks live on this floor." },
       { id: "tsSpin",     tip: "The octagon fires the drums. Your keyboard\u2019s <b>Go</b> works too." },
@@ -1001,23 +1002,50 @@ land = function(key, rec){ lastSpinKey = key; lastSpin = rec; _land(key, rec); }
       { id: "tsW4",       tip: null }, { id: "tsW5", tip: null },
       { id: "tsShareBox", tip: "Share your spin, <b>import a friend\u2019s</b>, or reset your local data \u2014 same spot on every machine." }
     ];
+    function tourHtmlFor(i){
+      var D = tourDots[i];
+      if (D.stop.tip) return D.stop.tip;
+      var tap = D.el.querySelector ? D.el.querySelector(".ts-tap") : null;
+      var w = tap ? tap.getAttribute("data-w") : "";
+      return (w && LESSON[w]) ? LESSON[w] : "One of the machine\u2019s five signal lamps \u2014 tap the row itself for its lesson.";
+    }
     function tourEnd(){
-      tourOn = false;
+      tourOn = false; tourIdx = -1; tourDots = [];
       var L = $("tsTour"); if (L) L.parentNode.removeChild(L);
       var E = $("tsTourEnd"); if (E) E.parentNode.removeChild(E);
     }
-    function tourTip(dot, html){
-      var L = $("tsTour"); if (!L) return;
+    function tourShow(i){
+      if (!tourOn || i < 0 || i >= tourDots.length) return;
+      tourIdx = i;
+      var D = tourDots[i], L = $("tsTour"); if (!L) return;
+      for (var q = 0; q < tourDots.length; q++) tourDots[q].dot.classList.toggle("on", q === i);
+      try { D.el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" }); }
+      catch (e){ D.el.scrollIntoView(); }
       var old = L.querySelector(".ts-ttip"); if (old) old.parentNode.removeChild(old);
-      var tip = document.createElement("div"); tip.className = "ts-ttip"; tip.innerHTML = html;
-      var x = parseFloat(dot.style.left), y = parseFloat(dot.style.top);
-      tip.style.left = Math.max(8, Math.min(x - 120, document.documentElement.clientWidth - 280)) + "px";
-      tip.style.top = (y + 34) + "px";
+      var last = (i === tourDots.length - 1);
+      var tip = document.createElement("div"); tip.className = "ts-ttip";
+      tip.innerHTML = tourHtmlFor(i)
+        + '<div class="ts-tnav">'
+        + '<button type="button" class="ts-tarr" id="tsTPrev" aria-label="Previous tip"' + (i === 0 ? " disabled" : "") + '>\u25C0</button>'
+        + '<span class="ts-tstep">' + (i + 1) + " / " + tourDots.length + '</span>'
+        + (last ? '<button type="button" class="ts-tarr done" id="tsTNext" aria-label="Finish tour">\u2713 DONE</button>'
+                : '<button type="button" class="ts-tarr" id="tsTNext" aria-label="Next tip">\u25B6</button>')
+        + '</div>';
+      tip.style.visibility = "hidden";
       L.appendChild(tip);
+      /* smart placement: below the dot if the viewport has room, else above -- never covering its own dot */
+      var x = parseFloat(D.dot.style.left), y = parseFloat(D.dot.style.top);
+      tip.style.left = Math.max(8, Math.min(x - 120, document.documentElement.clientWidth - 280)) + "px";
+      var th = tip.offsetHeight;
+      var below = ((y - window.scrollY) + 34 + th) < (window.innerHeight - 12);
+      tip.style.top = (below ? (y + 34) : Math.max(window.scrollY + 8, y - th - 12)) + "px";
+      tip.style.visibility = "visible";
+      $("tsTPrev").onclick = function(){ tourShow(tourIdx - 1); };
+      $("tsTNext").onclick = last ? tourEnd : function(){ tourShow(tourIdx + 1); };
     }
     function tourStart(){
-      if (tourOn){ tourEnd(); }
-      tourOn = true;
+      if (tourOn) tourEnd();
+      tourOn = true; tourDots = []; tourIdx = -1;
       var L = document.createElement("div"); L.className = "ts-tour"; L.id = "tsTour";
       L.style.height = document.documentElement.scrollHeight + "px";
       document.body.appendChild(L);
@@ -1025,24 +1053,19 @@ land = function(key, rec){ lastSpinKey = key; lastSpin = rec; _land(key, rec); }
       E.textContent = "END TOUR \u2715"; E.onclick = tourEnd;
       document.body.appendChild(E);
       for (var i = 0; i < TOUR_STOPS.length; i++){
-        (function(stop){
-          var el = $(stop.id); if (!el) return;
-          var r = el.getBoundingClientRect();
-          var d = document.createElement("button"); d.className = "ts-tdot";
-          d.setAttribute("aria-label", "What is this?");
-          d.style.left = (r.left + window.scrollX + r.width - 20) + "px";
-          d.style.top = (r.top + window.scrollY - 6) + "px";
-          d.onclick = function(){
-            var html = stop.tip;
-            if (!html && LESSON[el.querySelector && el.querySelector(".ts-tap") ? el.querySelector(".ts-tap").getAttribute("data-w") : ""]) html = LESSON[el.querySelector(".ts-tap").getAttribute("data-w")];
-            tourTip(d, html || "One of the machine\u2019s five signal lamps \u2014 tap the row itself for its lesson.");
-          };
-          L.appendChild(d);
-        })(TOUR_STOPS[i]);
+        var stop = TOUR_STOPS[i], el = $(stop.id); if (!el) continue;
+        var r = el.getBoundingClientRect();
+        var d = document.createElement("button"); d.className = "ts-tdot";
+        d.setAttribute("aria-label", "What is this? (station " + (tourDots.length + 1) + ")");
+        d.style.left = (r.left + window.scrollX + r.width - 20) + "px";
+        d.style.top = (r.top + window.scrollY - 6) + "px";
+        d.onclick = (function(myIdx){ return function(){ tourShow(myIdx); }; })(tourDots.length);
+        L.appendChild(d);
+        tourDots.push({ dot: d, el: el, stop: stop });
       }
+      if (tourDots.length) tourShow(0); /* the walk opens at station 1 */
       window.addEventListener("resize", tourEnd, { once: true });
     }
-    
     function tsChooseBuild(){
       if ($("tsChoose")) return; /* singleton-guarded, flagship pattern */
       var L = document.createElement("div"); L.id = "tsChoose";
