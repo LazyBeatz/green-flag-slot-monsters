@@ -1056,14 +1056,22 @@ land = function(key, rec){ lastSpinKey = key; lastSpin = rec; _land(key, rec); }
         var stop = TOUR_STOPS[i], el = $(stop.id); if (!el) continue;
         var r = el.getBoundingClientRect();
         var d = document.createElement("button"); d.className = "ts-tdot";
-        d.setAttribute("aria-label", "What is this? (station " + (tourDots.length + 1) + ")");
         d.style.left = (r.left + window.scrollX + r.width - 20) + "px";
         d.style.top = (r.top + window.scrollY - 6) + "px";
-        d.onclick = (function(myIdx){ return function(){ tourShow(myIdx); }; })(tourDots.length);
         L.appendChild(d);
-        tourDots.push({ dot: d, el: el, stop: stop });
+        tourDots.push({ dot: d, el: el, stop: stop, y: r.top + window.scrollY, x: r.left + window.scrollX });
       }
-      if (tourDots.length) tourShow(0); /* the walk opens at station 1 */
+      /* R16b: stations number by SCREEN POSITION -- 1 = the highest dot, then downward;
+         dots sharing a row order left-to-right. The walk and the counter follow the eye. */
+      tourDots.sort(function(a, b){
+        var ay = Math.round(a.y / 24), by = Math.round(b.y / 24);
+        return (ay - by) || (a.x - b.x);
+      });
+      for (var s = 0; s < tourDots.length; s++){
+        tourDots[s].dot.setAttribute("aria-label", "What is this? (station " + (s + 1) + " of " + tourDots.length + ")");
+        tourDots[s].dot.onclick = (function(myIdx){ return function(){ tourShow(myIdx); }; })(s);
+      }
+      if (tourDots.length) tourShow(0); /* the walk opens at the TOP dot */
       window.addEventListener("resize", tourEnd, { once: true });
     }
     function tsChooseBuild(){
