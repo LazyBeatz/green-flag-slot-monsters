@@ -21,7 +21,7 @@
 html{-webkit-text-size-adjust:100%}
 body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui,-apple-system,sans-serif;min-height:100vh}
 .ts-wrap{max-width:460px;margin:0 auto;padding:14px 12px 40px}
-.ts-face{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 95px),radial-gradient(120% 90% at 50% 0%,var(--ts-felt2) 0%,#0A0D16 60%,var(--ts-felt) 100%);border:1px solid #2E3A5C;border-radius:26px;padding:18px 14px 20px;box-shadow:0 0 0 1.5px rgba(255,255,255,.04) inset,0 0 26px rgba(79,216,199,.15),0 0 80px rgba(79,216,199,.06),0 12px 44px rgba(0,0,0,.62)}
+.ts-face{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,0) 110px),radial-gradient(120% 90% at 50% 0%,var(--ts-felt2) 0%,#0A0D16 60%,var(--ts-felt) 100%);border:1.5px solid #5A70AC;border-radius:26px;padding:18px 14px 20px;box-shadow:0 0 0 1.5px rgba(255,255,255,.07) inset,0 0 14px rgba(79,216,199,.55),0 0 34px rgba(79,216,199,.30),0 0 110px rgba(79,216,199,.13),0 14px 48px rgba(0,0,0,.65)}
 .ts-mast{text-align:center;margin-bottom:8px}
 .ts-flag{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--ts-green)}
 .ts-mast h1{font-family:'Jost',system-ui,sans-serif;font-size:26px;letter-spacing:.04em;line-height:1.15;color:var(--ts-gold);text-shadow:0 2px 10px rgba(0,0,0,.8);margin-top:2px}
@@ -492,7 +492,7 @@ function paintStage(){
   $("tsScore").hidden = !st.score;
   var taps = document.querySelectorAll(".ts-tap");
   for (var i = 0; i < taps.length; i++) taps[i].hidden = !st.lessons;
-  $("tsShareBox").className = "ts-sharebox" + (st.share && lastSpin ? " show" : "");
+  $("tsShareBox").className = "ts-sharebox show"; /* R5 floor law: the social block is a permanent cabinet fixture; IMPORT must greet arriving friends before any spin */
   $("tsHist").className = "ts-hist" + (st.share && histArr().length ? " show" : "");
 }
 $("tsModeTut").onclick = function(){ mode = "T"; lsSet(K.mode, mode); paintMode(); tsTally("mode", "tutorial-x"); };
@@ -858,7 +858,7 @@ $("tsNudgeX").onclick = function(){ lsSet(K.nudge, "1"); $("tsNudge").className 
 $("tsMemo").value = lsGet(K.memo, "");
 $("tsMemo").oninput = function(){ lsSet(K.memo, this.value); };
 $("tsShareBtn").onclick = function(){
-  if (!lastSpinKey) return;
+  if (!lastSpinKey){ marqType("SPIN A STOCK FIRST"); return; }
   var rec = TSEED[lastSpinKey];
   var w = tsWheels(rec, TRRG), sc = tsScore(w);
   var sh = gftsShare(rec, lastSpinKey, rec.v, sc, w, TS_ANCHOR, $("tsMemo").value);
@@ -869,7 +869,7 @@ $("tsShareBtn").onclick = function(){
   tsTally("share", lastSpinKey);
 };
 $("tsSectorBtn").onclick = function(){
-  if (!lastSpinKey) return;
+  if (!lastSpinKey){ marqType("SPIN A STOCK FIRST"); return; }
   var rec = TSEED[lastSpinKey];
   var lead = TRRG.daily.indexOf(rec.s) >= 0, wlead = TRRG.weekly.indexOf(rec.s) >= 0;
   var msg = "<b>\uD83C\uDF0A " + rec.s + "</b> is " + lastSpinKey + "'s neighborhood. ";
