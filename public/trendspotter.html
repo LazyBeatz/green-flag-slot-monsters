@@ -21,7 +21,7 @@
 html{-webkit-text-size-adjust:100%}
 body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui,-apple-system,sans-serif;min-height:100vh}
 .ts-wrap{max-width:460px;margin:0 auto;padding:14px 12px 40px}
-.ts-face{background:radial-gradient(120% 90% at 50% 0%,var(--ts-face1) 0%,#0A0D16 60%,var(--ts-face2) 100%);border-radius:20px;padding:18px 14px 20px;box-shadow:0 10px 40px rgba(0,0,0,.55)}
+.ts-face{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,0) 95px),radial-gradient(120% 90% at 50% 0%,var(--ts-felt2) 0%,#0A0D16 60%,var(--ts-felt) 100%);border:1px solid #2E3A5C;border-radius:26px;padding:18px 14px 20px;box-shadow:0 0 0 1.5px rgba(255,255,255,.04) inset,0 0 26px rgba(79,216,199,.15),0 0 80px rgba(79,216,199,.06),0 12px 44px rgba(0,0,0,.62)}
 .ts-mast{text-align:center;margin-bottom:8px}
 .ts-flag{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--ts-green)}
 .ts-mast h1{font-family:'Jost',system-ui,sans-serif;font-size:26px;letter-spacing:.04em;line-height:1.15;color:var(--ts-gold);text-shadow:0 2px 10px rgba(0,0,0,.8);margin-top:2px}
@@ -137,7 +137,7 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .ts-marq.type .ts-marqin{animation:none;justify-content:center}
 @keyframes tsMarqScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .ts-reelwin{position:relative;margin:12px 0 4px;padding:9px;border-radius:18px;background:linear-gradient(180deg,var(--ts-bezel),#111A30);border:2px solid rgba(79,216,199,.55);box-shadow:0 0 16px rgba(79,216,199,.28),0 0 2px rgba(79,216,199,.6),inset 0 2px 10px rgba(0,0,0,.65)}
-.ts-reels{display:flex;gap:5px;height:192px;overflow:hidden;border-radius:10px}
+.ts-reels{display:flex;gap:5px;height:128px;overflow:hidden;border-radius:10px;position:relative}
 .ts-reel{flex:1;overflow:hidden;background:linear-gradient(180deg,#DDE4EC 0%,var(--ts-reelface) 22%,var(--ts-reelface) 78%,#DDE4EC 100%);border-radius:9px;position:relative}
 .ts-strip{will-change:transform;transform:translateZ(0)}
 .ts-cell{height:64px;display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--ts-reelink)}
@@ -166,8 +166,8 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .ts-kickwrap{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;padding:0 12px 8vh;pointer-events:none}
 .ts-kickwrap.show{display:flex}
 .ts-cell.ts-land.jk{color:#1E9E54;font-weight:700}
-.ts-face{position:relative}
-</style>
+
+.ts-reel::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;border-radius:9px;background:linear-gradient(180deg,rgba(7,10,18,.42) 0%,rgba(7,10,18,0) 30%,rgba(7,10,18,0) 70%,rgba(7,10,18,.42) 100%)}.ts-sbfull{display:block;width:100%;margin-bottom:9px}.ts-impwrap,.ts-resetwrap{margin-top:9px}.ts-resetp{font-size:12px;color:var(--ts-dim2);margin:2px 0 8px;line-height:1.5}.ts-btn2.warn{border-color:#E95454;color:#F2938F}.ts-impview{margin-top:10px;background:var(--ts-panel);border:1.5px solid var(--ts-teal2);border-radius:11px;padding:12px 13px}.ts-impview h4{margin:0 0 7px;font-family:'Jost',system-ui,sans-serif;font-size:13.5px;letter-spacing:.08em;color:var(--ts-teal)}.ts-impline{margin:4px 0;font-size:13px;line-height:1.5}.ts-impdot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px;background:var(--ts-line)}.ts-impdot.g{background:#35D96B}.ts-impdot.r{background:var(--ts-redB)}.ts-impdot.x{background:#3A4358}.ts-impanch{margin-top:8px;font-size:11.5px;color:var(--ts-dim2)}</style>
 </head>
 <body>
 <div class="ts-wrap">
@@ -207,14 +207,32 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
         <div class="ts-wh" id="tsW3"><span class="ts-sym">&#128170;</span><span class="ts-lbl">Strength</span><button class="ts-tap" data-w="w3" aria-label="Strength wheel lesson" hidden></button></div>
         <div class="ts-wh" id="tsW4"><span class="ts-sym">&#9981;</span><span class="ts-lbl">Fuel</span><button class="ts-tap" data-w="w4" aria-label="Fuel wheel lesson" hidden></button></div>
         <div class="ts-wh" id="tsW5"><span class="ts-sym">&#127754;</span><span class="ts-lbl">Sector</span><button class="ts-tap" data-w="w5" aria-label="Sector wheel lesson" hidden></button></div></div><div class="ts-hexspin-slot"><button class="ts-spin" id="tsSpin">SPIN</button></div></div>
-    <div class="ts-sharebox" id="tsShareBox">
-      <textarea class="ts-memo" id="tsMemo" placeholder="&#128221; Add a note to your share (optional)&#8230;" aria-label="Share memo"></textarea>
-      <div class="ts-sharerow">
-        <button class="ts-btn2" id="tsShareBtn">&#128228; SHARE THIS SPIN</button>
-        <button class="ts-btn2 gold" id="tsSectorBtn">&#127754; SECTOR STORY</button>
-      </div>
-    </div>
+    
     <div class="ts-hist" id="tsHist"><h3>Your recent spins</h3><div id="tsHistList"></div></div>
+ <div class="ts-sharebox" id="tsShareBox">
+  <button class="ts-btn2 gold ts-sbfull" id="tsSectorBtn">&#127754; SECTOR STORY</button>
+  <textarea class="ts-memo" id="tsMemo" placeholder="&#128221; Memo &#183; trade catalyst (rides your share)" aria-label="Share memo"></textarea>
+  <div class="ts-sharerow">
+    <button class="ts-btn2" id="tsShareBtn">&#128228; SHARE</button>
+    <button class="ts-btn2" id="tsImportBtn">&#128229; IMPORT</button>
+    <button class="ts-btn2" id="tsResetBtn">&#129529; RESET</button>
+  </div>
+  <div class="ts-impwrap" id="tsImpWrap" hidden>
+    <textarea class="ts-memo" id="tsImpIn" placeholder="Paste a GFTS1- share here&#8230;" aria-label="Paste a share code"></textarea>
+    <div class="ts-sharerow">
+      <button class="ts-btn2" id="tsImpGo">LOAD IT</button>
+      <button class="ts-btn2" id="tsImpX">CANCEL</button>
+    </div>
+  </div>
+  <div class="ts-resetwrap" id="tsResetWrap" hidden>
+    <p class="ts-resetp">Reset clears YOUR local data on this phone only &#8212; spins, history, memo, mode. Shares you already sent are untouched.</p>
+    <div class="ts-sharerow">
+      <button class="ts-btn2 warn" id="tsResetGo">YES &#8212; RESET</button>
+      <button class="ts-btn2" id="tsResetX">CANCEL</button>
+    </div>
+  </div>
+  <div class="ts-impview" id="tsImpView" hidden></div>
+</div>
   </div>
   <div class="ts-foot">
     <span class="ts-chip">Data anchor 06-Au-26</span>
@@ -685,6 +703,7 @@ function paintWheels(w){
 }
 /* -- F1 CABINET ENGINE: 5-strip reels (translateY only) + marquee -- */
     var REELS = [], reelTok = 0, WKEYS = ["w1","w2","w3","w4","w5"];
+    var TS_LAND_OFF = -(CONFIG_TS.reel.cellH / 2); /* R4: rest offset centers the landing cell; neighbors half-crop at the window edges */
     function buildReels(){
       var wrap = $("tsReels"); if (!wrap || REELS.length) return;
       var C = CONFIG_TS.reel, SY = CONFIG_TS.symbols;
@@ -702,8 +721,8 @@ function paintWheels(w){
         landEl.className = "ts-cell ts-land";
         landEl.textContent = all[r];
         reel.appendChild(strip); wrap.appendChild(reel);
-        var startY = -((n - 3) * C.cellH);
-        strip.style.transform = "translateY(0px)"; /* rest: landing row on the payline */
+        var startY = -((n - 3) * C.cellH) + TS_LAND_OFF;
+        strip.style.transform = "translateY(" + TS_LAND_OFF + "px)"; /* rest: landing row centered on the payline, neighbors half-cropped */
         REELS.push({ strip: strip, land: landEl, startY: startY });
       }
     }
@@ -720,7 +739,7 @@ function paintWheels(w){
       }
       void REELS[0].strip.offsetHeight; /* commit the reset before launch */
       if (reduceMotion){
-        for (var q = 0; q < 5; q++){ REELS[q].strip.style.transform = "translateY(0px)"; }
+        for (var q = 0; q < 5; q++){ REELS[q].strip.style.transform = "translateY(" + TS_LAND_OFF + "px)"; }
         if (win) win.classList.add("hit");
         setTimeout(function(){ if (tok === reelTok) done(); }, 160);
         return;
@@ -734,7 +753,7 @@ function paintWheels(w){
           if (tok !== reelTok) return;
           var dur = travel + i * stag;
           R.strip.style.transition = "transform " + dur + "ms cubic-bezier(.17,.6,.28,1.06)";
-          R.strip.style.transform  = "translateY(0px)"; /* land w/ overshoot settle */
+          R.strip.style.transform  = "translateY(" + TS_LAND_OFF + "px)"; /* land w/ overshoot settle */
           setTimeout(function(){
             if (tok !== reelTok) return;
             fin++;
@@ -868,7 +887,50 @@ var _land = land;
 land = function(key, rec){ lastSpinKey = key; lastSpin = rec; _land(key, rec); };
 
 /* ── boot ── */
-buildReels(); marqIdle(); if (CONFIG_TS.shelf) $("tsTrophy").hidden = false; buildShelf(); paintMode(); paintHist();
+/* -- R5 UNIFORM SOCIAL: hardened IMPORT + two-step local RESET (share+memo already wired) -- */
+    var TS_VOK = { PU:1, UP:1, RC:1, SW:1, DN:1, FB:1 };
+    function impEl(tag, cls, txt){ var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+    function impClip(s, n){ s = String(s == null ? "" : s); return s.length > n ? s.slice(0, n) + "\u2026" : s; }
+    $("tsImportBtn").onclick = function(){ $("tsResetWrap").hidden = true; var w = $("tsImpWrap"); w.hidden = !w.hidden; if (!w.hidden) $("tsImpIn").focus(); };
+    $("tsImpX").onclick = function(){ $("tsImpWrap").hidden = true; };
+    $("tsImpGo").onclick = function(){
+      var p = gftsDecode($("tsImpIn").value);
+      var v = $("tsImpView"); v.innerHTML = ""; v.hidden = false;
+      var okT = !!p && /^[A-Z0-9][A-Z0-9.\-]{0,14}$/.test(String(p.t || ""));
+      var okV = !!p && TS_VOK[p.verdict] === 1;
+      var okS = !!p && isFinite(p.score) && isFinite(p.den) && p.score >= 0 && p.score <= 1000 && (p.den === 800 || p.den === 1000);
+      if (!okT || !okV || !okS){
+        v.appendChild(impEl("p", "ts-resetp", "That doesn\u2019t read as a valid GFTS1 share \u2014 check the paste and try again."));
+        return;
+      }
+      v.appendChild(impEl("h4", null, "\uD83C\uDF9F IMPORTED SPIN \u2014 a friend\u0027s pull"));
+      v.appendChild(impEl("p", "ts-impline", impClip(p.t, 15) + " \u2014 " + (TS_VWORD[p.verdict] || p.verdict)));
+      var dl = impEl("div", "ts-impline");
+      var wk = ["w1","w2","w3","w4","w5"], wo = (p.w && typeof p.w === "object") ? p.w : {};
+      for (var i = 0; i < 5; i++){ var st = wo[wk[i]]; dl.appendChild(impEl("span", "ts-impdot " + (st === "g" ? "g" : st === "x" ? "x" : "r"), "")); }
+      dl.appendChild(document.createTextNode(" " + p.score + " / " + p.den + (p.vd ? " \u00B7 day one " + impClip(p.vd, 14) : "")));
+      v.appendChild(dl);
+      if (p.m) v.appendChild(impEl("p", "ts-impline", "\uD83D\uDCDD " + impClip(p.m, 280)));
+      v.appendChild(impEl("p", "ts-impanch", "Their anchor: " + impClip(p.anchor, 14) + " \u00B7 non-destructive import \u2014 spin it live for today\u0027s read."));
+      $("tsTk").value = p.t;
+      $("tsImpWrap").hidden = true;
+    };
+    $("tsResetBtn").onclick = function(){ $("tsImpWrap").hidden = true; var w = $("tsResetWrap"); w.hidden = !w.hidden; };
+    $("tsResetX").onclick = function(){ $("tsResetWrap").hidden = true; };
+    $("tsResetGo").onclick = function(){
+      try {
+        localStorage.removeItem(K.mode); localStorage.removeItem(K.spins); localStorage.removeItem(K.memo);
+        localStorage.removeItem(K.hist); localStorage.removeItem(K.nudge);
+      } catch (e){}
+      spins = 0; mode = "T"; lastSpin = null; lastSpinKey = null;
+      $("tsMemo").value = ""; $("tsImpView").hidden = true; $("tsImpView").innerHTML = "";
+      $("tsVerdict").className = "ts-verdict"; $("tsScore").hidden = true;
+      $("tsHeld").textContent = ""; $("tsLesson").className = "ts-lesson";
+      paintMode(); paintHist(); paintStage(); marqIdle();
+      $("tsResetWrap").hidden = true;
+      $("tsTk").value = ""; $("tsTk").focus();
+    };
+    buildReels(); marqIdle(); if (CONFIG_TS.shelf) $("tsTrophy").hidden = false; buildShelf(); paintMode(); paintHist();
 var counts = (function(){ var n = 0; for (var k in TSEED) n++; return n; })();
 if (counts < 100) $("tsHint").textContent = "\u26A0\uFE0F Seed data missing \u2014 this build is incomplete.";
 })();
