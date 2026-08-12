@@ -843,7 +843,7 @@ function paintWheels(w){
   if (!key){
     $("tsVerdict").className = "ts-verdict sw show";
     $("tsVLine").textContent = "\uD83E\uDD14 NOT ON THE FLOOR"; marqType("NOT ON THE FLOOR");
-    $("tsDay").innerHTML = "That name isn't in the 1,147-stock universe at this anchor. Try the \uD83D\uDCDA Rolodex.";
+    $("tsDay").innerHTML = "That name isn't in the " + (Object.keys(TSEED).length - 1).toLocaleString("en-US") + "-stock universe at this anchor. Try the \uD83D\uDCDA Rolodex.";
     $("tsScore").hidden = true; $("tsHeld").textContent = "";
     return;
   }
@@ -879,7 +879,17 @@ function land(key, rec){
   else if (rec.v === "RC") ceremony("sprout", rec, key);
   }
 $("tsSpin").onclick = doSpin;
-$("tsTk").addEventListener("keydown", function(ev){ if (ev.key === "Enter"){ ev.preventDefault(); doSpin(); } });
+(function(){
+    var n = (Object.keys(TSEED).length - 1).toLocaleString("en-US");
+    var sub = function(el, attr){ if (!el) return;
+      if (attr){ var v = el.getAttribute(attr); if (v) el.setAttribute(attr, v.replace(/[\d,]+/, n)); }
+      else el.innerHTML = el.innerHTML.replace(/[\d,]+/, n);
+    };
+    sub($("tsRoloBtn")); sub($("tsRoloBtn"), "aria-label");
+    sub($("tsRoloQ"), "placeholder");
+    var h = $("tsHint"); if (h) h.innerHTML = h.innerHTML.replace(/^[\d,]+/, n);
+  })();
+  $("tsTk").addEventListener("keydown", function(ev){ if (ev.key === "Enter"){ ev.preventDefault(); doSpin(); } });
 
 /* ── nudge (one gentle ask, never repeated) ── */
 /* R11: PRO nudge retired with the mode split */
@@ -1000,7 +1010,7 @@ land = function(key, rec){ lastSpinKey = key; lastSpin = rec; _land(key, rec); }
        Free dot-taps still jump anywhere; the arrows walk the defined order. -- */
     var tourOn = false, tourDots = [], tourIdx = -1;
     var TOUR_STOPS = [
-      { id: "tsTk",       tip: "Type any <b>ticker or company name</b> \u2014 1,147 real stocks live on this floor." },
+      { id: "tsTk",       tip: "Type any <b>ticker or company name</b> \u2014 " + (Object.keys(TSEED).length - 1).toLocaleString("en-US") + " real stocks live on this floor." },
       { id: "tsSpin",     tip: "The octagon fires the drums. Your keyboard\u2019s <b>Go</b> works too." },
       { id: "tsMarqBox",  tip: "The machine talks here \u2014 the <b>verdict types out</b> after every spin." },
       { id: "tsReelWin",  tip: "Five drums = five signals. The row on the <b>teal payline</b> is your answer." },
