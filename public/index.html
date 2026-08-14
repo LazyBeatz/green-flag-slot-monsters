@@ -2234,6 +2234,65 @@ function seriesFresh(anchorISO, listedFor, whitelist){
   }
   return best;
 }
+function seriesOffWhitelist(anchorISO, allListed, rec, feed){
+  /* §H v1.7 RIDER — THE WHITELIST IS A PROXY FOR LIQUIDITY; WHERE WE CAN MEASURE
+     LIQUIDITY DIRECTLY, THE MEASUREMENT WINS. The calendar existed only because we could
+     not see spreads at design time. February was banned as a liquidity ASSUMPTION (true on
+     mega-caps: 10-25x thinner, measured) — never as a date. Thin names have the inverse
+     shape: a monthly ladder ending in Feb, no LEAPS anchor. So a non-whitelist monthly is
+     admissible IFF (i) no whitelist series sits above the floor, (ii) it is the nearest
+     listed series >= the floor, and (iii) it PASSES the live-hours spread gate at the
+     surfaced strike. This is STRICTER than a blanket calendar ban, not looser: it judges
+     each name on measurement instead of assuming all of them. Fail (iii) -> the fifth
+     reason fires honestly. Absent a live column the gate is not ENFORCING, so this path
+     CANNOT fire on assumption — measurement is required, never inferred. */
+  if (!allListed || !allListed.length) return null;
+  const cand = allListed
+    .filter(function(s){ return seriesDTE(s.d, anchorISO) >= SERIES_FLOOR_DTE; })
+    .sort(function(a, b){ return seriesDTE(a.d, anchorISO) - seriesDTE(b.d, anchorISO); });
+  if (!cand.length) return null;
+  const g = seriesGatePass(rec, feed);
+  if (g.state !== "ENFORCING" || !g.pass) return null;   /* (iii) measured, never assumed */
+  return { d: cand[0].d, label: cand[0].label, offWhitelist: true, gate: g.state, spr: g.spr };
+}
+const SERIES_NO_TENOR = "No series at an acceptable tenor: this name\u2019s listed expiries are all shorter than our " + SERIES_FLOOR_DTE + "-day floor, so we are not surfacing a short-dated bet.";
+function seriesDisposition(anchorISO, listedFor, allListed, rec, feed){
+  /* THE FIFTH REASON IS NARROW, AND SAYING IT WRONGLY IS A TRUE-SOUNDING FALSEHOOD.
+     "No acceptable tenor" asserts that a name’s listed expiries are ALL shorter than the
+     floor. For a name holding an above-floor NON-WHITELIST candidate that simply has not
+     been measured yet, that sentence is FALSE — the same species of error H7 outlawed on
+     the CAD side (never say "no options" about a venue you cannot read; never say "no
+     tenor" about a contract you have not measured). Four dispositions, and the wording
+     follows the disposition instead of being chosen by hand: */
+  const wl = seriesFresh(anchorISO, listedFor);
+  if (wl) return { state: "SERIES", series: wl, note: "" };            /* whitelist governs */
+  const off = seriesOffWhitelist(anchorISO, allListed, rec, feed);
+  if (off) return { state: "SERIES", series: off, note: SERIES_DISCLOSURE["INERT"], offWhitelist: true };
+  const above = (allListed || []).filter(function(s){ return seriesDTE(s.d, anchorISO) >= SERIES_FLOOR_DTE; });
+  if (above.length) return { state: "PENDING-MEASUREMENT", cand: above[0].label,
+    note: "This name lists no whitelist series above the " + SERIES_FLOOR_DTE + "-day floor. Its " + above[0].label +
+      " contract is a candidate under §H v1.7, but a non-whitelist series is admissible only on a PASSING live-hours spread measurement — which has not been taken. No strike is shown until it is." };
+  return { state: "NO-TENOR", note: SERIES_NO_TENOR };                 /* genuinely all sub-floor */
+}
+function seriesDeadline(rec, anchorISO, warnDays){
+  /* A deadline that lives only in a ticket gets DISCOVERED; one computed from the data gets
+     SEEN. Flags any name whose held series crosses SERIES_FLOOR_DTE within warnDays while its
+     alternative is still UNMEASURED — the case where the fifth reason would fire BY DEFAULT
+     rather than BY MEASUREMENT. Procedurally correct, epistemically weaker, and invisible
+     without this line, because "no acceptable tenor" is a legitimate state with a disclosure. */
+  if (!rec || !rec.kk || rec.kk.pending) return null;
+  const left = rec.kk.dte - SERIES_FLOOR_DTE;
+  /* WINDOW defaults to 14, not 7. The warning is measured from the ANCHOR, but an anchor can
+     be days old by the time anyone reads it — a 7-day window on a 2-day-old anchor leaves 5
+     days of real notice, and one missed live-hours window eats another. The window must
+     exceed anchor lag plus the lead time to act, or the warning is swallowed by exactly the
+     staleness it exists to outrun. */
+  if (left > (warnDays || 14) || left < 0) return null;
+  const cross = new Date(Date.parse(anchorISO + "T00:00:00Z") + left * 86400000);
+  return { daysLeft: left, crossISO: cross.toISOString().slice(0, 10),
+    cross: String(cross.getUTCDate()).padStart(2, "0") + "-" + MO2[cross.getUTCMonth()] + "-" + cross.getUTCFullYear(),
+    series: rec.kk.exp, need: "live-hours spread measurement before the cross, or the fifth reason fires by default" };
+}
 function seriesPick(priorSeriesISO, anchorISO, listedFor, whitelist){
   /* STEADY STATE, design (b): HOLD the prior series until it decays past the floor, then roll.
      A constant expiry serves the reader better than a constant tenor — but the floor
@@ -2274,7 +2333,7 @@ function seriesGatePass(rec, feed){
   if (st !== "ENFORCING") return { pass: true, state: st, note: SERIES_DISCLOSURE[st] };
   const row = feed.rows[rec.t];
   if (row.spr > SERIES_MAX_SPREAD_PCT) return { pass: false, state: st, note: "Wide market — spread " + row.spr + "% exceeds the " + SERIES_MAX_SPREAD_PCT + "% limit; routed to the fallback." };
-  return { pass: true, state: st, note: row.measuredAt === "ATM" ? SERIES_DISCLOSURE["INERT"] : "" };
+  return { pass: true, state: st, spr: row.spr, note: row.measuredAt === "ATM" ? SERIES_DISCLOSURE["INERT"] : "" };
 }
 const SERIES_DISCLOSURE = {
   "ENFORCING":     "",
