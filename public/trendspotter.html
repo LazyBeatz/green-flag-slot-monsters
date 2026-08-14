@@ -54,6 +54,13 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .ts-verdict{border-radius:14px;padding:15px 14px 13px;text-align:center;background:linear-gradient(180deg,var(--ts-tealD),#0B141C);border:1.5px solid var(--ts-teal2);display:none}
 .ts-verdict.show{display:block;animation:tsIn .4s ease}
 @keyframes tsIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ts-idea{position:relative;display:block;width:100%;margin:11px auto 2px;padding:11px 14px;min-height:44px;border-radius:11px;border:1.5px solid var(--ts-teal2);background:linear-gradient(180deg,#0C1C24,#081218);color:var(--ts-teal);font-family:'Jost',system-ui,sans-serif;font-size:14.5px;font-weight:700;letter-spacing:.05em;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ts-idea:active{transform:translateY(1px)}
+.ts-idea[hidden]{display:none}
+.ts-bring{position:absolute;inset:-2px;border-radius:12px;overflow:hidden;pointer-events:none;padding:2px;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude}
+.ts-bring s{position:absolute;left:50%;top:50%;width:340%;aspect-ratio:1;transform:translate(-50%,-50%);background:conic-gradient(from 0deg,transparent 0 62%,var(--ts-teal) 78%,#EAFBFF 86%,transparent 92% 100%);animation:tsBeam 1.7s linear infinite}
+@keyframes tsBeam{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.ts-bring s{animation:none}}
 .ts-vline{font-family:'Jost',system-ui,sans-serif;font-size:20px;letter-spacing:.03em;color:var(--ts-teal)}
 .ts-verdict.dn{border-color:var(--ts-redB);background:linear-gradient(180deg,#1D0F14,#140B0F)}
 .ts-verdict.dn .ts-vline{color:var(--ts-redT)}
@@ -207,6 +214,9 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
       <div class="ts-day" id="tsDay"></div>
       <div class="ts-score" id="tsScore" hidden></div>
       <div class="ts-held" id="tsHeld"></div>
+      <button class="ts-idea" id="tsIdea" type="button" hidden>
+        <i class="ts-bring"><s></s></i><span id="tsIdeaTx">💡 SEE HOUSE TRADE IDEA</span>
+      </button>
     </div>
     <div class="ts-lesson" id="tsLesson"></div>
     <div class="ts-deck"><div class="ts-meters" id="tsWheels" aria-label="Five signal meters"><div class="ts-wh" id="tsW1"><span class="ts-sym">&#128200;</span><span class="ts-lbl">Trend</span><button class="ts-tap" data-w="w1" aria-label="Trend wheel lesson" hidden></button></div>
@@ -334,6 +344,49 @@ var TS_VWORD = { PU:"\u2B50 PERFECT UP", UP:"\uD83D\uDCC8 TRENDING UP", RC:"\uD8
   SW:"\u27A1\uFE0F SIDEWAYS", DN:"\uD83D\uDCC9 TRENDING DOWN", FB:"\uD83D\uDC80 FULL BEAR" };
 
 /* ---- FIVE WHEELS (T5): display layer; the ladder decides ---- */
+/* ═══ HOUSE TRADE IDEA — runtime, any name, tier-aware ═══════════════════════════
+   THE NAME "HAIL MARY" IS IRONY, NOT INSTRUCTION. It is NOT a longshot: it buys the
+   AT-THE-MONEY long-dated call — the SMALLEST break-even move and the best chance of
+   finishing in the money. Deep-OTM lottery tickets are what this house refuses.
+   Tier 1-2 (uptrend) get the KICKER: first OTM strike, slightly more leverage.
+   Tier 3-4 (weak tape) get the HAIL MARY: at-the-money, closest break-even — a weak
+   name is the LAST place to reach for a longshot. Every idea clears the 0.25-delta
+   floor or it is not shown. Series is per-name (§H v1.7): an unmeasured name shows
+   NOTHING rather than a strike we cannot stand behind. */
+var TS_SERIES_BYNAME = { "SBCF": { exp: "19-Mr-2027", dte: 220 }, "COO": { exp: "18-De-2026", dte: 129 },
+  "CRL": { exp: "18-De-2026", dte: 129 }, "OC": { exp: "18-De-2026", dte: 129 } };
+var TS_SERIES_WITHHELD = { "ONC": "19-Fe-2027", "TXG": "19-Fe-2027" };
+function tsInc(px){ return px < 15 ? 0.5 : px < 50 ? 1 : px < 100 ? 2.5 : 5; }
+function tsFirstOtm(px){ var i = tsInc(px), k = Math.ceil(px / i) * i;
+  if (k <= px + 1e-9) k += i; if ((k - px) / px < 0.05) k += i; return Math.round(k * 100) / 100; }
+function tsAtm(px){ var i = tsInc(px), k = Math.round(px / i) * i; return Math.round((k || i) * 100) / 100; }
+function tsIV(rec){ var mc = rec.mc || 0;
+  var base = mc >= 50 ? 14 : mc >= 10 ? 18 : mc >= 2 ? 24 : 34;
+  if (typeof rec.rv !== "number") return base;
+  return Math.max(0.75 * base, 0.62 * rec.rv + 0.38 * base); }
+function tsNcdf(x){ var t = 1 / (1 + 0.2316419 * Math.abs(x));
+  var d = 0.3989423 * Math.exp(-x * x / 2);
+  var p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+  return x > 0 ? 1 - p : p; }
+function tsBS(S, K, ivPct, dte, r){ var T2 = dte / 365, sg = ivPct / 100;
+  if (!(S > 0 && K > 0 && T2 > 0 && sg > 0)) return null;
+  var d1 = (Math.log(S / K) + (r + sg * sg / 2) * T2) / (sg * Math.sqrt(T2)), d2 = d1 - sg * Math.sqrt(T2);
+  return { prem: S * tsNcdf(d1) - K * Math.exp(-r * T2) * tsNcdf(d2), delta: tsNcdf(d1) }; }
+function tsTrade(rec, tkr, cfg){
+  if (!rec || !rec.px) return null;
+  if (tkr && TS_SERIES_WITHHELD[tkr]) return { withheld: true, cand: TS_SERIES_WITHHELD[tkr] };
+  var SR = (tkr && TS_SERIES_BYNAME[tkr]) || { exp: cfg.expiry, dte: cfg.dte };
+  var kind = rec.t <= 2 ? "KICKER" : "HAIL MARY";
+  var K = rec.t <= 2 ? tsFirstOtm(rec.px) : tsAtm(rec.px);
+  var iv = Math.round(tsIV(rec));
+  var o = tsBS(rec.px, K, iv, SR.dte, cfg.rfr);
+  if (!o || !(o.prem > 0)) return null;
+  var delta = Math.round(o.delta * 1000) / 1000;
+  if (delta < 0.25) return { belowFloor: true, delta: delta };
+  var prem = Math.round(o.prem * 100) / 100, be = Math.round((K + prem) * 100) / 100;
+  return { kind: kind, strike: K, exp: SR.exp, dte: SR.dte, iv: iv, prem: prem, be: be,
+    bePct: Math.round((be / rec.px - 1) * 1000) / 10, delta: delta, cur: rec.cur };
+}
 function tsWheels(r, trrg){
   var w5;
   if (!trrg || !trrg.daily) w5 = "x";                       /* ⚫ NO DATA */
@@ -632,7 +685,7 @@ function tomatoes(){
     c.appendChild(s);
   }
 }
-function ceremClear(){ ceremStopAll(); kickHide(); }
+function ceremClear(){ ceremStopAll(); kickHide(); ideaHide(); }
 function ceremStopAll(){
       for (var i = 0; i < ceremT.length; i++) clearTimeout(ceremT[i]);
       ceremT = [];
@@ -641,7 +694,43 @@ function ceremStopAll(){
       var sk = $("tsSkip"); sk.className = "ts-skip"; sk.onclick = null;
     }
     var ceremT = [], ceremTok = 0;
-    function kickHide(){ var w = $("tsKickWrap"); w.className = "ts-kickwrap"; w.innerHTML = ""; }
+    function ideaHide(){ var b = $("tsIdea"); if (b){ b.hidden = true; b.onclick = null; } }
+function ideaArm(rec, tkr){
+  /* ALWAYS AVAILABLE — every landed spin offers the house idea, whatever the tier, same as
+     cabinet #1. A withheld or below-floor name STILL gets the pill; the panel explains why
+     there is no strike, because a silent absence teaches nothing. */
+  var b = $("tsIdea"); if (!b) return;
+  var tr = tsTrade(rec, tkr, CONFIG_TS.kicker), tx = $("tsIdeaTx");
+  if (tx) tx.textContent = (tr && tr.kind === "HAIL MARY") ? "\uD83C\uDFAF SEE HOUSE TRADE IDEA \u00B7 HAIL MARY"
+    : (tr && tr.kind === "KICKER") ? "\uD83D\uDCA1 SEE HOUSE TRADE IDEA \u00B7 KICKER"
+    : "\uD83D\uDCA1 SEE HOUSE TRADE IDEA";
+  b.hidden = false;
+  b.onclick = function(){ presentKick(buildIdea(rec, tkr, tr)); };
+}
+function buildIdea(rec, tkr, tr){
+  var kb = document.createElement("div"); kb.className = "ts-kick";
+  if (!tr || tr.withheld || tr.belowFloor){
+    var why = (tr && tr.withheld)
+      ? tkr + " lists no series in our calendar above the 120-day floor. Its " + tr.cand + " contract is a candidate, but a series outside our calendar is usable only on a passing live-hours spread measurement \u2014 which has not been taken."
+      : (tr && tr.belowFloor)
+        ? "The nearest sensible strike prices at " + tr.delta + " delta, under the house floor of 0.25. Below that the odds stop being worth the premium, so we do not show it."
+        : "No idea can be priced for this name from the data on the floor.";
+    kb.innerHTML = '<h4>NO TRADE SHOWN \u2014 ' + tkr + '</h4><p>' + why + '</p><p class="ts-model">Better nothing than a strike we cannot stand behind.</p>';
+  } else {
+    var isHM = tr.kind === "HAIL MARY";
+    kb.innerHTML = '<h4>' + (isHM ? "\uD83C\uDFAF HAIL MARY" : "\uD83D\uDCA1 THE KICKER") + ' \u2014 the house peeks at a trade</h4>' +
+      '<p><b>' + tkr + " " + tr.strike + "C</b> \u00B7 expires " + tr.exp + " \u00B7 " + tr.iv + "% IV \u00B7 premium " + tr.cur + tr.prem + " \u00B7 break-even " + tr.cur + tr.be + " (" + (tr.bePct >= 0 ? "+" : "") + tr.bePct + "%) \u00B7 delta " + tr.delta + "</p>" +
+      '<p class="ts-model">' + (isHM
+        ? "Despite the name this is the CAUTIOUS one: an at-the-money call \u2014 the smallest move needed to break even. \u201cHail Mary\u201d is a joke, not a longshot. This name\u2019s trend is weak, so read it as the least-bad structure, never a recommendation."
+        : "The first strike above the price \u2014 a little leverage on a name already trending up.") +
+      " IV is MODELED; premium is Black-Scholes at " + tr.dte + " days. Educational signals \u2014 not investment advice." +
+      (tr.cur === "C$" ? " Canadian options trade on the Montr\u00e9al Exchange, a venue our data source does not read, so this series is unverified." : "") + "</p>";
+  }
+  var xb = document.createElement("button"); xb.className = "ts-x"; xb.textContent = "\u2715";
+  xb.setAttribute("aria-label", "Close"); xb.style.cssText = "position:absolute;top:8px;right:8px";
+  xb.onclick = kickHide; kb.appendChild(xb); return kb;
+}
+function kickHide(){ var w = $("tsKickWrap"); w.className = "ts-kickwrap"; w.innerHTML = ""; }
     function buildKick(rec, tkr){
       var kb = document.createElement("div"); kb.className = "ts-kick";
       if (rec.kk){
@@ -857,7 +946,7 @@ function paintWheels(w){
   $("tsTk").value = key; $("tsTk").blur();
   $("tsSpin").disabled = true;
   $("tsLesson").className = "ts-lesson";
-  $("tsVerdict").className = "ts-verdict";
+  $("tsVerdict").className = "ts-verdict"; ideaHide();
   var wpre = tsWheels(rec, TRRG);
       var scpre = tsScore(wpre);
       var ovr = (rec.v === "PU" && scpre.pts === 1000 && scpre.den === 1000) ? CONFIG_TS.jackpotGlyph : (rec.v === "FB" ? CONFIG_TS.bearGlyph : null);
@@ -880,6 +969,7 @@ function land(key, rec){
   histPush(key, rec.v, sc.pts + "/" + sc.den);
   paintHist(); paintStage();
   tsTally("spin", key);
+  ideaArm(rec, key);
   if (tsTruck(rec, w, TRRG)) ceremony("truck", rec, key);
   else if (rec.v === "DN" || rec.v === "FB") ceremony("tomato", rec, key);
   else if (rec.v === "RC") ceremony("sprout", rec, key);
