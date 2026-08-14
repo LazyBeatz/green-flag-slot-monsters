@@ -1848,9 +1848,9 @@ function decodeShare(code){
    corners = array of { t, sc, tier } (scales 2..8), win = index into corners
    (-1 = dead heat), m = memo (2000-char staple), anchor = dataset anchor date.
    base64url (browser-safe), padding stripped. */
-function battlePrize(d){
+function battlePrize(d, t){
   if (!d || !d.tier) return null;
-  const tr = d.tier <= 2 ? kickerTrade(d) : hailMaryTrade(d);
+  const tr = d.tier <= 2 ? kickerTrade(d, t) : hailMaryTrade(d, t);
   if (!tr) return null;
   return { k: d.tier === 1 ? "kicker" : d.tier === 2 ? "dream" : "hail",
     strike: tr.k, exp: tr.expiry, iv: tr.iv, prem: tr.prem, be: tr.be,
@@ -1927,15 +1927,33 @@ function bsCall(S, K, ivPct, days, rfr, q){
   const d2 = d1 - sig * Math.sqrt(T);
   return S * Math.exp(-q * T) * normCdf(d1) - K * Math.exp(-rfr * T) * normCdf(d2);
 }
-function kickerTrade(d){
+/* ═══ PER-NAME SERIES OVERRIDES (Treaty Desk live listings sweep, 13-Au-2026) ═══════
+   The floor series is CONFIG.kicker. These names resolved DIFFERENTLY on live listings and
+   must never inherit the floor default — a series a name does not list is a fabricated
+   instrument. WITHHELD names list no whitelist series above the floor; their non-whitelist
+   candidate is unmeasured, so no strike is shown until it is (§H v1.7 condition (iii)). */
+const SERIES_BYNAME = {
+  "SBCF": { expiry: "19-Mr-2027", dte: 220 },
+  "COO":  { expiry: "18-De-2026", dte: 129 },
+  "CRL":  { expiry: "18-De-2026", dte: 129 },
+  "OC":   { expiry: "18-De-2026", dte: 129 }
+};
+const SERIES_WITHHELD = { "ONC": "19-Fe-2027", "TXG": "19-Fe-2027" };
+function seriesForName(t){
+  if (t && SERIES_WITHHELD[t]) return null;
+  return (t && SERIES_BYNAME[t]) || CONFIG.kicker;
+}
+function kickerTrade(d, t){
   const spot = parseMoney(d.price);
   if (spot === null) return null;
+  const SR = seriesForName(t);
+  if (!SR) return null;
   const K = firstOtmCall(spot);
   const iv = modeledIV(d);
   const q = (function(){ const v = parseFloat(String(d.div || "").replace("%", "")); return isNaN(v) ? 0 : v / 100; })();
-  const prem = bsCall(spot, K, iv, CONFIG.kicker.dte, CONFIG.kicker.rfr, q);
+  const prem = bsCall(spot, K, iv, SR.dte, CONFIG.kicker.rfr, q);
   const be = K + prem;
-  return { k: K, iv: Math.round(iv), delta: bsDelta(spot, K, iv, CONFIG.kicker.dte, CONFIG.kicker.rfr, q), expiry: CONFIG.kicker.expiry, dte: CONFIG.kicker.dte,
+  return { k: K, iv: Math.round(iv), delta: bsDelta(spot, K, iv, SR.dte, CONFIG.kicker.rfr, q), expiry: SR.expiry, dte: SR.dte,
     prem: Math.round(prem * 100) / 100, be: Math.round(be * 100) / 100,
     bePct: Math.round((be - spot) / spot * 1000) / 10,
     cad: String(d.price).indexOf("C$") === 0, spot: spot };
@@ -1956,15 +1974,17 @@ function atmStrike(spot){
   const k = Math.round(spot / inc) * inc;
   return Math.round((k || inc) * 100) / 100;
 }
-function hailMaryTrade(d){
+function hailMaryTrade(d, t){
   const spot = parseMoney(d.price);
   if (spot === null) return null;
+  const SR = seriesForName(t);
+  if (!SR) return null;
   const K = atmStrike(spot);
   const iv = modeledIV(d);
   const q = (function(){ const v = parseFloat(String(d.div || "").replace("%", "")); return isNaN(v) ? 0 : v / 100; })();
-  const prem = bsCall(spot, K, iv, CONFIG.kicker.dte, CONFIG.kicker.rfr, q);
+  const prem = bsCall(spot, K, iv, SR.dte, CONFIG.kicker.rfr, q);
   const be = K + prem;
-  return { k: K, iv: Math.round(iv), ivRaw: iv, delta: bsDelta(spot, K, iv, CONFIG.kicker.dte, CONFIG.kicker.rfr, q), expiry: CONFIG.kicker.expiry, dte: CONFIG.kicker.dte,
+  return { k: K, iv: Math.round(iv), ivRaw: iv, delta: bsDelta(spot, K, iv, SR.dte, CONFIG.kicker.rfr, q), expiry: SR.expiry, dte: SR.dte,
     prem: Math.round(prem * 100) / 100, be: Math.round(be * 100) / 100,
     bePct: Math.round((be - spot) / spot * 1000) / 10,
     cad: String(d.price).indexOf("C$") === 0, spot: spot };
@@ -3564,11 +3584,24 @@ document.addEventListener("click", function(ev){
     $("kickerPanel").classList.remove("show");
     $("hmPanel").classList.remove("show");
   }
-  function presentKicker(arm, label){
+  function withheldKicker(t){
+  /* A silent no-show is the exact failure this week was spent outlawing. If the floor will
+     not price a name, it SAYS SO, names the candidate, and gives the reason. */
+  const cand = SERIES_WITHHELD[t] || "";
+  if ($("kpTitle")) $("kpTitle").textContent = "OPTIONS \u2014 " + t + " \u00b7 no strike shown";
+  if ($("kpBig")) $("kpBig").textContent = "AWAITING A LIVE MEASUREMENT";
+  ["kpPrem", "kpPremC", "kpIv", "kpBe", "kpBePct"].forEach(function(id){ if ($(id)) $(id).textContent = "\u2014"; });
+  if ($("kpExp")) $("kpExp").textContent = cand + " (candidate)";
+  if ($("kpCap")) $("kpCap").textContent = t + " lists no series in our calendar above the 120-day floor. Its "
+    + cand + " contract is a candidate, but a non-whitelist series is usable only on a passing live-hours spread"
+    + " measurement \u2014 which has not been taken. Better nothing than a strike we cannot stand behind.";
+  return;
+}
+function presentKicker(arm, label){
     if (!arm) return;
     const t = arm.t, d = arm.d;
-    const K = kickerTrade(d);
-    if (!K) return;
+    const K = kickerTrade(d, t);
+    if (!K) return withheldKicker(t);
     Sound.bonusSting();
     const cur = K.cad ? "C$" : "$";
     $("kpTitle").textContent = label + " \u2014 " + t + " \u00b7 first OTM call ~6 months out";
@@ -3594,7 +3627,7 @@ document.addEventListener("click", function(ev){
     const be = [], iv = [];
     Object.keys(SEED).forEach(function(k){
       if (k === "RRG77777") return;
-      const r = hailMaryTrade(SEED[k]);
+      const r = hailMaryTrade(SEED[k], k);
       if (r){ be.push(r.bePct); iv.push(r.ivRaw); }
     });
     be.sort(function(a, b){ return a - b; });
@@ -3610,8 +3643,8 @@ document.addEventListener("click", function(ev){
     if (!arm) return;
     hmEnsureBoard();
     const t = arm.t, d = arm.d;
-    const r = hailMaryTrade(d);
-    if (!r) return;
+    const r = hailMaryTrade(d, t);
+    if (!r) return withheldKicker(t);
     const score = Math.round((pctBelow(hmBoard.be, r.bePct) + pctBelow(hmBoard.iv, r.ivRaw)) / 2);
     const v = hmVerdict(score);
     Sound.bonusSting();
@@ -3998,7 +4031,7 @@ document.addEventListener("click", function(ev){
           { t: pick.B.t, sc: r.b, tier: pick.B.d.tier }
         ],
         win: r.winner === "TIE" ? -1 : (r.winner === "G" ? 0 : 1) };
-      if (btlSharePayload.win >= 0) btlSharePayload.prize = battlePrize(pick[r.winner].d);
+      if (btlSharePayload.win >= 0) btlSharePayload.prize = battlePrize(pick[r.winner].d, pick[r.winner].t);
       (function(){
         var tie2 = r.winner === "TIE";
         var wG = tie2 || r.winner === "G";
@@ -4646,7 +4679,7 @@ document.addEventListener("click", function(ev){
           return { t: rk.t, sc: rk.sc, tier: dd.tier || 0 };
         }),
         win: rr.tie ? -1 : 0 };
-      if (!rr.tie) btlSharePayload.prize = battlePrize(SEED[rr.champs[0]]);
+      if (!rr.tie) btlSharePayload.prize = battlePrize(SEED[rr.champs[0]], rr.champs[0]);
       $("rmbActions").style.display = "";
       if (rr.tie){ Sound.midWin(); } else { Sound.bonusSting(); }
       Celebrate.confetti();
@@ -4990,7 +5023,7 @@ document.addEventListener("click", function(ev){
           return { t: e2.t, sc: gfmScore(dd), tier: dd.tier || 0 };
         }),
         win: tny.entrants.indexOf(W) };
-      btlSharePayload.prize = battlePrize(cd);
+      btlSharePayload.prize = battlePrize(cd, W);
       $("tnyActions").style.display = "";
       Sound.tada(); Celebrate.confetti();
       setTimeout(function(){ if (my === bTok) Celebrate.confetti(); }, 900);
