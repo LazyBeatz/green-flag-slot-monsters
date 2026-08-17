@@ -1984,7 +1984,11 @@ function kickerTrade(d, t){
   const q = (function(){ const v = parseFloat(String(d.div || "").replace("%", "")); return isNaN(v) ? 0 : v / 100; })();
   const prem = bsCall(spot, K, iv, SR.dte, CONFIG.kicker.rfr, q);
   const be = K + prem;
-  return { k: K, iv: Math.round(iv), delta: bsDelta(spot, K, iv, SR.dte, CONFIG.kicker.rfr, q), expiry: SR.expiry, dte: SR.dte,
+  /* REPORT WHAT YOU PRICED. iv is displayed to 2 dp because the premium is
+     computed from the unrounded value; at 0 dp the card could not reproduce
+     its own premium (worst case $5.09 on NVR). The pricing input is NOT
+     rounded -- accuracy is kept, precision is shown. */
+  return { k: K, iv: Math.round(iv * 100) / 100, delta: bsDelta(spot, K, iv, SR.dte, CONFIG.kicker.rfr, q), expiry: SR.expiry, dte: SR.dte,
     prem: Math.round(prem * 100) / 100, be: Math.round(be * 100) / 100,
     bePct: Math.round((be - spot) / spot * 1000) / 10,
     cad: String(d.price).indexOf("C$") === 0, spot: spot };
@@ -2015,7 +2019,7 @@ function hailMaryTrade(d, t){
   const q = (function(){ const v = parseFloat(String(d.div || "").replace("%", "")); return isNaN(v) ? 0 : v / 100; })();
   const prem = bsCall(spot, K, iv, SR.dte, CONFIG.kicker.rfr, q);
   const be = K + prem;
-  return { k: K, iv: Math.round(iv), ivRaw: iv, delta: bsDelta(spot, K, iv, SR.dte, CONFIG.kicker.rfr, q), expiry: SR.expiry, dte: SR.dte,
+  return { k: K, iv: Math.round(iv * 100) / 100, ivRaw: iv, delta: bsDelta(spot, K, iv, SR.dte, CONFIG.kicker.rfr, q), expiry: SR.expiry, dte: SR.dte,
     prem: Math.round(prem * 100) / 100, be: Math.round(be * 100) / 100,
     bePct: Math.round((be - spot) / spot * 1000) / 10,
     cad: String(d.price).indexOf("C$") === 0, spot: spot };
@@ -4411,7 +4415,13 @@ function presentKicker(arm, label){
             smaTrig: o.smaTrig, sellSig: o.sellSig, memo: o.memo, qty: o.qty, avg: o.avg, stop: o.stop,
             vwap: o.vwap, fib: o.fib, oi: o.oi, snap: o.snap, added: o.added };
         });
-        const j = JSON.stringify({ v: 1, pm: ($("miPMemo").value || "").slice(0, 800), h: slim });
+        /* anchor rides at v:1 -- ADDING A FIELD IS NOT BUMPING A VERSION.
+           A version bump is a breaking change under gray-card law: every
+           shipped renderer would refuse every drop until the other product
+           deploys and caches turn over. Renderers learn before encoders
+           speak. Phase 2 makes it mandatory, later, coordinated. */
+        const j = JSON.stringify({ v: 1, pm: ($("miPMemo").value || "").slice(0, 800),
+          anchor: MANCHOR, h: slim });
         return "GFSM1:" + btoa(unescape(encodeURIComponent(j)));
       }
       function note(msg){
@@ -4447,7 +4457,8 @@ function presentKicker(arm, label){
       $("miImpNo").addEventListener("click", function(){ $("miImpC").hidden = true; $("miImpTxt").value = ""; $("miImpMsg").textContent = ""; });
       $("miImpGo").addEventListener("click", function(){
         const raw = $("miImpTxt").value || "";
-        const m = raw.match(/GFSM1:([A-Za-z0-9+\/=]+)/) || raw.match(/GFM1\.([A-Za-z0-9+\/=]+)/);
+        const m = raw.match(/(?:^|[\s>("'])GFSM1:([A-Za-z0-9+\/=]+)/)
+               || raw.match(/(?:^|[\s>("'])GFM1\.([A-Za-z0-9+\/=]+)/);
         if (!m){ $("miImpMsg").textContent = "no Mirror code found \u2014 paste the whole shared message"; return; }
         let data = null;
         try { data = JSON.parse(decodeURIComponent(escape(atob(m[1])))); } catch(e){}
@@ -4885,7 +4896,7 @@ function presentKicker(arm, label){
         + "\n\u25B6 Green Flag Slot Monsters \u00b7 " + APPURL;
       if (btlSharePayload){
         txt += "\nBattle code: " + battleCode(btlSharePayload.mode, btlSharePayload.corners,
-          btlSharePayload.win, memo, "11-Au-26",
+          btlSharePayload.win, memo, MANCHOR,
           btlSharePayload.prize || null);
       }
       var done = function(msg){
