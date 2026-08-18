@@ -329,6 +329,12 @@ function tsMacdAboveSig(m){ return m === "G" || m === "P"; }   /* MACD > signal 
    r.s20 = % distance to 20-SMA (sign = above/below) · r.sf = 1 rising / 0 falling
    r.m/r.d/r.p = house macd/dmi/ppo colour codes                                  */
 function tsVerdict(r){
+  /* ND -- THE SEVENTH CODE (Treaty ruling 17-Au-2026, inside v:1).
+     Absence is not a direction. A null input means the indicator does not exist
+     yet, and (null > 0) is false -- which would read as "not above" and hand back
+     a confident SIDEWAYS. A renderer that has never heard of ND degrades to
+     neutral raw text; a hidden flag on SW would keep printing an arrow. */
+  if (r.s20 == null || r.m == null || r.p == null) return "ND";
   var above  = r.s20 > 0;
   var rising = r.sf === 1;
   var up = above && tsMacdAboveSig(r.m) && rising;
@@ -340,7 +346,7 @@ function tsVerdict(r){
   if (dn)                                   return "DN";  /* 📉 TRENDING DOWN */
   return "SW";                                            /* ➡️ SIDEWAYS    */
 }
-var TS_VWORD = { PU:"\u2B50 PERFECT UP", UP:"\uD83D\uDCC8 TRENDING UP", RC:"\uD83C\uDF31 RECOVERING",
+var TS_VWORD = { ND:"\u23F3 NOT ENOUGH HISTORY YET", PU:"\u2B50 PERFECT UP", UP:"\uD83D\uDCC8 TRENDING UP", RC:"\uD83C\uDF31 RECOVERING",
   SW:"\u27A1\uFE0F SIDEWAYS", DN:"\uD83D\uDCC9 TRENDING DOWN", FB:"\uD83D\uDC80 FULL BEAR" };
 
 /* ---- FIVE WHEELS (T5): display layer; the ladder decides ---- */
@@ -395,10 +401,10 @@ function tsWheels(r, trrg){
     w5 = (r.demo === 1 || lead) ? "g" : "r";
   }
   return {
-    w1: r.s20 > 0 ? "g" : "r",
-    w2: r.m === "G" ? "g" : "r",
-    w3: (r.d === "GS" || r.d === "BL") ? "g" : "r",
-    w4: r.p === "G" ? "g" : "r",
+    w1: r.s20 == null ? "x" : (r.s20 > 0 ? "g" : "r"),   /* dark wheel: no 20-SMA yet */
+    w2: r.m == null ? "x" : (r.m === "G" ? "g" : "r"),
+    w3: r.d == null ? "x" : ((r.d === "GS" || r.d === "BL") ? "g" : "r"),
+    w4: r.p == null ? "x" : (r.p === "G" ? "g" : "r"),
     w5: w5
   };
 }
@@ -420,7 +426,8 @@ function tsHeldBack(w){
 }
 
 /* ---- STUD PARITY (T5; verbatim flagship boolean, never re-derived) ---- */
-function tsStud(r){ return r.t === 1 && r.m === "G" && r.d === "GS" && r.p === "G" && r.a === 4; }
+function tsStud(r){ var av = (r.av == null ? 4 : r.av);
+  return r.t === 1 && r.m === "G" && r.d === "GS" && r.p === "G" && av > 0 && r.a === av && r.nd !== 1; }
 function tsClub(r, trrg){ return tsStud(r) && !!trrg && (r.demo === 1 || trrg.daily.indexOf(r.s) >= 0); }
 function tsGlobe(r, trrg){ return tsClub(r, trrg) && (r.demo === 1 || trrg.weekly.indexOf(r.s) >= 0); }
 function tsTruck(r, w, trrg){ var sc = tsScore(w); return sc.pts === 1000 && sc.den === 1000 && tsGlobe(r, trrg) && tsStud(r); }
@@ -960,7 +967,10 @@ function land(key, rec){
   var sc = tsScore(w);
   paintWheels(w);
   $("tsVerdict").className = "ts-verdict show " + verdictClass(rec.v);
-  $("tsVLine").textContent = TS_VWORD[rec.v]; marqType(TS_VWORD[rec.v] + (rec.vd ? " \u00B7 since " + rec.vd : ""));
+  /* || rec.v -- a guard that only works while the map is complete is not a guard.
+     Unknown letter prints itself in neutral styling, never the string "undefined". */
+  var vw = TS_VWORD[rec.v] || rec.v;
+  $("tsVLine").textContent = vw; marqType(vw + (rec.v !== "ND" && rec.vd ? " \u00B7 since " + rec.vd : ""));
   $("tsDay").innerHTML = rec.n + " \u2014 " + dayLine(rec);
   $("tsScore").textContent = sc.pts + " / " + sc.den;
   var held = tsHeldBack(w);
@@ -1060,7 +1070,11 @@ land = function(key, rec){ lastSpinKey = key; lastSpin = rec; _land(key, rec); }
 
 /* ── boot ── */
 /* -- R5 UNIFORM SOCIAL: hardened IMPORT + two-step local RESET (share+memo already wired) -- */
-    var TS_VOK = { PU:1, UP:1, RC:1, SW:1, DN:1, FB:1 };
+    /* ND added so the cabinet accepts its OWN emission -- a door that rejects the
+       code this same file mints would bounce a friend's valid share as malformed.
+       The allow-list SHAPE (allow-list vs format check, for a future eighth code)
+       is a GFTS1 species question and sits with the Treaty Desk, unbuilt here. */
+    var TS_VOK = { ND:1, PU:1, UP:1, RC:1, SW:1, DN:1, FB:1 };
     function impEl(tag, cls, txt){ var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
     function impClip(s, n){ s = String(s == null ? "" : s); return s.length > n ? s.slice(0, n) + "\u2026" : s; }
     $("tsImportBtn").onclick = function(){ $("tsResetWrap").hidden = true; var w = $("tsImpWrap"); w.hidden = !w.hidden; if (!w.hidden) $("tsImpIn").focus(); };
