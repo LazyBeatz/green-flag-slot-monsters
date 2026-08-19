@@ -184,6 +184,59 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 
 .ts-hempty{font-size:12.5px;color:var(--ts-dim2);padding:6px 2px}
 #tsChoose{position:fixed;inset:0;z-index:45;display:none;background:rgba(4,6,10,.72);align-items:center;justify-content:center;padding:20px}#tsChoose.on{display:flex}.ts-chcard{width:100%;max-width:340px;background:#0C1019;border:2px solid var(--ts-gold);border-radius:16px;padding:14px}.ts-chhead{display:flex;align-items:center;gap:8px;margin-bottom:10px}.ts-chtitle{flex:1;color:var(--ts-gold);font-family:'Jost',system-ui,sans-serif;font-weight:800;font-size:15px;letter-spacing:.08em}.ts-choice{display:block;width:100%;margin:0 0 8px;padding:14px;border-radius:11px;cursor:pointer;background:#0A0E17;border:2px solid var(--ts-teal2);color:var(--ts-ink);font-family:'Jost',system-ui,sans-serif;font-size:16px;font-weight:800;min-height:44px;text-align:left;line-height:1.5}.ts-choice.blue{border-color:#2077C8}.ts-choice small{display:block;color:var(--ts-dim2);font-size:13px;font-weight:400;margin-top:2px}.ts-choice:active{transform:translateY(1px)}.ts-choice:focus-visible{outline:2px solid var(--ts-teal);outline-offset:2px}.ts-tnav{display:flex;align-items:center;gap:10px;margin-top:10px}.ts-tarr{flex:0 0 auto;min-width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(180deg,var(--ts-teal),var(--ts-teal2));color:#04110E;font-family:'Jost',system-ui,sans-serif;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;transition:transform .12s}.ts-tarr:active{transform:translateY(1px)}.ts-tarr:focus-visible{outline:2px solid var(--ts-teal);outline-offset:2px}.ts-tarr[disabled]{opacity:.35;cursor:default}.ts-tarr.done{border-radius:999px;padding:0 16px;width:auto;letter-spacing:.06em}.ts-tstep{flex:1;text-align:center;font-size:12.5px;color:var(--ts-dim2);letter-spacing:.06em}.ts-tdot.on{animation:none;transform:scale(1.18);box-shadow:0 0 0 5px rgba(32,119,200,.55),0 2px 10px rgba(0,0,0,.7)}</style>
+
+<style id="c2css">
+/* ═══ CEREMONY SUITE 2 — The Dump + Jet Flyover (19-Au-2026) ═══
+   Namespace c2-. Fixed unclipped siblings (G4/Y2). z-ladder: 60 scrim · 70 actors ·
+   75 headline · 80 tap-to-skip. Transform/opacity only. Blinkers 1 flash/s (WCAG 2.3.1
+   ceiling is 3/s). Reduced-motion: static card, no motion. */
+.c2-layer{position:fixed;inset:0;z-index:60;display:none;pointer-events:none;font-family:'Jost',system-ui,sans-serif}
+.c2-layer.on{display:block}
+.c2-scrim{position:absolute;inset:0;background:rgba(0,0,0,.58);opacity:0;transition:opacity .22s}
+.c2-layer.on .c2-scrim{opacity:1}
+.c2-layer.jets .c2-scrim{background:rgba(0,0,0,.38)}
+.c2-tap{position:absolute;inset:0;z-index:80;pointer-events:auto}
+.c2-head{position:fixed;top:18vh;left:0;right:0;z-index:75;text-align:center;font-weight:800;font-size:24px;color:#F3E9CF;text-shadow:0 2px 8px rgba(0,0,0,.85);letter-spacing:.06em}
+/* ── the truck ── */
+.c2-truck{position:fixed;z-index:70;left:50%;bottom:30vh;width:190px;height:86px;transform:translateX(120vw);}
+.c2-layer.dump.on .c2-truck{animation:c2rev 1.3s cubic-bezier(.2,.9,.3,1) forwards}
+@keyframes c2rev{to{transform:translateX(-50%)}}
+.c2-cab{position:absolute;left:0;bottom:14px;width:52px;height:44px;background:linear-gradient(180deg,#3A7A54,#2A5A3E);border-radius:8px 4px 4px 4px;box-shadow:inset 0 2px 0 rgba(255,255,255,.18)}
+.c2-cab::after{content:"";position:absolute;top:6px;left:8px;width:30px;height:14px;background:#BCd8E8;border-radius:3px}
+.c2-bed{position:absolute;right:0;bottom:14px;width:126px;height:58px;background:linear-gradient(180deg,#33684A,#254D36);border-radius:6px;transform-origin:8% 100%;transition:transform .8s cubic-bezier(.45,.05,.25,1);box-shadow:inset 0 2px 0 rgba(255,255,255,.14)}
+.c2-truck.tip .c2-bed{transform:rotate(-34deg)}
+.c2-lid{position:absolute;top:-8px;left:6px;right:6px;height:10px;background:#1E3F2C;border-radius:4px;transform-origin:left center;transition:transform .5s ease-out}
+.c2-truck.tip .c2-lid{transform:rotate(-72deg)}
+.c2-wheel{position:absolute;bottom:0;width:26px;height:26px;background:radial-gradient(circle at 35% 35%,#555,#111 70%);border-radius:50%}
+.c2-blk{position:absolute;bottom:40px;left:-8px;width:10px;height:10px;background:#FFB300;border-radius:50%;box-shadow:0 0 10px #FFB300;animation:c2blink 1s steps(1) infinite}
+@keyframes c2blink{50%{opacity:.15}}
+/* ── junk avalanche ── */
+.c2-junk{position:fixed;z-index:70;font-size:26px;animation:c2junk .95s cubic-bezier(.4,.05,.6,1) forwards}
+@keyframes c2junk{to{transform:translate(var(--jx),56vh) rotate(540deg);opacity:.95}}
+/* ── tomatoes, now with an ENDING: full travel, impact squash, red splash ── */
+.c2-tom{position:fixed;z-index:70;font-size:32px;animation:c2throw .7s cubic-bezier(.2,.6,.5,1) forwards}
+@keyframes c2throw{0%{transform:translate(0,0) scale(.8)}100%{transform:translate(var(--tx),var(--ty)) scale(1.12)}}
+.c2-tom.splat{animation:c2splat .32s ease-out forwards}
+@keyframes c2splat{to{transform:translate(var(--tx),var(--ty)) scaleY(.3) scaleX(1.55);filter:saturate(1.7) brightness(1.05)}}
+.c2-tom.splat::after{content:"";position:absolute;left:-14px;top:2px;right:-14px;bottom:-8px;background:radial-gradient(ellipse at center,rgba(198,40,30,.72),rgba(198,40,30,0) 68%);border-radius:50%}
+/* ── the flies ── */
+.c2-fly{position:fixed;z-index:70;font-size:19px;animation:c2fly 1.1s ease-in-out infinite alternate}
+@keyframes c2fly{from{transform:translate(0,0) rotate(-8deg)}to{transform:translate(var(--fx),var(--fy)) rotate(10deg)}}
+/* ── prop plane + banner ── */
+.c2-plane{position:fixed;z-index:70;top:7vh;left:0;display:flex;align-items:center;gap:2px;transform:translateX(-70vw);animation:c2plane 3.4s linear forwards}
+@keyframes c2plane{to{transform:translateX(120vw)}}
+.c2-rope{width:26px;height:2px;background:#D8CBA8;opacity:.8}
+.c2-ban{background:#F5E9C8;color:#5A3A1A;border:2px solid #C8A951;border-radius:4px;padding:4px 12px;font-weight:800;font-size:13px;letter-spacing:.1em;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.4)}
+/* ── the five-jet delta ── */
+.c2-jet{position:fixed;z-index:70;font-size:27px;left:0;transform:translateX(-18vw);animation:c2jet 1.9s cubic-bezier(.3,.1,.25,1) forwards}
+@keyframes c2jet{to{transform:translateX(135vw)}}
+.c2-jet::before{content:"";position:absolute;right:96%;top:52%;width:32vw;height:3px;background:linear-gradient(90deg,rgba(200,169,81,0),rgba(200,169,81,.85));border-radius:2px}
+/* ── reduced-motion static card ── */
+.c2-static{position:fixed;z-index:75;top:34vh;left:8vw;right:8vw;text-align:center;background:rgba(10,14,20,.92);border:2px solid #C8A951;border-radius:12px;padding:18px 10px;color:#F3E9CF;font-weight:800;font-size:18px;letter-spacing:.05em}
+@media (prefers-reduced-motion: reduce){
+  .c2-truck,.c2-junk,.c2-tom,.c2-fly,.c2-plane,.c2-jet,.c2-blk{animation:none !important}
+}
+</style>
 </head>
 <body>
 <div class="ts-wrap">
@@ -980,8 +1033,9 @@ function land(key, rec){
   paintHist(); paintStage();
   tsTally("spin", key);
   ideaArm(rec, key);
-  if (tsTruck(rec, w, TRRG)) ceremony("truck", rec, key);
-  else if (rec.v === "DN" || rec.v === "FB") ceremony("tomato", rec, key);
+  if (tsTruck(rec, w, TRRG)) ceremony("truck", rec, key);       /* the king — jets stand down */
+  else if (window.C2GF && (function(){ var s2 = tsScore(w); return (rec.v === "PU" && s2.pts === 1000 && s2.den === 1000) || (TRRG && TRRG.daily && TRRG.daily.indexOf(rec.s) >= 0); })()) C2GF.jets();
+  else if (rec.v === "DN" || rec.v === "FB"){ if (window.C2GF) C2GF.dump(); else ceremony("tomato", rec, key); }
   else if (rec.v === "RC") ceremony("sprout", rec, key);
   }
 $("tsSpin").onclick = doSpin;
@@ -1217,6 +1271,126 @@ land = function(key, rec){ lastSpinKey = key; lastSpin = rec; _land(key, rec); }
     buildReels(); marqIdle(); if (CONFIG_TS.shelf) $("tsTrophy").hidden = false; buildShelf(); paintMode(); paintHist();
 var counts = (function(){ var n = 0; for (var k in TSEED) n++; return n; })();
 if (counts < 100) $("tsHint").textContent = "\u26A0\uFE0F Seed data missing \u2014 this build is incomplete.";
+})();
+</script>
+
+<script id="c2js">
+/* ═══ CEREMONY SUITE 2 — singleton, token-guarded, tap-to-skip (G5) ═══ */
+(function(){
+  if (window.C2GF) return;                      /* singleton guard */
+  var tok = 0, T = [], layer = null;
+  var RM = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function el(tag, cls, txt){ var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+  function build(){
+    if (layer) return layer;
+    layer = el("div", "c2-layer");
+    layer.appendChild(el("div", "c2-scrim"));
+    var tap = el("div", "c2-tap"); tap.onclick = stop; layer.appendChild(tap);
+    document.body.appendChild(layer);
+    return layer;
+  }
+  function later(fn, ms){ var my = tok; T.push(setTimeout(function(){ if (my === tok) fn(); }, ms)); }
+  function stop(){
+    tok++;
+    for (var i = 0; i < T.length; i++) clearTimeout(T[i]);
+    T = [];
+    if (layer){
+      layer.className = "c2-layer";
+      while (layer.childNodes.length > 2) layer.removeChild(layer.lastChild);
+    }
+  }
+  function open(kind){ stop(); build(); layer.className = "c2-layer on " + kind; }
+  function staticCard(txt, ms){
+    layer.appendChild(el("div", "c2-static", txt));
+    later(stop, ms || 1700);
+  }
+  /* ── THE DUMP ── */
+  function dump(){
+    open("dump");
+    if (RM){ staticCard("\uD83D\uDDD1 BETTER LUCK NEXT TIME"); return; }
+    var tr = el("div", "c2-truck");
+    tr.appendChild(el("div", "c2-blk"));
+    var bed = el("div", "c2-bed"); bed.appendChild(el("div", "c2-lid")); tr.appendChild(bed);
+    tr.appendChild(el("div", "c2-cab"));
+    var w1 = el("div", "c2-wheel"); w1.style.left = "8px"; tr.appendChild(w1);
+    var w2 = el("div", "c2-wheel"); w2.style.right = "18px"; tr.appendChild(w2);
+    layer.appendChild(tr);
+    later(function(){ tr.classList.add("tip"); }, 1450);
+    later(function(){                                             /* junk avalanche */
+      var J = ["\uD83D\uDDD1","\uD83D\uDCA9","\uD83C\uDF4C","\uD83E\uDD6B","\uD83D\uDCF0","\uD83E\uDDE6","\uD83D\uDC1F","\uD83E\uDDBA"];
+      for (var i = 0; i < 8; i++){
+        var j = el("span", "c2-junk", J[i]);
+        j.style.left = "calc(50% + " + (10 + Math.random() * 46) + "px)";
+        j.style.bottom = "52vh";
+        j.style.setProperty("--jx", (Math.random() * 30 - 15) + "vw");
+        j.style.animationDelay = (i * 0.07) + "s";
+        layer.appendChild(j);
+      }
+    }, 1750);
+    later(function(){                                             /* the barrage, finished this time */
+      for (var i = 0; i < 15; i++){
+        (function(i){
+          var s = el("span", "c2-tom", "\uD83C\uDF45");
+          var side = i % 2 === 0;
+          s.style.left = side ? "-40px" : "auto";
+          s.style.right = side ? "auto" : "-40px";
+          s.style.top = (16 + Math.random() * 52) + "vh";
+          s.style.setProperty("--tx", (side ? 1 : -1) * (44 + Math.random() * 22) + "vw");
+          s.style.setProperty("--ty", (Math.random() * 18 - 9) + "vh");
+          s.style.animationDelay = (i * 0.09) + "s";
+          layer.appendChild(s);
+          later(function(){ s.classList.add("splat"); }, 700 + i * 90);
+        })(i);
+      }
+    }, 2450);
+    later(function(){                                             /* the flies arrive */
+      for (var i = 0; i < 4; i++){
+        var f = el("span", "c2-fly", "\uD83E\uDEB0");
+        f.style.left = (30 + Math.random() * 40) + "vw";
+        f.style.top = (46 + Math.random() * 18) + "vh";
+        f.style.setProperty("--fx", (Math.random() * 12 - 6) + "vw");
+        f.style.setProperty("--fy", (Math.random() * 8 - 4) + "vh");
+        f.style.animationDelay = (i * 0.18) + "s";
+        layer.appendChild(f);
+      }
+    }, 4300);
+    later(function(){                                             /* the flyover of shame */
+      var p = el("div", "c2-plane");
+      p.appendChild(el("span", null, "\uD83D\uDEE9\uFE0F"));
+      p.appendChild(el("i", "c2-rope"));
+      p.appendChild(el("span", "c2-ban", "BETTER LUCK NEXT TIME"));
+      layer.appendChild(p);
+    }, 4500);
+    later(stop, 8300);
+  }
+  /* ── THE FIVE-JET DELTA FLYOVER ── */
+  function jets(){
+    open("jets");
+    if (RM){ staticCard("\u2708\uFE0F FLYOVER HONORS"); return; }
+    layer.appendChild(el("div", "c2-head", "\u2708\uFE0F FLYOVER HONORS"));
+    var off = [0, -3.2, 3.2, -6.4, 6.4], del = [0, 90, 90, 180, 180];
+    for (var i = 0; i < 5; i++){
+      var j = el("span", "c2-jet", "\u2708\uFE0F");
+      j.style.top = (16 + off[i]) + "vh";
+      j.style.animationDelay = del[i] + "ms";
+      layer.appendChild(j);
+    }
+    later(stop, 2900);
+  }
+  /* ── flagship dispatch: called once after the solo-spin settle chain ── */
+  function after(d){
+    try{
+      if (!d) return;
+      if (d.tier === 4){ dump(); return; }
+      var rrg = (typeof CONFIG !== "undefined" && CONFIG.rrg) ? CONFIG.rrg : null;
+      var club  = !!(d.demoClub  || (rrg && rrg.daily  && rrg.daily.indexOf(d.spdr)  >= 0));
+      var globe = !!(d.demoGlobe || (club && rrg && rrg.weekly && rrg.weekly.indexOf(d.spdr) >= 0));
+      var perfect = (typeof isFiveStarStud === "function") && isFiveStarStud(d);
+      if (globe && perfect) return;            /* red-carpet territory — jets stand down */
+      if (perfect || club) jets();
+    }catch(e){}
+  }
+  window.C2GF = { dump: dump, jets: jets, after: after, skip: stop };
 })();
 </script>
 </body>
