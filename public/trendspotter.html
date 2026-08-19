@@ -231,10 +231,19 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .c2-jet{position:fixed;z-index:70;font-size:27px;left:0;transform:translateX(-18vw);animation:c2jet 1.9s cubic-bezier(.3,.1,.25,1) forwards}
 @keyframes c2jet{to{transform:translateX(135vw)}}
 .c2-jet::before{content:"";position:absolute;right:96%;top:52%;width:32vw;height:3px;background:linear-gradient(90deg,rgba(200,169,81,0),rgba(200,169,81,.85));border-radius:2px}
+/* ── the bear (Tier 3 / SW): waddles in, does his business, waddles off ── */
+.c2-bear{position:fixed;z-index:70;bottom:26vh;left:0;font-size:54px;transform:translateX(-20vw)}
+.c2-bear.in{transition:transform 1.7s cubic-bezier(.35,.1,.3,1);transform:translateX(42vw)}
+.c2-bear.squat{transition:transform .4s;transform:translateX(42vw) scaleY(.86)}
+.c2-bear.out{transition:transform 1.6s cubic-bezier(.55,0,.85,.45);transform:translateX(120vw)}
+.c2-bear i{display:inline-block;animation:c2waddle .5s ease-in-out infinite alternate;font-style:normal}
+@keyframes c2waddle{from{transform:rotate(-4deg)}to{transform:rotate(4deg) translateY(-3px)}}
+.c2-poop{position:fixed;z-index:70;bottom:26.5vh;left:50%;font-size:30px;transform:translateX(-50%) scale(0);animation:c2plop .5s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes c2plop{to{transform:translateX(-50%) scale(1)}}
 /* ── reduced-motion static card ── */
 .c2-static{position:fixed;z-index:75;top:34vh;left:8vw;right:8vw;text-align:center;background:rgba(10,14,20,.92);border:2px solid #C8A951;border-radius:12px;padding:18px 10px;color:#F3E9CF;font-weight:800;font-size:18px;letter-spacing:.05em}
 @media (prefers-reduced-motion: reduce){
-  .c2-truck,.c2-junk,.c2-tom,.c2-fly,.c2-plane,.c2-jet,.c2-blk{animation:none !important}
+  .c2-truck,.c2-junk,.c2-tom,.c2-fly,.c2-plane,.c2-jet,.c2-blk,.c2-bear i,.c2-poop{animation:none !important}
 }
 </style>
 </head>
@@ -1034,9 +1043,10 @@ function land(key, rec){
   tsTally("spin", key);
   ideaArm(rec, key);
   if (tsTruck(rec, w, TRRG)) ceremony("truck", rec, key);       /* the king — jets stand down */
-  else if (window.C2GF && (function(){ var s2 = tsScore(w); return (rec.v === "PU" && s2.pts === 1000 && s2.den === 1000) || (TRRG && TRRG.daily && TRRG.daily.indexOf(rec.s) >= 0); })()) C2GF.jets();
-  else if (rec.v === "DN" || rec.v === "FB"){ if (window.C2GF) C2GF.dump(); else ceremony("tomato", rec, key); }
+  else if (rec.v === "DN" || rec.v === "FB"){ if (window.C2GF) C2GF.dump(); else ceremony("tomato", rec, key); }   /* bad news OUTRANKS honors — never dress a loss as a win */
+  else if (rec.v === "SW"){ if (window.C2GF) C2GF.bear(); }   /* sideways: the bear walks by */
   else if (rec.v === "RC") ceremony("sprout", rec, key);
+  else if (window.C2GF && (function(){ var s2 = tsScore(w); return (rec.v === "PU" && s2.pts === 1000 && s2.den === 1000) || (TRRG && TRRG.daily && TRRG.daily.indexOf(rec.s) >= 0); })()) C2GF.jets();
   }
 $("tsSpin").onclick = doSpin;
 (function(){
@@ -1377,6 +1387,28 @@ if (counts < 100) $("tsHint").textContent = "\u26A0\uFE0F Seed data missing \u20
     }
     later(stop, 2900);
   }
+  /* ── THE BEAR (Tier 3 / SW): nobody feels left out ── */
+  function bear(){
+    open("dump");
+    if (RM){ staticCard("\uD83D\uDC3B THE BEAR WALKED BY"); return; }
+    var b = el("div", "c2-bear"); b.appendChild(el("i", null, "\uD83D\uDC3B")); layer.appendChild(b);
+    later(function(){ b.classList.add("in"); }, 40);
+    later(function(){ b.classList.add("squat"); }, 1950);
+    later(function(){ layer.appendChild(el("span", "c2-poop", "\uD83D\uDCA9")); }, 2400);
+    later(function(){ b.classList.remove("squat"); b.classList.add("out"); }, 2850);
+    later(function(){
+      for (var i = 0; i < 3; i++){
+        var f = el("span", "c2-fly", "\uD83E\uDEB0");
+        f.style.left = (43 + Math.random() * 10) + "vw";
+        f.style.top = (60 + Math.random() * 7) + "vh";
+        f.style.setProperty("--fx", (Math.random() * 8 - 4) + "vw");
+        f.style.setProperty("--fy", (Math.random() * 6 - 3) + "vh");
+        f.style.animationDelay = (i * 0.15) + "s";
+        layer.appendChild(f);
+      }
+    }, 3400);
+    later(stop, 6300);
+  }
   /* ── flagship dispatch: called once after the solo-spin settle chain ── */
   function after(d){
     try{
@@ -1390,7 +1422,7 @@ if (counts < 100) $("tsHint").textContent = "\u26A0\uFE0F Seed data missing \u20
       if (perfect || club) jets();
     }catch(e){}
   }
-  window.C2GF = { dump: dump, jets: jets, after: after, skip: stop };
+  window.C2GF = { dump: dump, jets: jets, bear: bear, after: after, skip: stop };
 })();
 </script>
 </body>
