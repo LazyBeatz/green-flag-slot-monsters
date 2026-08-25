@@ -72,7 +72,7 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .ts-day b{color:var(--ts-gold);font-weight:600}
 .ts-score{display:inline-block;margin-top:9px;padding:6px 15px;border-radius:999px;font-family:'Jost',system-ui,sans-serif;font-size:13.5px;letter-spacing:.05em;background:#10261F;color:var(--ts-gold);border:1px solid var(--ts-goldL)}
 .ts-held{font-size:11.5px;color:var(--ts-dim);margin-top:8px;line-height:1.5}
-.ts-spin{display:block;flex:0 0 76px;width:76px;min-height:76px;border:none;cursor:pointer;font-family:'Jost',system-ui,sans-serif;font-size:14px;font-weight:700;letter-spacing:.1em;color:#04110E;background:linear-gradient(180deg,var(--ts-teal),var(--ts-teal2));clip-path:polygon(29.3% 0,70.7% 0,100% 29.3%,100% 70.7%,70.7% 100%,29.3% 100%,0 70.7%,0 29.3%);position:relative;filter:drop-shadow(0 4px 14px rgba(79,216,199,.45));transition:transform .12s,filter .2s}.ts-spin::before{content:"";position:absolute;inset:5px;clip-path:polygon(29.3% 0,70.7% 0,100% 29.3%,100% 70.7%,70.7% 100%,29.3% 100%,0 70.7%,0 29.3%);background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 45%);pointer-events:none}
+.ts-spin{display:block;flex:0 0 76px;width:76px;min-height:76px;border:none;cursor:pointer;font-family:'Jost',system-ui,sans-serif;font-size:14px;font-weight:700;letter-spacing:.1em;color:#04110E;background:linear-gradient(180deg,var(--ts-teal),var(--ts-teal2));border-radius:50%;position:relative;filter:drop-shadow(0 4px 14px rgba(79,216,199,.45));transition:transform .12s,filter .2s}.ts-spin::before{content:"";position:absolute;inset:5px;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 45%);pointer-events:none}
 .ts-spin:active{transform:translateY(1px)}
 .ts-spin:disabled{opacity:.5;cursor:default}
 .ts-spin:focus-visible{outline:2px solid var(--ts-gold);outline-offset:2px}
@@ -205,8 +205,8 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .c2-cab::after{content:"";position:absolute;top:6px;left:8px;width:30px;height:14px;background:#BCd8E8;border-radius:3px}
 .c2-bed{position:absolute;right:0;bottom:14px;width:126px;height:58px;background:linear-gradient(180deg,#33684A,#254D36);border-radius:6px;transform-origin:96% 100%;transition:transform .8s cubic-bezier(.45,.05,.25,1);box-shadow:inset 0 2px 0 rgba(255,255,255,.14)}
 .c2-truck.tip .c2-bed{transform:rotate(-36deg)}
-.c2-lid{position:absolute;top:-8px;left:6px;right:6px;height:10px;background:#1E3F2C;border-radius:4px;transform-origin:right center;transition:transform .5s ease-out}
-.c2-truck.tip .c2-lid{transform:rotate(-72deg)}
+.c2-lid{position:absolute;top:6px;right:-5px;width:11px;height:52px;background:#1E3F2C;border-radius:3px;transform-origin:top center;transition:transform .55s ease-out}
+.c2-truck.tip .c2-lid{transform:rotate(82deg)}
 .c2-wheel{position:absolute;bottom:0;width:26px;height:26px;background:radial-gradient(circle at 35% 35%,#555,#111 70%);border-radius:50%}
 .c2-blk{position:absolute;bottom:40px;left:-8px;width:10px;height:10px;background:#FFB300;border-radius:50%;box-shadow:0 0 10px #FFB300;animation:c2blink 1s steps(1) infinite}
 @keyframes c2blink{50%{opacity:.15}}
@@ -223,16 +223,16 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .c2-fly{position:fixed;z-index:70;font-size:19px;animation:c2fly 1.1s ease-in-out infinite alternate}
 @keyframes c2fly{from{transform:translate(0,0) rotate(-8deg)}to{transform:translate(var(--fx),var(--fy)) rotate(10deg)}}
 /* ── prop plane + banner ── */
-.c2-plane{position:fixed;z-index:70;top:7vh;left:0;display:flex;align-items:center;gap:2px;transform:translateX(112vw);animation:c2plane 3.6s linear forwards}
+.c2-plane{position:fixed;z-index:70;top:7vh;left:0;display:flex;align-items:center;gap:2px;transform:translateX(112vw);animation:c2plane 5.4s linear forwards}
 @keyframes c2plane{to{transform:translateX(-95vw)}}
 .c2-rope{width:26px;height:2px;background:#D8CBA8;opacity:.8}
 .c2-ban{background:#F5E9C8;color:#5A3A1A;border:2px solid #C8A951;border-radius:4px;padding:4px 12px;font-weight:800;font-size:13px;letter-spacing:.1em;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.4)}
 /* ── the five-jet delta ── */
-.c2-jet{position:fixed;z-index:70;font-size:27px;left:0;transform:translateX(-18vw);animation:c2jet 1.9s cubic-bezier(.3,.1,.25,1) forwards}
+.c2-jet{position:fixed;z-index:70;font-size:27px;left:0;transform:translateX(-18vw);animation:c2jet 3.1s cubic-bezier(.35,.08,.3,1) forwards}
 @keyframes c2jet{to{transform:translateX(135vw)}}
 .c2-jet::before{content:"";position:absolute;right:96%;top:52%;width:32vw;height:3px;background:linear-gradient(90deg,rgba(200,169,81,0),rgba(200,169,81,.85));border-radius:2px}
 /* ── the bear (Tier 3 / SW): waddles in, does his business, waddles off ── */
-.c2-bear{position:fixed;z-index:70;bottom:26vh;left:0;font-size:54px;transform:translateX(-20vw)}
+.c2-poop{}  /* legacy .c2-bear rules retired with the floating head */
 .c2-bear.in{transition:transform 1.7s cubic-bezier(.35,.1,.3,1);transform:translateX(42vw)}
 .c2-bear.squat{transition:transform .4s;transform:translateX(42vw) scaleY(.86)}
 .c2-bear.out{transition:transform 1.6s cubic-bezier(.55,0,.85,.45);transform:translateX(120vw)}
@@ -256,10 +256,23 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .c2-bag{position:fixed;z-index:70;font-size:38px;animation:c2bag 1.15s cubic-bezier(.35,.02,.6,1) forwards}
 @keyframes c2bag{0%{transform:translate(0,0) rotate(0deg)}100%{transform:translate(var(--bx),42vh) rotate(var(--br));opacity:.96}}
 .c2-nose{display:inline-block;transform:scaleX(-1)}
+/* ── THE GRIZZLY: full-grown, four legs, shoulder hump, runs / squats / runs ── */
+.c2-griz{position:fixed;z-index:70;bottom:22vh;left:0;width:210px;height:126px;transform:translateX(-26vw)}
+.c2-griz.run{transition:transform 2.3s cubic-bezier(.3,.05,.35,1);transform:translateX(38vw)}
+.c2-griz.squat{transition:transform .5s ease-out;transform:translateX(38vw) translateY(16px) scaleY(.82)}
+.c2-griz.off{transition:transform 2.1s cubic-bezier(.5,0,.85,.5);transform:translateX(128vw)}
+.c2-griz .leg{transform-origin:50% 8%;animation:c2gallop .34s ease-in-out infinite alternate}
+.c2-griz .lb{animation-delay:-.17s}
+.c2-griz .fb{animation-delay:-.09s}
+.c2-griz .ff{animation-delay:-.25s}
+@keyframes c2gallop{from{transform:rotate(-26deg)}to{transform:rotate(24deg)}}
+.c2-griz .body{animation:c2lope .34s ease-in-out infinite alternate}
+@keyframes c2lope{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+.c2-griz.squat .leg,.c2-griz.squat .body{animation:none}
 /* ── reduced-motion static card ── */
 .c2-static{position:fixed;z-index:75;top:34vh;left:8vw;right:8vw;text-align:center;background:rgba(10,14,20,.92);border:2px solid #C8A951;border-radius:12px;padding:18px 10px;color:#F3E9CF;font-weight:800;font-size:18px;letter-spacing:.05em}
 @media (prefers-reduced-motion: reduce){
-  .c2-truck,.c2-junk,.c2-tom,.c2-fly,.c2-plane,.c2-jet,.c2-blk,.c2-bear i,.c2-poop,.c2-mtruck,.c2-bag{animation:none !important}
+  .c2-truck,.c2-junk,.c2-tom,.c2-fly,.c2-plane,.c2-jet,.c2-blk,.c2-poop,.c2-mtruck,.c2-bag,.c2-griz .leg,.c2-griz .body{animation:none !important}
 }
 </style>
 </head>
@@ -1319,6 +1332,7 @@ if (counts < 100) $("tsHint").textContent = "\u26A0\uFE0F Seed data missing \u20
   if (window.C2GF) return;                      /* singleton guard */
   var tok = 0, T = [], layer = null;
   var RM = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var GRIZ = '<svg viewBox="0 0 210 126" width="210" height="126" aria-hidden="true"><defs><linearGradient id="c2fur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8A5A32"/><stop offset="1" stop-color="#4E3018"/></linearGradient></defs><g class="body"><rect class="leg lb" x="46" y="70" width="17" height="46" rx="8" fill="#3E2513"/><rect class="leg fb" x="132" y="70" width="17" height="46" rx="8" fill="#3E2513"/><ellipse cx="104" cy="60" rx="62" ry="34" fill="url(#c2fur)"/><path d="M56 40 Q72 16 100 30 L104 46 Z" fill="#8A5A32"/><rect class="leg lf" x="58" y="72" width="19" height="46" rx="9" fill="#6B4423"/><rect class="leg ff" x="142" y="72" width="19" height="46" rx="9" fill="#6B4423"/><circle cx="164" cy="42" r="26" fill="#7A4E2A"/><circle cx="152" cy="22" r="9" fill="#5E3A1E"/><circle cx="176" cy="24" r="8" fill="#5E3A1E"/><ellipse cx="186" cy="50" rx="16" ry="12" fill="#A8794A"/><ellipse cx="197" cy="48" rx="5" ry="4" fill="#20140A"/><circle cx="172" cy="38" r="3.4" fill="#1A1008"/><path d="M44 52 Q28 46 30 62" stroke="#4E3018" stroke-width="9" fill="none" stroke-linecap="round"/></g></svg>';
   function el(tag, cls, txt){ var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
   function build(){
     if (layer) return layer;
@@ -1400,7 +1414,31 @@ if (counts < 100) $("tsHint").textContent = "\u26A0\uFE0F Seed data missing \u20
       p.appendChild(el("span", "c2-ban", "BETTER LUCK NEXT TIME"));
       layer.appendChild(p);
     }, 4500);
-    later(stop, 8300);
+    later(stop, 9800);
+  }
+  /* ── THE GRIZZLY (Tier 3 / SW): runs in, pauses, does his business, runs off ── */
+  function bear(){
+    open("dump");
+    if (RM){ staticCard("\uD83D\uDC3B THE BEAR RAN THROUGH"); return; }
+    var b = el("div", "c2-griz");
+    b.innerHTML = GRIZ;
+    layer.appendChild(b);
+    later(function(){ b.classList.add("run"); }, 40);
+    later(function(){ b.classList.remove("run"); b.classList.add("squat"); }, 2450);
+    later(function(){ layer.appendChild(el("span", "c2-poop", "\uD83D\uDCA9")); }, 3050);
+    later(function(){ b.classList.remove("squat"); b.classList.add("off"); }, 3600);
+    later(function(){
+      for (var i = 0; i < 6; i++){                    /* minimum five; six for good measure */
+        var f = el("span", "c2-fly", "\uD83E\uDEB0");
+        f.style.left = (36 + Math.random() * 18) + "vw";
+        f.style.top = (56 + Math.random() * 14) + "vh";
+        f.style.setProperty("--fx", (Math.random() * 16 - 8) + "vw");
+        f.style.setProperty("--fy", (Math.random() * 12 - 6) + "vh");
+        f.style.animationDelay = (i * 0.12) + "s";
+        layer.appendChild(f);
+      }
+    }, 3300);
+    later(stop, 7400);
   }
   /* ── THE MONEY TRUCK (jackpot): 2x, heaving, bags out the back ── */
   function money(){
@@ -1437,36 +1475,14 @@ if (counts < 100) $("tsHint").textContent = "\u26A0\uFE0F Seed data missing \u20
     open("jets");
     if (RM){ staticCard("\u2708\uFE0F FLYOVER HONORS"); return; }
     layer.appendChild(el("div", "c2-head", "\u2708\uFE0F FLYOVER HONORS"));
-    var off = [0, -3.2, 3.2, -6.4, 6.4], del = [0, 90, 90, 180, 180];
+    var off = [0, -3.2, 3.2, -6.4, 6.4], del = [0, 150, 150, 300, 300];
     for (var i = 0; i < 5; i++){
       var j = el("span", "c2-jet", "\u2708\uFE0F");
       j.style.top = (16 + off[i]) + "vh";
       j.style.animationDelay = del[i] + "ms";
       layer.appendChild(j);
     }
-    later(stop, 2900);
-  }
-  /* ── THE BEAR (Tier 3 / SW): nobody feels left out ── */
-  function bear(){
-    open("dump");
-    if (RM){ staticCard("\uD83D\uDC3B THE BEAR WALKED BY"); return; }
-    var b = el("div", "c2-bear"); b.appendChild(el("i", null, "\uD83D\uDC3B")); layer.appendChild(b);
-    later(function(){ b.classList.add("in"); }, 40);
-    later(function(){ b.classList.add("squat"); }, 1950);
-    later(function(){ layer.appendChild(el("span", "c2-poop", "\uD83D\uDCA9")); }, 2400);
-    later(function(){ b.classList.remove("squat"); b.classList.add("out"); }, 2850);
-    later(function(){
-      for (var i = 0; i < 3; i++){
-        var f = el("span", "c2-fly", "\uD83E\uDEB0");
-        f.style.left = (43 + Math.random() * 10) + "vw";
-        f.style.top = (60 + Math.random() * 7) + "vh";
-        f.style.setProperty("--fx", (Math.random() * 8 - 4) + "vw");
-        f.style.setProperty("--fy", (Math.random() * 6 - 3) + "vh");
-        f.style.animationDelay = (i * 0.15) + "s";
-        layer.appendChild(f);
-      }
-    }, 3400);
-    later(stop, 6300);
+    later(stop, 4200);
   }
   /* ── flagship dispatch: called once after the solo-spin settle chain ── */
   function after(d){
