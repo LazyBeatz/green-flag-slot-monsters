@@ -271,9 +271,10 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 /* the arc ENDS on the floor and stays there — forwards holds the final frame,
    so the bags heap up under the truck instead of evaporating mid-air */
 @keyframes c2bag{0%{transform:translate(0,0) rotate(0deg)}
-  72%{transform:translate(calc(var(--bx) * .82), calc(var(--drop) - 2vh)) rotate(var(--br))}
-  86%{transform:translate(calc(var(--bx) * .93), var(--drop)) rotate(var(--br))}
-  93%{transform:translate(var(--bx), calc(var(--drop) - .9vh)) rotate(var(--br))}
+  18%{transform:translate(calc(var(--bx) * .30), calc(var(--drop) * .18)) rotate(calc(var(--br) * .25))}
+  70%{transform:translate(calc(var(--bx) * .88), calc(var(--drop) - 1.6vh)) rotate(calc(var(--br) * .85))}
+  84%{transform:translate(var(--bx), var(--drop)) rotate(var(--br))}
+  92%{transform:translate(var(--bx), calc(var(--drop) - .8vh)) rotate(var(--br))}
   100%{transform:translate(var(--bx), var(--drop)) rotate(var(--br));opacity:1}}
 .c2-nose{display:inline-block;transform:scaleX(-1);font-size:76px;line-height:1}
 /* RESET must be SEEN, not merely done — a silent success is indistinguishable from a dead button */
@@ -1058,7 +1059,19 @@ function paintWheels(w){
         if (i < chars.length) setTimeout(step, 26);
       })();
     }
-    function boardClear(){
+    function tsWheelsReset(){
+  /* wheels back to their resting faces. Declared once; called by reset. */
+  try {
+    var g = document.getElementById("tsWheels");
+    if (!g) return;
+    var cells = g.querySelectorAll(".ts-cell, .ts-land");
+    for (var i = 0; i < cells.length; i++){
+      cells[i].className = cells[i].className.replace(/\b(g|r|x|jk|bk)\b/g, "").replace(/\s+/g, " ").trim();
+    }
+    g.className = g.className.replace(/\bspin\b/g, "").trim();
+  } catch(e){}
+}
+function boardClear(){
   /* DECLARED ONCE, used by spin and by reset — two callers, one definition */
   try {
     $("tsVerdict").className = "ts-verdict";
@@ -1258,15 +1271,24 @@ land = function(key, rec){ lastSpinKey = key; lastSpin = rec; _land(key, rec); }
     $("tsResetBtn").onclick = function(){ $("tsImpWrap").hidden = true; var w = $("tsResetWrap"); w.hidden = !w.hidden; };
     $("tsResetX").onclick = function(){ $("tsResetWrap").hidden = true; };
     $("tsResetGo").onclick = function(){
-      try {
-        localStorage.removeItem(K.mode); localStorage.removeItem(K.spins); localStorage.removeItem(K.memo);
-        localStorage.removeItem(K.hist); localStorage.removeItem(K.nudge);
-      } catch (e){}
+      /* EVERY key this cabinet writes, swept by the K map itself rather than by a
+         hand-typed list — a list drifts the day someone adds a sixth key; the map
+         cannot, because the map IS what the writers use. */
+      try { for (var kk in K){ if (Object.prototype.hasOwnProperty.call(K, kk)) localStorage.removeItem(K[kk]); } } catch (e){}
       spins = 0; mode = "T"; lastSpin = null; lastSpinKey = null;
-      $("tsMemo").value = ""; $("tsImpView").hidden = true; $("tsImpView").innerHTML = "";
+      $("tsMemo").value = "";
+      /* EVERY panel that can be open when reset is pressed — the trophy shelf and
+         the import drawer were the two that survived a reset and made it look
+         like nothing happened. */
+      $("tsImpView").hidden = true; $("tsImpView").innerHTML = "";
+      $("tsImpWrap").hidden = true;
+      if ($("tsImpIn")) $("tsImpIn").value = "";
+      if ($("tsTrophy")) $("tsTrophy").hidden = true;
       $("tsVerdict").className = "ts-verdict"; $("tsScore").hidden = true;
       $("tsHeld").textContent = ""; $("tsLesson").className = "ts-lesson";
       boardClear();
+      /* the wheels return to their resting faces, not the last spin's outcome */
+      if (typeof tsWheelsReset === "function") tsWheelsReset();
       paintMode(); paintHist(); paintStage(); marqIdle();
       $("tsResetWrap").hidden = true;
       $("tsTk").value = "";
@@ -1614,10 +1636,14 @@ const TSound = (function(){
           b.style.bottom = "34vh";
           /* heap under the truck: a tight lateral band, and each bag drops to a
              slightly different floor line so the pile reads as a pile, not a row */
+          /* THE PILE SITS WHERE THE BAGS LEAVE THE TRUCK. Lateral travel is small
+             and centred on the tailgate — a bag falls almost straight down, tumbles,
+             and comes to rest on the ones already there. A large --bx was the defect:
+             it flung every bag toward the middle of the screen. */
           var lane = (i % 5) - 2;                       /* -2..+2 across the heap */
-          b.style.setProperty("--bx", (lane * 7 + (Math.random() * 6 - 3) - 22) + "vw");
-          b.style.setProperty("--drop", (24 + Math.floor(i / 5) * 1.6 + Math.random() * 1.2) + "vh");
-          b.style.setProperty("--br", (Math.random() * 720 - 360) + "deg");
+          b.style.setProperty("--bx", (lane * 2.3 - 2 + (Math.random() * 2.2 - 1.1)) + "vw");
+          b.style.setProperty("--drop", (24 + Math.floor(i / 5) * 1.7 + Math.random() * 1.1) + "vh");
+          b.style.setProperty("--br", (Math.random() * 900 - 450) + "deg");   /* real tumble */
           b.style.animationDelay = (i * 0.11) + "s";
           layer.appendChild(b);
         })(i);
