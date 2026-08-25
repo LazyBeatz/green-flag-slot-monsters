@@ -493,8 +493,13 @@ button{font-family:inherit;cursor:pointer;border:none}
 @media (prefers-reduced-motion: reduce){.rlx-sheet{animation:none}.rlx-pulse{animation:none}}
 html{scrollbar-gutter:stable;font-size:100%}
 html.hut-lock,html.hut-lock body{overflow:hidden}
-.hut-pair{position:fixed;top:calc(8px + env(safe-area-inset-top));right:calc(8px + env(safe-area-inset-right));
-  z-index:58;display:flex;flex-direction:column;gap:8px}
+.hut-pair{position:absolute;top:calc(8px + env(safe-area-inset-top));right:calc(8px + env(safe-area-inset-right));
+  z-index:12;display:flex;flex-direction:column;gap:8px}
+/* the machine wears its own controls — they ride the cabinet, never hover over it */
+.mute-pair{position:absolute;top:calc(8px + env(safe-area-inset-top));left:calc(8px + env(safe-area-inset-left));z-index:12}
+.mute-pair button{width:44px;height:44px;border-radius:50%;background:rgba(10,11,19,.85);border:2px solid var(--gold);color:#EED9A0;font-size:19px;font-weight:800;cursor:pointer;padding:0;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.45)}
+.mute-pair button:active{transform:translateY(1px) scale(.985)}
+.mute-pair button.off{color:#8A93A3;border-color:#5A6472}
 .hut-pair button{width:44px;height:44px;border-radius:50%;background:rgba(10,11,19,.85);
   border:2px solid var(--gold);color:#EED9A0;font-size:19px;font-weight:800;cursor:pointer;padding:0;
   line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.45)}
@@ -1328,15 +1333,15 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 .c2-cab{position:absolute;left:0;bottom:14px;width:52px;height:44px;background:linear-gradient(180deg,#3A7A54,#2A5A3E);border-radius:8px 4px 4px 4px;box-shadow:inset 0 2px 0 rgba(255,255,255,.18)}
 .c2-cab::after{content:"";position:absolute;top:6px;left:8px;width:30px;height:14px;background:#BCd8E8;border-radius:3px}
 .c2-bed{position:absolute;right:0;bottom:14px;width:126px;height:58px;background:linear-gradient(180deg,#33684A,#254D36);border-radius:6px;transform-origin:96% 100%;transition:transform .8s cubic-bezier(.45,.05,.25,1);box-shadow:inset 0 2px 0 rgba(255,255,255,.14)}
-.c2-truck.tip .c2-bed{transform:rotate(-36deg)}
+.c2-truck.tip .c2-bed{transform:rotate(38deg)}
 .c2-lid{position:absolute;top:6px;right:-5px;width:11px;height:52px;background:#1E3F2C;border-radius:3px;transform-origin:top center;transition:transform .55s ease-out}
-.c2-truck.tip .c2-lid{transform:rotate(82deg)}
+.c2-truck.tip .c2-lid{transform:rotate(66deg)}
 .c2-wheel{position:absolute;bottom:0;width:26px;height:26px;background:radial-gradient(circle at 35% 35%,#555,#111 70%);border-radius:50%}
 .c2-blk{position:absolute;bottom:40px;left:-8px;width:10px;height:10px;background:#FFB300;border-radius:50%;box-shadow:0 0 10px #FFB300;animation:c2blink 1s steps(1) infinite}
 @keyframes c2blink{50%{opacity:.15}}
 /* ── junk avalanche ── */
 .c2-junk{position:fixed;z-index:70;font-size:26px;animation:c2junk .95s cubic-bezier(.4,.05,.6,1) forwards}
-@keyframes c2junk{to{transform:translate(var(--jx),56vh) rotate(540deg);opacity:.95}}
+@keyframes c2junk{to{transform:translate(var(--jx),46vh) rotate(540deg);opacity:.95}}
 /* ── tomatoes, now with an ENDING: full travel, impact squash, red splash ── */
 .c2-tom{position:fixed;z-index:70;font-size:32px;animation:c2throw .7s cubic-bezier(.2,.6,.5,1) forwards}
 @keyframes c2throw{0%{transform:translate(0,0) scale(.8)}100%{transform:translate(var(--tx),var(--ty)) scale(1.12)}}
@@ -1347,12 +1352,12 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 .c2-fly{position:fixed;z-index:70;font-size:19px;animation:c2fly 1.1s ease-in-out infinite alternate}
 @keyframes c2fly{from{transform:translate(0,0) rotate(-8deg)}to{transform:translate(var(--fx),var(--fy)) rotate(10deg)}}
 /* ── prop plane + banner ── */
-.c2-plane{position:fixed;z-index:70;top:7vh;left:0;display:flex;align-items:center;gap:2px;transform:translateX(112vw);animation:c2plane 5.4s linear forwards}
+.c2-plane{position:fixed;z-index:70;top:5vh;left:0;display:flex;align-items:center;gap:6px;transform:translateX(112vw);animation:c2plane 5.4s linear forwards}
 @keyframes c2plane{to{transform:translateX(-95vw)}}
-.c2-rope{width:26px;height:2px;background:#D8CBA8;opacity:.8}
-.c2-ban{background:#F5E9C8;color:#5A3A1A;border:2px solid #C8A951;border-radius:4px;padding:4px 12px;font-weight:800;font-size:13px;letter-spacing:.1em;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.4)}
+.c2-rope{width:44px;height:3px;background:#D8CBA8;opacity:.85}
+.c2-ban{background:#F5E9C8;color:#5A3A1A;border:3px solid #C8A951;border-radius:6px;padding:12px 26px;font-weight:800;font-size:27px;letter-spacing:.12em;white-space:nowrap;box-shadow:0 5px 18px rgba(0,0,0,.45)}
 /* ── the five-jet delta ── */
-.c2-jet{position:fixed;z-index:70;font-size:27px;left:0;transform:translateX(-18vw);animation:c2jet 3.1s cubic-bezier(.35,.08,.3,1) forwards}
+.c2-jet{position:fixed;z-index:70;font-size:52px;left:0;transform:translateX(-18vw);animation:c2jet 3.1s cubic-bezier(.35,.08,.3,1) forwards}
 @keyframes c2jet{to{transform:translateX(135vw)}}
 .c2-jet::before{content:"";position:absolute;right:96%;top:52%;width:32vw;height:3px;background:linear-gradient(90deg,rgba(200,169,81,0),rgba(200,169,81,.85));border-radius:2px}
 /* ── the bear (Tier 3 / SW): waddles in, does his business, waddles off ── */
@@ -1379,7 +1384,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 .c2-mwheel{position:absolute;bottom:0;width:52px;height:52px;background:radial-gradient(circle at 35% 35%,#5A5A5A,#101010 70%);border-radius:50%}
 .c2-bag{position:fixed;z-index:70;font-size:38px;animation:c2bag 1.15s cubic-bezier(.35,.02,.6,1) forwards}
 @keyframes c2bag{0%{transform:translate(0,0) rotate(0deg)}100%{transform:translate(var(--bx),42vh) rotate(var(--br));opacity:.96}}
-.c2-nose{display:inline-block;transform:scaleX(-1)}
+.c2-nose{display:inline-block;transform:scaleX(-1);font-size:76px;line-height:1}
 /* ── THE GRIZZLY: full-grown, four legs, shoulder hump, runs / squats / runs ── */
 .c2-griz{position:fixed;z-index:70;bottom:22vh;left:0;width:210px;height:126px;transform:translateX(-26vw)}
 .c2-griz.run{transition:transform 2.3s cubic-bezier(.3,.05,.35,1);transform:translateX(38vw)}
@@ -1410,6 +1415,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
     </div>
   <div class="lights" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 </header>
+<div class="mute-pair"><button type="button" id="hutMute" aria-label="Mute sound" aria-pressed="false">&#128266;</button></div>
 <div class="hut-pair">
   <button type="button" id="hutHelp" aria-label="Help and glossary">?</button>
   <button type="button" id="hutSave" aria-label="Backup and restore">&#128190;</button>
@@ -2584,7 +2590,10 @@ const Sound = (function(){
     }
     return ctx;
   }
+  let muted = false;   /* MUTE AT THE SOURCE — one gate every voice passes through,
+                          so no caller can forget it and no future voice escapes it */
   function tone(freq, dur, type, vol, delay){
+    if (muted) return;
     const c = ac(); if (!c) return;
     try {
       const t0 = c.currentTime + (delay || 0);
@@ -2598,6 +2607,8 @@ const Sound = (function(){
     } catch(e){}
   }
   return {
+    setMuted(m){ muted = !!m; if (m && this.hush) this.hush(); },
+
     engraveTick(){ tone(1500 + Math.random()*700, .05, "square", .035); },
     coinInsert(){ tone(880, .09, "triangle", .09); tone(1320, .12, "triangle", .07, .07); },
     rejectClunk(){ tone(160, .22, "square", .1); tone(110, .3, "square", .09, .1); },
@@ -5703,6 +5714,7 @@ function presentKicker(arm, label){
   if (window.C2GF) return;                      /* singleton guard */
   var tok = 0, T = [], layer = null;
   var RM = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var SFX = (typeof Sound !== "undefined") ? Sound : (window.TSound || null);
   var GRIZ = '<svg viewBox="0 0 210 126" width="210" height="126" aria-hidden="true"><defs><linearGradient id="c2fur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8A5A32"/><stop offset="1" stop-color="#4E3018"/></linearGradient></defs><g class="body"><rect class="leg lb" x="46" y="70" width="17" height="46" rx="8" fill="#3E2513"/><rect class="leg fb" x="132" y="70" width="17" height="46" rx="8" fill="#3E2513"/><ellipse cx="104" cy="60" rx="62" ry="34" fill="url(#c2fur)"/><path d="M56 40 Q72 16 100 30 L104 46 Z" fill="#8A5A32"/><rect class="leg lf" x="58" y="72" width="19" height="46" rx="9" fill="#6B4423"/><rect class="leg ff" x="142" y="72" width="19" height="46" rx="9" fill="#6B4423"/><circle cx="164" cy="42" r="26" fill="#7A4E2A"/><circle cx="152" cy="22" r="9" fill="#5E3A1E"/><circle cx="176" cy="24" r="8" fill="#5E3A1E"/><ellipse cx="186" cy="50" rx="16" ry="12" fill="#A8794A"/><ellipse cx="197" cy="48" rx="5" ry="4" fill="#20140A"/><circle cx="172" cy="38" r="3.4" fill="#1A1008"/><path d="M44 52 Q28 46 30 62" stroke="#4E3018" stroke-width="9" fill="none" stroke-linecap="round"/></g></svg>';
   function el(tag, cls, txt){ var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
   function build(){
@@ -5745,7 +5757,7 @@ function presentKicker(arm, label){
       for (var i = 0; i < 8; i++){
         var j = el("span", "c2-junk", J[i]);
         j.style.left = "calc(50% + " + (10 + Math.random() * 46) + "px)";
-        j.style.bottom = "52vh";
+        j.style.bottom = "50vh";
         j.style.setProperty("--jx", (Math.random() * 30 - 15) + "vw");
         j.style.animationDelay = (i * 0.07) + "s";
         layer.appendChild(j);
@@ -5796,7 +5808,14 @@ function presentKicker(arm, label){
     layer.appendChild(b);
     later(function(){ b.classList.add("run"); }, 40);
     later(function(){ b.classList.remove("run"); b.classList.add("squat"); }, 2450);
-    later(function(){ layer.appendChild(el("span", "c2-poop", "\uD83D\uDCA9")); }, 3050);
+    later(function(){
+      if (SFX) SFX.fart();                       /* merch slot: swap for a custom sound */
+      var p1 = el("span", "c2-poop", "\uD83D\uDCA9"); p1.style.marginLeft = "-26px"; layer.appendChild(p1);
+    }, 3050);
+    later(function(){
+      var p2 = el("span", "c2-poop", "\uD83D\uDCA9");
+      p2.style.marginLeft = "18px"; p2.style.fontSize = "26px"; layer.appendChild(p2);
+    }, 3380);
     later(function(){ b.classList.remove("squat"); b.classList.add("off"); }, 3600);
     later(function(){
       for (var i = 0; i < 6; i++){                    /* minimum five; six for good measure */
@@ -5846,7 +5865,7 @@ function presentKicker(arm, label){
     open("jets");
     if (RM){ staticCard("\u2708\uFE0F FLYOVER HONORS"); return; }
     layer.appendChild(el("div", "c2-head", "\u2708\uFE0F FLYOVER HONORS"));
-    var off = [0, -3.2, 3.2, -6.4, 6.4], del = [0, 150, 150, 300, 300];
+    var off = [0, -4.6, 4.6, -9.2, 9.2], del = [0, 150, 150, 300, 300];
     for (var i = 0; i < 5; i++){
       var j = el("span", "c2-jet", "\u2708\uFE0F");
       j.style.top = (16 + off[i]) + "vh";
@@ -5870,6 +5889,28 @@ function presentKicker(arm, label){
     }catch(e){}
   }
   window.C2GF = { dump: dump, jets: jets, bear: bear, money: money, after: after, skip: stop };
+  /* ── MUTE: one switch, persisted, gated at the ENGINE so no caller can forget it ── */
+  (function(){
+    var b = document.getElementById("hutMute"); if (!b) return;
+    var KEY = "gfsMute", ENG = function(){ return (typeof Sound !== 'undefined') ? Sound : null; };
+    function paint(m){
+      b.innerHTML = m ? "\uD83D\uDD07" : "\uD83D\uDD0A";
+      b.setAttribute("aria-pressed", m ? "true" : "false");
+      b.setAttribute("aria-label", m ? "Unmute sound" : "Mute sound");
+      if (m) b.classList.add("off"); else b.classList.remove("off");
+    }
+    var muted = false;
+    try { muted = localStorage.getItem(KEY) === "1"; } catch(e){}
+    function apply(m){ var E = ENG(); if (E && E.setMuted) E.setMuted(m); paint(m); }
+    apply(muted);
+    b.addEventListener("click", function(){
+      muted = !muted;
+      try { localStorage.setItem(KEY, muted ? "1" : "0"); } catch(e){}
+      apply(muted);
+      var E = ENG(); if (!muted && E && E.press) E.press();
+    });
+  })();
+
 })();
 </script>
 </body>
