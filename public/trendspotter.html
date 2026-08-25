@@ -255,20 +255,26 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .c2-poop{position:fixed;z-index:70;bottom:26.5vh;left:50%;font-size:30px;transform:translateX(-50%) scale(0);animation:c2plop .5s cubic-bezier(.2,1.4,.4,1) forwards}
 @keyframes c2plop{to{transform:translateX(-50%) scale(1)}}
 /* ── THE MONEY TRUCK (jackpot) — twice the size, shaking, bags out the back ── */
-.c2-mtruck{position:fixed;z-index:70;left:50%;bottom:26vh;width:323px;height:146px;transform:translateX(140vw)}
+.c2-mtruck{position:fixed;z-index:70;left:50%;bottom:26vh;width:275px;height:124px;transform:translateX(140vw)}
 .c2-layer.money.on .c2-mtruck{animation:c2mrev 1.5s cubic-bezier(.2,.9,.3,1) forwards}
 @keyframes c2mrev{to{transform:translateX(-50%)}}
 .c2-mtruck.heave{animation:c2heave .28s ease-in-out infinite}
 @keyframes c2heave{0%,100%{transform:translateX(-50%) rotate(0deg)}35%{transform:translateX(-50%) translateY(-5px) rotate(-1.4deg)}70%{transform:translateX(-50%) translateY(2px) rotate(1deg)}}
-.c2-mcab{position:absolute;left:0;bottom:22px;width:88px;height:75px;background:linear-gradient(180deg,#2E7D5B,#1C5540);border-radius:14px 8px 8px 8px;box-shadow:inset 0 3px 0 rgba(255,255,255,.2)}
-.c2-mcab::after{content:"";position:absolute;top:10px;left:14px;width:51px;height:24px;background:#BCD8E8;border-radius:5px}
-.c2-mbed{position:absolute;right:0;bottom:22px;width:214px;height:99px;background:linear-gradient(180deg,#2F6E50,#1F4C38);border-radius:10px;box-shadow:inset 0 3px 0 rgba(255,255,255,.16)}
-.c2-mbed::after{content:"$";position:absolute;top:24px;left:50%;transform:translateX(-50%);font-size:46px;font-weight:800;color:#C8A951;text-shadow:0 2px 6px rgba(0,0,0,.5)}
-.c2-mgate{position:absolute;right:-4px;bottom:22px;width:10px;height:99px;background:#173D2C;border-radius:3px;transform-origin:top center;transition:transform .5s ease-out}
+.c2-mcab{position:absolute;left:0;bottom:19px;width:75px;height:64px;background:linear-gradient(180deg,#2E7D5B,#1C5540);border-radius:14px 8px 8px 8px;box-shadow:inset 0 3px 0 rgba(255,255,255,.2)}
+.c2-mcab::after{content:"";position:absolute;top:9px;left:12px;width:43px;height:20px;background:#BCD8E8;border-radius:5px}
+.c2-mbed{position:absolute;right:0;bottom:19px;width:182px;height:84px;background:linear-gradient(180deg,#2F6E50,#1F4C38);border-radius:10px;box-shadow:inset 0 3px 0 rgba(255,255,255,.16)}
+.c2-mbed::after{content:"$";position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:39px;font-weight:800;color:#C8A951;text-shadow:0 2px 6px rgba(0,0,0,.5)}
+.c2-mgate{position:absolute;right:-4px;bottom:19px;width:9px;height:84px;background:#173D2C;border-radius:3px;transform-origin:top center;transition:transform .5s ease-out}
 .c2-mtruck.open .c2-mgate{transform:rotate(78deg)}
-.c2-mwheel{position:absolute;bottom:0;width:44px;height:44px;background:radial-gradient(circle at 35% 35%,#5A5A5A,#101010 70%);border-radius:50%}
-.c2-bag{position:fixed;z-index:70;font-size:38px;animation:c2bag 1.15s cubic-bezier(.35,.02,.6,1) forwards}
-@keyframes c2bag{0%{transform:translate(0,0) rotate(0deg)}100%{transform:translate(var(--bx),42vh) rotate(var(--br));opacity:.96}}
+.c2-mwheel{position:absolute;bottom:0;width:37px;height:37px;background:radial-gradient(circle at 35% 35%,#5A5A5A,#101010 70%);border-radius:50%}
+.c2-bag{position:fixed;z-index:69;font-size:33px;animation:c2bag 1.05s cubic-bezier(.4,.02,.65,1) forwards}
+/* the arc ENDS on the floor and stays there — forwards holds the final frame,
+   so the bags heap up under the truck instead of evaporating mid-air */
+@keyframes c2bag{0%{transform:translate(0,0) rotate(0deg)}
+  72%{transform:translate(calc(var(--bx) * .82), calc(var(--drop) - 2vh)) rotate(var(--br))}
+  86%{transform:translate(calc(var(--bx) * .93), var(--drop)) rotate(var(--br))}
+  93%{transform:translate(var(--bx), calc(var(--drop) - .9vh)) rotate(var(--br))}
+  100%{transform:translate(var(--bx), var(--drop)) rotate(var(--br));opacity:1}}
 .c2-nose{display:inline-block;transform:scaleX(-1);font-size:76px;line-height:1}
 /* RESET must be SEEN, not merely done — a silent success is indistinguishable from a dead button */
 .ts-resetglow{position:fixed;inset:0;z-index:64;pointer-events:none;background:radial-gradient(circle at 50% 46%,rgba(233,84,84,.34),rgba(233,84,84,0) 62%);opacity:0;animation:tsRstGlow 1.25s ease-out forwards}
@@ -1595,8 +1601,8 @@ const TSound = (function(){
     tr.appendChild(el("div", "c2-mbed"));
     tr.appendChild(el("div", "c2-mgate"));
     tr.appendChild(el("div", "c2-mcab"));
-    var w1 = el("div", "c2-mwheel"); w1.style.left = "15px"; tr.appendChild(w1);
-    var w2 = el("div", "c2-mwheel"); w2.style.right = "29px"; tr.appendChild(w2);
+    var w1 = el("div", "c2-mwheel"); w1.style.left = "13px"; tr.appendChild(w1);
+    var w2 = el("div", "c2-mwheel"); w2.style.right = "25px"; tr.appendChild(w2);
     layer.appendChild(tr);
     later(function(){ tr.classList.add("open"); }, 1600);
     later(function(){ tr.classList.add("heave"); }, 1800);
@@ -1606,15 +1612,19 @@ const TSound = (function(){
           var b = el("span", "c2-bag", "\uD83D\uDCB0");
           b.style.left = "calc(50% + 128px)";
           b.style.bottom = "34vh";
-          b.style.setProperty("--bx", (Math.random() * 62 - 6) + "vw");
+          /* heap under the truck: a tight lateral band, and each bag drops to a
+             slightly different floor line so the pile reads as a pile, not a row */
+          var lane = (i % 5) - 2;                       /* -2..+2 across the heap */
+          b.style.setProperty("--bx", (lane * 7 + (Math.random() * 6 - 3) - 22) + "vw");
+          b.style.setProperty("--drop", (24 + Math.floor(i / 5) * 1.6 + Math.random() * 1.2) + "vh");
           b.style.setProperty("--br", (Math.random() * 720 - 360) + "deg");
-          b.style.animationDelay = (i * 0.13) + "s";
+          b.style.animationDelay = (i * 0.11) + "s";
           layer.appendChild(b);
         })(i);
       }
     }, 2000);
     later(function(){ tr.classList.remove("heave"); }, 4400);
-    later(stop, 6200);
+    later(stop, 7000);
   }
   /* ── THE FIVE-JET DELTA FLYOVER ── */
   function jets(){
