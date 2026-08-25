@@ -201,6 +201,9 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .c2-truck{position:fixed;z-index:70;left:50%;bottom:30vh;width:190px;height:86px;transform:translateX(120vw);}
 .c2-layer.dump.on .c2-truck{animation:c2rev 1.3s cubic-bezier(.2,.9,.3,1) forwards}
 @keyframes c2rev{to{transform:translateX(-50%)}}
+.c2-frame{position:absolute;left:6px;right:2px;bottom:10px;height:16px;background:linear-gradient(180deg,#2A2F33,#15181B);border-radius:4px;box-shadow:inset 0 2px 0 rgba(255,255,255,.10)}
+.c2-frame::after{content:"";position:absolute;left:44px;right:8px;top:-7px;height:9px;background:#20262A;border-radius:3px}
+.c2-hinge{position:absolute;right:12px;bottom:24px;width:10px;height:10px;background:#C8A951;border-radius:50%;box-shadow:0 0 0 2px rgba(0,0,0,.35)}
 .c2-cab{position:absolute;left:0;bottom:14px;width:52px;height:44px;background:linear-gradient(180deg,#3A7A54,#2A5A3E);border-radius:8px 4px 4px 4px;box-shadow:inset 0 2px 0 rgba(255,255,255,.18)}
 .c2-cab::after{content:"";position:absolute;top:6px;left:8px;width:30px;height:14px;background:#BCd8E8;border-radius:3px}
 .c2-bed{position:absolute;right:0;bottom:14px;width:126px;height:58px;background:linear-gradient(180deg,#33684A,#254D36);border-radius:6px;transform-origin:96% 100%;transition:transform .8s cubic-bezier(.45,.05,.25,1);box-shadow:inset 0 2px 0 rgba(255,255,255,.14)}
@@ -212,7 +215,7 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 @keyframes c2blink{50%{opacity:.15}}
 /* ── junk avalanche ── */
 .c2-junk{position:fixed;z-index:70;font-size:26px;animation:c2junk .95s cubic-bezier(.4,.05,.6,1) forwards}
-@keyframes c2junk{to{transform:translate(var(--jx),46vh) rotate(540deg);opacity:.95}}
+@keyframes c2junk{to{transform:translate(var(--jx),30vh) rotate(540deg);opacity:.95}}
 /* ── tomatoes, now with an ENDING: full travel, impact squash, red splash ── */
 .c2-tom{position:fixed;z-index:70;font-size:32px;animation:c2throw .7s cubic-bezier(.2,.6,.5,1) forwards}
 @keyframes c2throw{0%{transform:translate(0,0) scale(.8)}100%{transform:translate(var(--tx),var(--ty)) scale(1.12)}}
@@ -256,6 +259,11 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .c2-bag{position:fixed;z-index:70;font-size:38px;animation:c2bag 1.15s cubic-bezier(.35,.02,.6,1) forwards}
 @keyframes c2bag{0%{transform:translate(0,0) rotate(0deg)}100%{transform:translate(var(--bx),42vh) rotate(var(--br));opacity:.96}}
 .c2-nose{display:inline-block;transform:scaleX(-1);font-size:76px;line-height:1}
+/* RESET must be SEEN, not merely done — a silent success is indistinguishable from a dead button */
+.ts-resetglow{position:fixed;inset:0;z-index:64;pointer-events:none;background:radial-gradient(circle at 50% 46%,rgba(233,84,84,.34),rgba(233,84,84,0) 62%);opacity:0;animation:tsRstGlow 1.25s ease-out forwards}
+@keyframes tsRstGlow{18%{opacity:1}100%{opacity:0}}
+.ts-resetdone{position:fixed;left:0;right:0;top:38vh;z-index:65;text-align:center;font-family:'Jost',system-ui,sans-serif;font-weight:800;font-size:20px;letter-spacing:.08em;color:#FFD9D6;text-shadow:0 2px 8px rgba(0,0,0,.85);pointer-events:none;animation:tsRstGlow 1.25s ease-out forwards}
+@media (prefers-reduced-motion: reduce){.ts-resetglow,.ts-resetdone{animation:none;opacity:1}}
 .ts-mute{position:absolute;top:10px;left:10px;z-index:12}
 .ts-mute button{width:40px;height:40px;border-radius:50%;background:rgba(6,20,18,.85);border:1.5px solid var(--ts-gold);color:var(--ts-gold);font-size:17px;cursor:pointer;padding:0;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.4)}
 .ts-mute button:active{transform:translateY(1px) scale(.985)}
@@ -1033,11 +1041,26 @@ function paintWheels(w){
         if (i < chars.length) setTimeout(step, 26);
       })();
     }
-    function doSpin(){
+    function boardClear(){
+  /* DECLARED ONCE, used by spin and by reset — two callers, one definition */
+  try {
+    $("tsVerdict").className = "ts-verdict";
+    $("tsVLine").textContent = "";
+    $("tsScore").hidden = true;
+    $("tsHeld").textContent = "";
+    $("tsLesson").className = "ts-lesson";
+    $("tsImpView").hidden = true; $("tsImpView").innerHTML = "";
+    ideaHide(); kickHide();
+    paintStage();
+  } catch(e){}
+}
+function doSpin(){
   if (window.TSound){ TSound.wake(); TSound.leverCrank(); }   /* the pull */
   /* a new spin clears the last spin's furniture — the house peek and kicker must
      not outlive the result they belong to */
   ideaHide(); kickHide(); if (window.C2GF) C2GF.skip();
+  boardClear();   /* the board returns to default the MOMENT the lever is pulled —
+                     a stale result must never sit under a spin in progress */
   var q = $("tsTk").value.trim();
   if (!q){ $("tsTk").focus(); return; }
   if (q.indexOf(",") >= 0){
@@ -1226,9 +1249,20 @@ land = function(key, rec){ lastSpinKey = key; lastSpin = rec; _land(key, rec); }
       $("tsMemo").value = ""; $("tsImpView").hidden = true; $("tsImpView").innerHTML = "";
       $("tsVerdict").className = "ts-verdict"; $("tsScore").hidden = true;
       $("tsHeld").textContent = ""; $("tsLesson").className = "ts-lesson";
+      boardClear();
       paintMode(); paintHist(); paintStage(); marqIdle();
       $("tsResetWrap").hidden = true;
-      $("tsTk").value = ""; $("tsTk").focus();
+      $("tsTk").value = "";
+      /* NO focus() here — it summoned the keyboard and hid the very feedback that
+         tells the player the reset happened. Show the act, then get out of the way. */
+      if (window.TSound && TSound.rejectClunk) TSound.rejectClunk();
+      (function(){
+        var g = document.createElement("div"); g.className = "ts-resetglow";
+        var m = document.createElement("div"); m.className = "ts-resetdone";
+        m.textContent = "\uD83E\uDDF9 RESET \u2014 THIS PHONE IS CLEAR";
+        document.body.appendChild(g); document.body.appendChild(m);
+        setTimeout(function(){ g.remove(); m.remove(); }, 1400);
+      })();
     };
     /* -- R16 BLUE-DOT TOUR v2: guided walker -- arrows + step counter + smart placement.
        Free dot-taps still jump anywhere; the arrows walk the defined order. -- */
@@ -1447,9 +1481,11 @@ const TSound = (function(){
     if (SFX && SFX.truckRumble) SFX.truckRumble();
     if (RM){ staticCard("\uD83D\uDDD1 BETTER LUCK NEXT TIME"); return; }
     var tr = el("div", "c2-truck");
+    tr.appendChild(el("div", "c2-frame"));   /* chassis: one vehicle, not two pieces */
     tr.appendChild(el("div", "c2-blk"));
     var bed = el("div", "c2-bed"); bed.appendChild(el("div", "c2-lid")); tr.appendChild(bed);
     tr.appendChild(el("div", "c2-cab"));
+    tr.appendChild(el("div", "c2-hinge"));   /* the pivot the bed rotates on */
     var w1 = el("div", "c2-wheel"); w1.style.left = "8px"; tr.appendChild(w1);
     var w2 = el("div", "c2-wheel"); w2.style.right = "18px"; tr.appendChild(w2);
     layer.appendChild(tr);
@@ -1458,9 +1494,10 @@ const TSound = (function(){
       var J = ["\uD83D\uDDD1","\uD83D\uDCA9","\uD83C\uDF4C","\uD83E\uDD6B","\uD83D\uDCF0","\uD83E\uDDE6","\uD83D\uDC1F","\uD83E\uDDBA"];
       for (var i = 0; i < 8; i++){
         var j = el("span", "c2-junk", J[i]);
-        j.style.left = "calc(50% + " + (10 + Math.random() * 46) + "px)";
-        j.style.bottom = "50vh";
-        j.style.setProperty("--jx", (Math.random() * 30 - 15) + "vw");
+        /* born AT THE TAILGATE (rear edge of the bed), then falls to the road */
+        j.style.left = "calc(50% + " + (74 + Math.random() * 26) + "px)";
+        j.style.bottom = "calc(30vh + " + (34 + Math.random() * 26) + "px)";
+        j.style.setProperty("--jx", (2 + Math.random() * 20) + "vw");
         j.style.animationDelay = (i * 0.07) + "s";
         layer.appendChild(j);
       }
