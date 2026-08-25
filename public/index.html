@@ -1398,8 +1398,11 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 .c2-bear.out{transition:transform 1.6s cubic-bezier(.55,0,.85,.45);transform:translateX(120vw)}
 .c2-bear i{display:inline-block;animation:c2waddle .5s ease-in-out infinite alternate;font-style:normal}
 @keyframes c2waddle{from{transform:rotate(-4deg)}to{transform:rotate(4deg) translateY(-3px)}}
-.c2-poop{position:fixed;z-index:70;bottom:26.5vh;left:50%;font-size:30px;transform:translateX(-50%) scale(0);animation:c2plop .5s cubic-bezier(.2,1.4,.4,1) forwards}
-@keyframes c2plop{to{transform:translateX(-50%) scale(1)}}
+/* placed relative to the BEAR, not the screen: --px is his rear, --pb the floor.
+   z-index 68 sits BEHIND the grizzly (70) so it emerges from behind him. */
+.c2-poop{position:fixed;z-index:68;bottom:var(--pb,23vh);left:var(--px,38vw);font-size:30px;
+  transform:scale(0) translateY(-6px);animation:c2plop .55s cubic-bezier(.2,1.5,.4,1) forwards}
+@keyframes c2plop{60%{transform:scale(1.12) translateY(1px)}to{transform:scale(1) translateY(0)}}
 /* ── THE MONEY TRUCK (jackpot) — twice the size, shaking, bags out the back ── */
 .c2-mtruck{position:fixed;z-index:70;left:50%;bottom:26vh;width:275px;height:124px;transform:translateX(140vw)}
 .c2-layer.money.on .c2-mtruck{animation:c2mrev 1.5s cubic-bezier(.2,.9,.3,1) forwards}
@@ -1441,52 +1444,6 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 @media (prefers-reduced-motion: reduce){
   .c2-truck,.c2-junk,.c2-tom,.c2-fly,.c2-plane,.c2-jet,.c2-blk,.c2-poop,.c2-mtruck,.c2-bag,.c2-griz .leg,.c2-griz .body{animation:none !important}
 }
-</style>
-
-<style id="coin3d">
-/* ══ THE BIG COIN GETS ITS EDGE ══════════════════════════════════════════════
-   Same law as the falling coins: a disc reads as printed until it has a rim that
-   catches light differently from its face. The existing face gradient and inset
-   rings are untouched — this adds thickness AROUND them.
-   The rim rides .coin (which does NOT flip), so it stays put while the faces turn,
-   which is exactly how a real coin's edge behaves. ══════════════════════════ */
-.coin{
-  /* the standing edge: stacked rings, lit from above-left, shading to the underside */
-  box-shadow:
-    0 0 0 calc(var(--sz)*.012) #6B4E0C,                    /* outer milled edge  */
-    0 0 0 calc(var(--sz)*.020) #9A7415,                    /* edge mid-tone      */
-    0 calc(var(--sz)*.010) 0 calc(var(--sz)*.016) #56400A, /* the underside      */
-    0 calc(var(--sz)*.022) calc(var(--sz)*.030) rgba(0,0,0,.55),
-    0 18px 60px rgba(0,0,0,.75);                           /* the original drop  */
-}
-/* crown light along the top-left arc — the single strongest depth cue */
-.coin::before{
-  content:"";position:absolute;inset:calc(var(--sz)*-.012);border-radius:50%;
-  pointer-events:none;z-index:2;
-  background:linear-gradient(148deg,rgba(255,248,214,.85) 0%,rgba(255,248,214,0) 26%,
-             rgba(0,0,0,0) 62%,rgba(52,36,4,.55) 100%);
-  -webkit-mask:radial-gradient(circle,transparent calc(50% - var(--sz)*.021),#000 calc(50% - var(--sz)*.020));
-  mask:radial-gradient(circle,transparent calc(50% - var(--sz)*.021),#000 calc(50% - var(--sz)*.020));
-}
-/* a slow specular sweep across the metal — light moving over a solid object */
-.coin::after{
-  content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;z-index:3;
-  background:linear-gradient(115deg,rgba(255,255,255,0) 38%,rgba(255,255,255,.30) 47%,
-             rgba(255,255,255,0) 56%);
-  animation:coinSheen 4.2s ease-in-out infinite;
-}
-@keyframes coinSheen{0%,72%{transform:translateX(-58%)}100%{transform:translateX(58%)}}
-/* the faces gain their own relief so the struck detail sits ON metal, not paper */
-.coin .bb-face{
-  box-shadow:
-    inset 0 0 0 calc(var(--sz)*.045) rgba(139,105,20,.85),
-    inset 0 0 0 calc(var(--sz)*.07) rgba(243,227,180,.5),
-    inset 0 calc(var(--sz)*.035) calc(var(--sz)*.05) rgba(255,248,214,.30),
-    inset 0 calc(var(--sz)*-.045) calc(var(--sz)*.06) rgba(74,48,4,.42);
-}
-/* skinned coins keep their flat photo face — their rim still comes from .coin */
-.coin.skinned .bb-face{box-shadow:none}
-@media (prefers-reduced-motion: reduce){.coin::after{animation:none;opacity:.18}}
 </style>
 </head>
 <body>
@@ -5898,15 +5855,19 @@ function presentKicker(arm, label){
     later(function(){
       if (SFX) SFX.fart();                       /* merch slot: swap for a custom sound */
       var p1 = el("span", "c2-poop", "\uD83D\uDCA9");
-      p1.style.marginLeft = "-52px"; p1.style.fontSize = "34px";
+      p1.style.setProperty("--px", "calc(38vw + 14px)");   /* his rear, not the screen centre */
+      p1.style.setProperty("--pb", "22.6vh");
+      p1.style.fontSize = "34px";
       layer.appendChild(p1);
     }, 3050);
     later(function(){
       if (SFX && SFX.plap) SFX.plap();          /* the second one lands with its own note */
       var p2 = el("span", "c2-poop", "\uD83D\uDCA9");
-      p2.style.marginLeft = "44px"; p2.style.fontSize = "27px"; p2.style.bottom = "24.5vh";
+      p2.style.setProperty("--px", "calc(38vw - 22px)");   /* further behind him */
+      p2.style.setProperty("--pb", "23.4vh");
+      p2.style.fontSize = "27px";
       layer.appendChild(p2);
-    }, 3380);
+    }, 3460);
     later(function(){ b.classList.remove("squat"); b.classList.add("off"); }, 3600);
     later(function(){
       for (var i = 0; i < 6; i++){                    /* minimum five; six for good measure */
