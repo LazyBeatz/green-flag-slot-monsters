@@ -496,6 +496,20 @@ html.hut-lock,html.hut-lock body{overflow:hidden}
 .hut-pair{position:absolute;top:calc(8px + env(safe-area-inset-top));right:calc(8px + env(safe-area-inset-right));
   z-index:12;display:flex;flex-direction:column;gap:8px}
 /* the machine wears its own controls — they ride the cabinet, never hover over it */
+/* the dream button now rides the lamp row where the dead label sat */
+/* THE BUTTON GROWS TO FIT ITS WORDS — never the words spilling past the button.
+   nowrap was the defect: it forbade the only escape valve the text had. Now the
+   label may wrap to a second line and the control gets taller to hold it, so the
+   words stay inside the border at every width down to the narrowest phone. */
+.bonus-lamp .lamp-dream{flex:1 1 auto;min-width:0;max-width:210px;font-size:10.5px;
+  letter-spacing:.03em;min-height:40px;height:auto;padding:7px 10px;margin:0;
+  white-space:normal;overflow-wrap:break-word;word-break:normal;hyphens:none;
+  line-height:1.25;display:flex;align-items:center;justify-content:center;text-align:center}
+/* the row lets its tallest child set the height instead of clipping it */
+.bonus-lamp{align-items:stretch}
+@media (max-width:360px){.bonus-lamp .lamp-dream{font-size:9.5px;letter-spacing:.02em;padding:6px 7px}}
+/* the recent-spins pill lives under the ticker box it belongs to */
+.tray-under{width:100%;margin-top:6px;min-height:34px;font-size:10px;letter-spacing:.05em}
 .mute-pair{position:absolute;top:calc(8px + env(safe-area-inset-top));left:calc(8px + env(safe-area-inset-left));z-index:12}
 .mute-pair button{width:44px;height:44px;border-radius:50%;background:rgba(10,11,19,.85);border:2px solid var(--gold);color:#EED9A0;font-size:19px;font-weight:800;cursor:pointer;padding:0;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.45)}
 .mute-pair button:active{transform:translateY(1px) scale(.985)}
@@ -1373,18 +1387,18 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 .c2-poop{position:fixed;z-index:70;bottom:26.5vh;left:50%;font-size:30px;transform:translateX(-50%) scale(0);animation:c2plop .5s cubic-bezier(.2,1.4,.4,1) forwards}
 @keyframes c2plop{to{transform:translateX(-50%) scale(1)}}
 /* ── THE MONEY TRUCK (jackpot) — twice the size, shaking, bags out the back ── */
-.c2-mtruck{position:fixed;z-index:70;left:50%;bottom:26vh;width:380px;height:172px;transform:translateX(140vw)}
+.c2-mtruck{position:fixed;z-index:70;left:50%;bottom:26vh;width:323px;height:146px;transform:translateX(140vw)}
 .c2-layer.money.on .c2-mtruck{animation:c2mrev 1.5s cubic-bezier(.2,.9,.3,1) forwards}
 @keyframes c2mrev{to{transform:translateX(-50%)}}
 .c2-mtruck.heave{animation:c2heave .28s ease-in-out infinite}
 @keyframes c2heave{0%,100%{transform:translateX(-50%) rotate(0deg)}35%{transform:translateX(-50%) translateY(-5px) rotate(-1.4deg)}70%{transform:translateX(-50%) translateY(2px) rotate(1deg)}}
-.c2-mcab{position:absolute;left:0;bottom:26px;width:104px;height:88px;background:linear-gradient(180deg,#2E7D5B,#1C5540);border-radius:14px 8px 8px 8px;box-shadow:inset 0 3px 0 rgba(255,255,255,.2)}
-.c2-mcab::after{content:"";position:absolute;top:12px;left:16px;width:60px;height:28px;background:#BCD8E8;border-radius:5px}
-.c2-mbed{position:absolute;right:0;bottom:26px;width:252px;height:116px;background:linear-gradient(180deg,#2F6E50,#1F4C38);border-radius:10px;box-shadow:inset 0 3px 0 rgba(255,255,255,.16)}
-.c2-mbed::after{content:"$";position:absolute;top:30px;left:50%;transform:translateX(-50%);font-size:54px;font-weight:800;color:#C8A951;text-shadow:0 2px 6px rgba(0,0,0,.5)}
-.c2-mgate{position:absolute;right:-4px;bottom:26px;width:12px;height:116px;background:#173D2C;border-radius:3px;transform-origin:top center;transition:transform .5s ease-out}
+.c2-mcab{position:absolute;left:0;bottom:22px;width:88px;height:75px;background:linear-gradient(180deg,#2E7D5B,#1C5540);border-radius:14px 8px 8px 8px;box-shadow:inset 0 3px 0 rgba(255,255,255,.2)}
+.c2-mcab::after{content:"";position:absolute;top:10px;left:14px;width:51px;height:24px;background:#BCD8E8;border-radius:5px}
+.c2-mbed{position:absolute;right:0;bottom:22px;width:214px;height:99px;background:linear-gradient(180deg,#2F6E50,#1F4C38);border-radius:10px;box-shadow:inset 0 3px 0 rgba(255,255,255,.16)}
+.c2-mbed::after{content:"$";position:absolute;top:24px;left:50%;transform:translateX(-50%);font-size:46px;font-weight:800;color:#C8A951;text-shadow:0 2px 6px rgba(0,0,0,.5)}
+.c2-mgate{position:absolute;right:-4px;bottom:22px;width:10px;height:99px;background:#173D2C;border-radius:3px;transform-origin:top center;transition:transform .5s ease-out}
 .c2-mtruck.open .c2-mgate{transform:rotate(78deg)}
-.c2-mwheel{position:absolute;bottom:0;width:52px;height:52px;background:radial-gradient(circle at 35% 35%,#5A5A5A,#101010 70%);border-radius:50%}
+.c2-mwheel{position:absolute;bottom:0;width:44px;height:44px;background:radial-gradient(circle at 35% 35%,#5A5A5A,#101010 70%);border-radius:50%}
 .c2-bag{position:fixed;z-index:70;font-size:38px;animation:c2bag 1.15s cubic-bezier(.35,.02,.6,1) forwards}
 @keyframes c2bag{0%{transform:translate(0,0) rotate(0deg)}100%{transform:translate(var(--bx),42vh) rotate(var(--br));opacity:.96}}
 .c2-nose{display:inline-block;transform:scaleX(-1);font-size:76px;line-height:1}
@@ -1474,7 +1488,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
         <button class="theme-toggle" id="themeBtn" aria-label="Colour theme: dark" title="Theme: dark">&#9790;</button>
         <span class="tt-label" id="themeLbl" aria-hidden="true">Dark</span>
       </div>
-      <span class="bl-label" aria-hidden="true">Bonus RRG Leader</span>
+      <button class="dream lamp-dream" id="btnDream" disabled aria-disabled="true" title="Arms on Tier 2 or better">I HAVE A $ DREAM<i class="bring"><s></s></i></button>
       <span class="bl-club" role="button" tabindex="0" aria-label="Show RRG leaders">&#9827;</span>
       <div class="theme-stack">
         <button class="spade-btn" id="btnSpade" disabled aria-disabled="true" title="Hail Mary call &#8212; arms after any spin">&#9824;&#xFE0E;<i class="bring"><s></s></i></button>
@@ -1531,8 +1545,6 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
       <div class="kp-cap" id="hmCap"></div>
       <div class="hm-beware">&#9824;&#xFE0E;BUYER BEWARE!!!&#9824;&#xFE0E;</div>
     </div>
-    <button class="dream deck-wide" id="btnDream" disabled aria-disabled="true" title="Arms on Tier 2 or better">I HAVE A $ DREAM<i class="bring"><s></s></i></button>
-    <button class="tray" id="tray" aria-haspopup="dialog"><span id="trayTxt">VIEW RECENT SPINS</span></button>
     <div class="pmirr" id="mirrorLayer" role="dialog" aria-label="Portfolio Mirror">
       <div class="mbg"></div>
       <div class="mwrap">
@@ -1702,6 +1714,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
         <input id="tickerIn" inputmode="text" enterkeyhint="go" autocomplete="off" spellcheck="false" maxlength="10" placeholder="Ticker or company &#8212; try TTWO or Aritzia" aria-label="Stock ticker">
         <button type="button" class="rlx-br" data-rlx="cas" aria-label="Browse all companies">&#128214;</button>
       </div>
+      <button class="tray tray-under" id="tray" aria-haspopup="dialog"><span id="trayTxt">VIEW RECENT SPINS</span></button>
     </div>
     <div class="in-cell in-cell-coin">
       <span class="in-head" aria-hidden="true">Insert Coin</span>
@@ -5816,11 +5829,15 @@ function presentKicker(arm, label){
     later(function(){ b.classList.remove("run"); b.classList.add("squat"); }, 2450);
     later(function(){
       if (SFX) SFX.fart();                       /* merch slot: swap for a custom sound */
-      var p1 = el("span", "c2-poop", "\uD83D\uDCA9"); p1.style.marginLeft = "-26px"; layer.appendChild(p1);
+      var p1 = el("span", "c2-poop", "\uD83D\uDCA9");
+      p1.style.marginLeft = "-52px"; p1.style.fontSize = "34px";
+      layer.appendChild(p1);
     }, 3050);
     later(function(){
+      if (SFX && SFX.plap) SFX.plap();          /* the second one lands with its own note */
       var p2 = el("span", "c2-poop", "\uD83D\uDCA9");
-      p2.style.marginLeft = "18px"; p2.style.fontSize = "26px"; layer.appendChild(p2);
+      p2.style.marginLeft = "44px"; p2.style.fontSize = "27px"; p2.style.bottom = "24.5vh";
+      layer.appendChild(p2);
     }, 3380);
     later(function(){ b.classList.remove("squat"); b.classList.add("off"); }, 3600);
     later(function(){
@@ -5845,8 +5862,8 @@ function presentKicker(arm, label){
     tr.appendChild(el("div", "c2-mbed"));
     tr.appendChild(el("div", "c2-mgate"));
     tr.appendChild(el("div", "c2-mcab"));
-    var w1 = el("div", "c2-mwheel"); w1.style.left = "18px"; tr.appendChild(w1);
-    var w2 = el("div", "c2-mwheel"); w2.style.right = "34px"; tr.appendChild(w2);
+    var w1 = el("div", "c2-mwheel"); w1.style.left = "15px"; tr.appendChild(w1);
+    var w2 = el("div", "c2-mwheel"); w2.style.right = "29px"; tr.appendChild(w2);
     layer.appendChild(tr);
     later(function(){ tr.classList.add("open"); }, 1600);
     later(function(){ tr.classList.add("heave"); }, 1800);
@@ -5854,7 +5871,7 @@ function presentKicker(arm, label){
       for (var i = 0; i < 14; i++){
         (function(i){
           var b = el("span", "c2-bag", "\uD83D\uDCB0");
-          b.style.left = "calc(50% + 150px)";
+          b.style.left = "calc(50% + 128px)";
           b.style.bottom = "34vh";
           b.style.setProperty("--bx", (Math.random() * 62 - 6) + "vw");
           b.style.setProperty("--br", (Math.random() * 720 - 360) + "deg");
@@ -5871,7 +5888,7 @@ function presentKicker(arm, label){
     open("jets");
     if (RM){ staticCard("\u2708\uFE0F FLYOVER HONORS"); return; }
     layer.appendChild(el("div", "c2-head", "\u2708\uFE0F FLYOVER HONORS"));
-    var off = [0, -4.6, 4.6, -9.2, 9.2], del = [0, 150, 150, 300, 300];
+    var off = [0, -5.8, 5.8, -11.6, 11.6], del = [0, 150, 150, 300, 300];
     for (var i = 0; i < 5; i++){
       var j = el("span", "c2-jet", "\u2708\uFE0F");
       j.style.top = (16 + off[i]) + "vh";
@@ -5921,4 +5938,3 @@ function presentKicker(arm, label){
 </script>
 </body>
 </html>
-
