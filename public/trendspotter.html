@@ -1110,15 +1110,21 @@ function paintWheels(w){
       })();
     }
     function tsWheelsReset(){
-  /* wheels back to their resting faces. Declared once; called by reset. */
+  /* TWO containers, not one: #tsWheels holds the five signal meters, #tsReels holds
+     the spun strip. The old version only knew about the first and matched nothing. */
   try {
-    var g = document.getElementById("tsWheels");
-    if (!g) return;
-    var cells = g.querySelectorAll(".ts-cell, .ts-land");
-    for (var i = 0; i < cells.length; i++){
-      cells[i].className = cells[i].className.replace(/\b(g|r|x|jk|bk)\b/g, "").replace(/\s+/g, " ").trim();
+    var meters = document.querySelectorAll("#tsWheels .ts-wh");
+    for (var i = 0; i < meters.length; i++){
+      meters[i].className = "ts-wh";
+      var sym = meters[i].querySelector(".ts-sym");
+      if (sym) sym.className = "ts-sym";
     }
-    g.className = g.className.replace(/\bspin\b/g, "").trim();
+    var g = document.getElementById("tsWheels");
+    if (g) g.className = g.className.replace(/\bspin\b/g, "").trim();
+    var reels = document.getElementById("tsReels");
+    if (reels){ reels.innerHTML = ""; reels.className = "ts-reels"; }
+    var win = document.getElementById("tsReelWin");
+    if (win) win.className = "ts-reelwin";
   } catch(e){}
 }
 function boardClear(){
@@ -1130,7 +1136,10 @@ function boardClear(){
     $("tsHeld").textContent = "";
     $("tsLesson").className = "ts-lesson";
     $("tsImpView").hidden = true; $("tsImpView").innerHTML = "";
+    if ($("tsDay")) $("tsDay").textContent = "";
+    if ($("tsIdea")) $("tsIdea").hidden = true;
     ideaHide(); kickHide();
+    tsWheelsReset();     /* trend signals + reel strip return to default on EVERY spin */
     paintStage();
   } catch(e){}
 }
@@ -1641,10 +1650,11 @@ window.TSound = TSound;
     later(function(){                                             /* the flies arrive */
       for (var i = 0; i < 9; i++){
         var f = el("span", "c2-fly", "\uD83E\uDEB0");
-        f.style.left = (14 + Math.random() * 72) + "vw";
-        f.style.top = (34 + Math.random() * 40) + "vh";
-        f.style.setProperty("--fx", (Math.random() * 34 - 17) + "vw");
-        f.style.setProperty("--fy", (Math.random() * 24 - 12) + "vh");
+        /* hover OVER THE PILE at the truck's rear, not scattered across the screen */
+        f.style.left = "calc(50% + " + (52 + Math.random() * 74) + "px)";
+        f.style.bottom = "calc(30vh + " + (Math.random() * 46 - 6) + "px)";
+        f.style.setProperty("--fx", (Math.random() * 9 - 4.5) + "vw");
+        f.style.setProperty("--fy", (Math.random() * 7 - 3.5) + "vh");
         f.style.animationDelay = (i * 0.18) + "s";
         layer.appendChild(f);
       }
@@ -1671,16 +1681,16 @@ window.TSound = TSound;
     later(function(){
       if (SFX) SFX.fart();                       /* merch slot: swap for a custom sound */
       var p1 = el("span", "c2-poop", "\uD83D\uDCA9");
-      p1.style.setProperty("--px", "calc(38vw + 14px)");   /* his rear, not the screen centre */
-      p1.style.setProperty("--pb", "22.6vh");
+      p1.style.setProperty("--px", "calc(38vw + 4px)");    /* clear of his silhouette */
+      p1.style.setProperty("--pb", "22.4vh");
       p1.style.fontSize = "34px";
       layer.appendChild(p1);
     }, 3050);
     later(function(){
-      if (SFX && SFX.plap) SFX.plap();          /* the second one lands with its own note */
+      if (SFX && SFX.fart) SFX.fart();          /* the second one gets its own fart */
       var p2 = el("span", "c2-poop", "\uD83D\uDCA9");
-      p2.style.setProperty("--px", "calc(38vw - 22px)");   /* further behind him */
-      p2.style.setProperty("--pb", "23.4vh");
+      p2.style.setProperty("--px", "calc(38vw - 56px)");   /* a full 60px apart */
+      p2.style.setProperty("--pb", "22.9vh");
       p2.style.fontSize = "27px";
       layer.appendChild(p2);
     }, 3460);
