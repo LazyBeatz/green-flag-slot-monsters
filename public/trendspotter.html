@@ -33,7 +33,23 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 
 
 
+.ts-entrylab{display:block;font-family:'Jost',system-ui,sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ts-dim);margin:12px 0 -6px 3px}
 .ts-entry{display:flex;gap:8px;margin:12px 0;max-width:100%;min-width:0}
+.ts-tkwrap{position:relative;flex:1 1 0;min-width:0;display:flex;overflow:hidden;border-radius:11px}
+.ts-tkwrap .ts-tk{flex:1 1 0;min-width:0}
+/* A PLACEHOLDER THAT CANNOT BE READ IS NOT AN INVITATION. The full sentence
+   scrolls slowly across the box, then repeats — so a narrow phone still shows
+   the whole prompt. It stops the instant the user types (nothing may distract
+   from their own text) and stops entirely under reduced-motion. */
+.ph-marq{position:absolute;left:12px;right:12px;top:0;bottom:0;display:flex;align-items:center;
+  overflow:hidden;pointer-events:none;z-index:1}
+.ph-marq span{white-space:nowrap;animation:phScroll 13s linear infinite}
+@keyframes phScroll{0%{transform:translateX(0)}8%{transform:translateX(0)}
+  92%{transform:translateX(calc(-100% + 62vw))}100%{transform:translateX(calc(-100% + 62vw))}}
+.ph-marq.off{display:none}
+@media (prefers-reduced-motion: reduce){.ph-marq span{animation:none}}
+
 /* on a narrow screen the TICKER BOX yields and the SPIN button keeps its size —
    the placeholder shortens rather than the control being pushed off the cabinet */
 @media (max-width:380px){
@@ -50,7 +66,12 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .ts-tk:focus{outline:none;border-color:var(--ts-teal);box-shadow:0 0 10px rgba(79,216,199,.25)}
 .ts-rolobtn{display:block;width:100%;margin:8px 0 0;min-height:44px;padding:10px 12px;background:var(--ts-panel);border:1.5px dashed var(--ts-line);color:var(--ts-gold);border-radius:13px;font-family:'Jost',system-ui,sans-serif;font-size:13px;letter-spacing:.06em;cursor:pointer}.ts-rolobtn:active{transform:translateY(1px)}.ts-rolobtn:focus-visible{outline:2px solid var(--ts-teal);outline-offset:2px}
 .ts-rolobtn:focus-visible{outline:2px solid var(--ts-teal);outline-offset:2px}
-.ts-hint{font-size:11.5px;color:var(--ts-dim2);text-align:center;margin:2px 0 10px;line-height:1.5}
+/* prime real estate on the cabinet — legible, not fine print */
+.ts-hint{font-size:12.5px;color:var(--ts-dim);text-align:center;margin:2px 0 10px;line-height:1.55}
+.ts-hint b{color:var(--ts-gold)}
+/* the plain-language anchor note lives in the footer, below the cross-cabinet link */
+.ts-anchornote{max-width:560px;margin:10px auto;font-size:12px;line-height:1.6;color:var(--ts-dim);text-align:left;padding:11px 13px;border:1px solid var(--ts-line);border-radius:10px;background:rgba(6,12,20,.55)}
+.ts-anchornote b{color:var(--ts-gold)}
 
 .ts-wh{display:flex;flex-direction:row;align-items:center;gap:9px;padding:7px 11px;border-radius:10px;border:1.5px solid var(--ts-line);background:var(--ts-panel);transition:border-color .25s, box-shadow .25s;position:relative}.ts-wh::after{content:"";width:10px;height:10px;border-radius:50%;margin-left:auto;background:var(--ts-line);box-shadow:none;transition:background .25s, box-shadow .25s}.ts-wh.g::after{background:#35D96B;box-shadow:0 0 8px rgba(53,217,107,.8)}.ts-wh.r::after{background:var(--ts-redB);box-shadow:0 0 6px rgba(233,84,84,.6)}.ts-wh.x::after{background:#3A4358}
 .ts-wh .ts-sym{font-size:23px;line-height:1}
@@ -92,7 +113,10 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .ts-lesson b{color:var(--ts-teal)}
 .ts-sharebox{display:none;margin-top:12px}
 .ts-sharebox.show{display:block}
-.ts-memo{width:100%;background:#0B0F1B;border:1px solid var(--ts-line);border-radius:11px;color:var(--ts-ink);font-family:inherit;font-size:13px;padding:10px 12px;resize:vertical;min-height:44px}
+/* the memo is its own labelled compartment, matching cabinet #1's treatment */
+.ts-memobox{margin-top:10px;border:1.5px dashed var(--ts-line);border-radius:12px;padding:9px 10px 10px;background:rgba(6,12,20,.45)}
+.ts-memolab{display:block;font-family:'Jost',system-ui,sans-serif;font-size:10.5px;letter-spacing:.12em;color:var(--ts-dim);margin:0 0 6px 2px}
+.ts-memo{width:100%;background:#0B0F1B;border:1px solid var(--ts-line);border-radius:9px;color:var(--ts-ink);font-family:inherit;font-size:13px;padding:10px 12px;resize:vertical;min-height:52px;box-sizing:border-box}
 .ts-memo:focus{outline:none;border-color:var(--ts-teal)}
 .ts-sharerow{display:flex;gap:8px;margin-top:8px}
 .ts-btn2{flex:1;background:var(--ts-panel);border:1.5px solid var(--ts-teal2);color:var(--ts-teal);border-radius:11px;padding:11px;font-family:'Jost',system-ui,sans-serif;font-size:13px;letter-spacing:.08em;cursor:pointer;min-height:46px}
@@ -133,6 +157,13 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 .ts-banner{position:fixed;top:26vh;left:0;right:0;text-align:center;font-family:'Jost',system-ui,sans-serif;font-size:26px;color:var(--ts-gold);text-shadow:0 3px 14px rgba(0,0,0,.9);letter-spacing:.06em;animation:tsIn .5s ease}
 .ts-banner small{display:block;font-size:13px;color:var(--ts-teal);margin-top:6px;letter-spacing:.1em}
 .ts-kick{position:relative;width:100%;pointer-events:auto;background:#0C1019;border:1.5px solid var(--ts-goldL);border-radius:14px;padding:13px;max-width:436px;margin:0 auto;animation:tsIn .5s ease}
+/* THE CLOSE BUTTON IS ABSOLUTE, SO IT CLAIMS NO SPACE — the panel must reserve
+   the corner for it. A float on a zero-content shim makes the first lines of text
+   FLOW AROUND the button and then reclaim the full width below it, which beats a
+   blanket padding-right that would indent every paragraph in the panel. */
+.ts-kick.has-x::before{content:"";float:right;width:52px;height:46px;shape-outside:inset(0)}
+.ts-kick.has-x > h4{padding-right:52px}
+.ts-kick.has-x::after{content:"";display:block;clear:both}
 .ts-kick h4{font-family:'Jost',system-ui,sans-serif;font-size:13px;color:var(--ts-gold);letter-spacing:.1em;margin-bottom:6px}
 .ts-kick p{font-size:12.5px;color:#C7D3E2;line-height:1.55}
 .ts-kick .ts-model{font-size:10.5px;color:var(--ts-dim2);margin-top:6px}
@@ -326,12 +357,16 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
     </div>
     
     <div class="ts-marq" id="tsMarqBox" aria-hidden="true"><div class="ts-marqin" id="tsMarq"><span id="tsMarqTx"></span><span id="tsMarqTx2"></span></div></div>
-  <div class="ts-entry">
-      <input class="ts-tk" id="tsTk" placeholder="Ticker or company name&#8230;" inputmode="latin" autocapitalize="characters" autocomplete="off" enterkeyhint="go" aria-label="Ticker symbol">
+  <span class="ts-entrylab">Enter Stock</span>
+      <div class="ts-entry">
+      <div class="ts-tkwrap">
+        <input class="ts-tk" id="tsTk" placeholder="" inputmode="latin" autocapitalize="characters" autocomplete="off" enterkeyhint="go" aria-label="Type a Stock or Company Name">
+        <div class="ph-marq" id="tsPhMarq" aria-hidden="true"><span>Type Stock or Company Name &#8212; Try TTWO, Aritzia or RRG77777 &#183; &#160; Type Stock or Company Name &#8212; Try TTWO, Aritzia or RRG77777</span></div>
+      </div>
       <button class="ts-spin" id="tsSpin">SPIN</button>
     </div>
-    <button class="ts-rolobtn" id="tsRoloBtn" aria-label="Browse all 1,147 stocks">&#128218; Browse all 1,147 names</button>
-    <div class="ts-hint" id="tsHint">1,147 real companies &#183; anchor 11-Au-2026 &#183; try RRG77777 for the demo jackpot</div>
+    <button class="ts-rolobtn" id="tsRoloBtn" aria-label="Browse All 1,147 Stocks">&#128218; Browse All 1,147 Stocks</button>
+    <div class="ts-hint" id="tsHint"><b>1,147 real companies</b> &#8212; every stock in the S&amp;P 500, the Nasdaq-100 and the TSX Composite.<br>Try <b>RRG77777</b> for the full demo jackpot.</div>
     
     <div class="ts-reelwin" id="tsReelWin" aria-hidden="true"><span class="ts-nub l">&#9664;</span><span class="ts-nub r">&#9654;</span><div class="ts-payline"></div><div class="ts-reels" id="tsReels"></div></div>
   <div class="ts-verdict" id="tsVerdict" role="status" aria-live="polite">
@@ -353,7 +388,10 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
     <div class="ts-hist" id="tsHist"><h3>Your recent spins</h3><div id="tsHistList"></div></div>
  <div class="ts-sharebox" id="tsShareBox">
   <button class="ts-btn2 gold ts-sbfull" id="tsSectorBtn">&#127754; SECTOR STORY</button>
-  <textarea class="ts-memo" id="tsMemo" placeholder="&#128221; Memo &#183; trade catalyst (rides your share)" aria-label="Share memo"></textarea>
+  <div class="ts-memobox">
+        <span class="ts-memolab">&#128221; MEMO &#183; TRADE CATALYST</span>
+        <textarea class="ts-memo" id="tsMemo" placeholder="Pep talk, thesis, smack talk&#8230; it rides your share" aria-label="Share memo"></textarea>
+      </div>
   <div class="ts-sharerow">
     <button class="ts-btn2" id="tsShareBtn">&#128228; SHARE</button>
     <button class="ts-btn2" id="tsImportBtn">&#128229; IMPORT</button>
@@ -378,10 +416,17 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 </div>
   </div>
   <div class="ts-foot">
-    <span class="ts-chip">Data anchor 11-Au-26</span>
-    <span class="ts-chip" id="tsRrgChip">sector data as of 11-Au-26</span><br>
-    Educational signals &#8212; Not investment advice.<br>
     <a class="ts-xlink" href="https://green-flag-slot-monsters.lexbeatz.workers.dev" rel="noopener">&#127920; Play Green Flag Slot Monsters &#8594;</a>
+    <div class="ts-anchornote">
+      <b>What you are looking at.</b> This machine reads <b>1,147 real companies</b> &#8212; every stock in the
+      S&amp;P 500, the Nasdaq-100 and the TSX Composite. Every price, trend line and verdict is a
+      <b>photograph of the market taken on one day</b>, not a live feed.<br>
+      <span class="ts-chip">Price &amp; signal data anchored: 11-Au-2026</span>
+      <span class="ts-chip" id="tsRrgChip">Sector rotation data: 11-Au-2026</span><br>
+      Nothing moves until the next photograph is taken, so a stock&#8217;s real price today may differ
+      from what the wheels show.
+    </div>
+    Educational signals &#8212; Not investment advice.
   </div>
 </div>
 
@@ -870,6 +915,7 @@ function buildIdea(rec, tkr, tr){
   }
   var xb = document.createElement("button"); xb.className = "ts-x"; xb.textContent = "\u2715";
   xb.setAttribute("aria-label", "Close"); xb.style.cssText = "position:absolute;top:8px;right:8px";
+  kb.classList.add("has-x");   /* reserve the corner so text flows around it */
   xb.onclick = kickHide; kb.appendChild(xb); return kb;
 }
 function kickHide(){ var w = $("tsKickWrap"); w.className = "ts-kickwrap"; w.innerHTML = ""; }
@@ -882,6 +928,7 @@ function kickHide(){ var w = $("tsKickWrap"); w.className = "ts-kickwrap"; w.inn
       }
       var xb = document.createElement("button"); xb.className = "ts-x"; xb.textContent = "\u2715";
       xb.setAttribute("aria-label", "Close"); xb.style.cssText = "position:absolute;top:8px;right:8px";
+  kb.classList.add("has-x");   /* reserve the corner so text flows around it */
       xb.onclick = kickHide; kb.appendChild(xb);
       return kb;
     }
@@ -1165,7 +1212,14 @@ $("tsSpin").onclick = doSpin;
     sub($("tsRoloQ"), "placeholder");
     var h = $("tsHint"); if (h) h.innerHTML = h.innerHTML.replace(/^[\d,]+/, n);
   })();
-  $("tsTk").addEventListener("keydown", function(ev){ if (ev.key === "Enter"){ ev.preventDefault(); doSpin(); } });
+  (function(){
+  var inp = document.getElementById("tsTk"), pm = document.getElementById("tsPhMarq");
+  if (inp && pm){
+    var upd = function(){ pm.className = inp.value ? "ph-marq off" : "ph-marq"; };
+    inp.addEventListener("input", upd); inp.addEventListener("focus", upd); upd();
+  }
+})();
+$("tsTk").addEventListener("keydown", function(ev){ if (ev.key === "Enter"){ ev.preventDefault(); doSpin(); } });
 
 /* ── nudge (one gentle ask, never repeated) ── */
 /* R11: PRO nudge retired with the mode split */
@@ -1221,7 +1275,18 @@ $("tsShareBtn").onclick = function(){
     }
     
 $("tsSectorBtn").onclick = function(){
-  if (!lastSpinKey){ marqType("SPIN A STOCK FIRST"); return; }
+  if (!lastSpinKey){
+    /* a refusal must be SEEN at the control, not only typed into a marquee elsewhere */
+    marqType("SPIN A STOCK FIRST");
+    var nb = document.createElement("div"); nb.className = "ts-kick";
+    nb.innerHTML = "<h4>\uD83C\uDF0A SECTOR STORY</h4><p>Spin a stock first \u2014 the sector story describes the neighbourhood the last spin landed in.</p>";
+    var nx = document.createElement("button"); nx.className = "ts-x"; nx.textContent = "\u2715";
+    nx.setAttribute("aria-label", "Close"); nx.style.cssText = "position:absolute;top:8px;right:8px";
+    nx.onclick = kickHide; nb.appendChild(nx); nb.classList.add("has-x");
+    presentKick(nb);
+    if (window.TSound && TSound.rejectClunk) TSound.rejectClunk();
+    return;
+  }
   var rec = TSEED[lastSpinKey];
   var lead = TRRG.daily.indexOf(rec.s) >= 0, wlead = TRRG.weekly.indexOf(rec.s) >= 0;
   var msg = "<b>\uD83C\uDF0A " + rec.s + "</b> is " + lastSpinKey + "'s neighborhood. ";
@@ -1230,8 +1295,17 @@ $("tsSectorBtn").onclick = function(){
   else if (wlead) msg += "It's on the weekly leaders board \u2014 the slower, steadier list.";
   else msg += "It's not on the leaders board at this anchor. Stocks can still win in a resting neighborhood \u2014 it's just a headwind.";
   msg += " <i>(sector data as of " + TRRG.asOf + ")</i>";
+  /* answer arrives WHERE THE BUTTON IS. Writing it into the lesson panel far above
+     the share box made a working control read as dead. */
   $("tsLesson").innerHTML = msg;
   $("tsLesson").className = "ts-lesson show";
+  var sb = document.createElement("div"); sb.className = "ts-kick";
+  sb.innerHTML = "<h4>\uD83C\uDF0A SECTOR STORY</h4><p>" + msg + "</p>";
+  var sx = document.createElement("button"); sx.className = "ts-x"; sx.textContent = "\u2715";
+  sx.setAttribute("aria-label", "Close"); sx.style.cssText = "position:absolute;top:8px;right:8px";
+  sx.onclick = kickHide; sb.appendChild(sx); sb.classList.add("has-x");
+  presentKick(sb);
+  if (window.TSound && TSound.press) TSound.press();
   tsTally("sector", lastSpinKey);
 };
 var lastSpinKey = null;
@@ -1483,6 +1557,10 @@ const TSound = (function(){
     wake(){ try { if (ctx && ctx.state === "suspended") ctx.resume(); } catch(e){} }
   };
 })();
+/* EXPORT THE ENGINE. `const` does not attach to window; without this line every
+   `if (window.TSound)` guard is false and the cabinet runs silent. */
+window.TSound = TSound;
+
 
 </script>
 <script id="c2js">
