@@ -250,21 +250,33 @@ button{font-family:inherit;cursor:pointer;border:none}
   cursor:not-allowed;transition:.3s;
   box-shadow:0 0 0 2.5px rgba(10,11,19,.9),0 0 0 4px #3A4250,0 3px 7px rgba(0,0,0,.6),
    inset 0 2px 3px rgba(255,255,255,.12),inset 0 -3px 4px rgba(0,0,0,.55)}
-.kicker.armed{cursor:pointer;color:#EAFBF0;animation:kicker3D .8s linear infinite}
+.kicker.armed{cursor:pointer;color:#EAFBF0;animation:kicker3D 3.6s ease-in-out infinite}
 @keyframes kicker3D{
-  0%,45%{border-color:#35D96B;background:#0A1A10;color:#B9FFD1;
+  /* smooth travel: single stops interpolate; the previous hold-then-cut shape
+     held each colour then CUT, and a cut is what reads as a flash */
+  0%{border-color:#35D96B;background:#0A1A10;color:#B9FFD1;
     box-shadow:0 0 0 2.5px rgba(10,11,19,.9),0 0 0 4px #35D96B,0 0 16px rgba(53,217,107,.75),
      inset 0 2px 3px rgba(255,255,255,.16),inset 0 -3px 4px rgba(0,0,0,.5);
     text-shadow:0 0 8px rgba(53,217,107,.9)}
-  50%,95%{border-color:#4FC3F7;background:#0A1420;color:#CDEFFF;
+  50%{border-color:#4FC3F7;background:#0A1420;color:#CDEFFF;
     box-shadow:0 0 0 2.5px rgba(10,11,19,.9),0 0 0 4px #4FC3F7,0 0 16px rgba(79,195,247,.8),
      inset 0 2px 3px rgba(255,255,255,.16),inset 0 -3px 4px rgba(0,0,0,.5);
-    text-shadow:0 0 8px rgba(79,195,247,.9)}}
-@keyframes kickerFlash{
-  0%,45%{border-color:#35D96B;box-shadow:0 0 16px rgba(53,217,107,.75),inset 0 0 10px rgba(53,217,107,.25);
+    text-shadow:0 0 8px rgba(79,195,247,.9)}
+  100%{border-color:#35D96B;background:#0A1A10;color:#B9FFD1;
+    box-shadow:0 0 0 2.5px rgba(10,11,19,.9),0 0 0 4px #35D96B,0 0 16px rgba(53,217,107,.75),
+     inset 0 2px 3px rgba(255,255,255,.16),inset 0 -3px 4px rgba(0,0,0,.5);
     text-shadow:0 0 8px rgba(53,217,107,.9)}
-  50%,95%{border-color:#4FC3F7;box-shadow:0 0 16px rgba(79,195,247,.8),inset 0 0 10px rgba(79,195,247,.25);
-    text-shadow:0 0 8px rgba(79,195,247,.9)}}
+}
+@keyframes kickerFlash{
+  /* smooth travel: single stops interpolate; the previous hold-then-cut shape
+     held each colour then CUT, and a cut is what reads as a flash */
+  0%{border-color:#35D96B;box-shadow:0 0 16px rgba(53,217,107,.75),inset 0 0 10px rgba(53,217,107,.25);
+    text-shadow:0 0 8px rgba(53,217,107,.9)}
+  50%{border-color:#4FC3F7;box-shadow:0 0 16px rgba(79,195,247,.8),inset 0 0 10px rgba(79,195,247,.25);
+    text-shadow:0 0 8px rgba(79,195,247,.9)}
+  100%{border-color:#35D96B;box-shadow:0 0 16px rgba(53,217,107,.75),inset 0 0 10px rgba(53,217,107,.25);
+    text-shadow:0 0 8px rgba(53,217,107,.9)}
+}
 .kicker.armed:active{transform:scale(.98)}
 .kicker-panel{display:none;margin-top:10px;border:2px solid var(--gold);border-radius:12px;
   background:#0A0B13;padding:10px 12px;
@@ -292,7 +304,7 @@ button{font-family:inherit;cursor:pointer;border:none}
 .dream{flex:1;min-height:30px;border-radius:8px;background:#0A0B13;border:2px solid #2A3242;
   color:#7E8DA1;font-family:'Bungee';font-size:9px;letter-spacing:.05em;padding:4px 8px;
   cursor:not-allowed;transition:.3s}
-.dream.armed{cursor:pointer;color:#EAFBF0;animation:kickerFlash .8s linear infinite}
+.dream.armed{cursor:pointer;color:#EAFBF0;animation:kickerFlash 3.6s ease-in-out infinite}
 .bonus-lamp .lamp-dream.armed{box-shadow:inset 0 0 0 2px #0A0B13, inset 0 0 0 3.5px #C8A951}
 .dream.armed:active{transform:scale(.97)}
 .spade-btn{width:38px;height:38px;min-height:38px;flex:none;border-radius:50%;
@@ -521,6 +533,10 @@ html.hut-lock,html.hut-lock body{overflow:hidden}
 /* the marquee's positioning parent must be the INPUT'S OWN BOX. Anchored to the
    whole row it spanned the STOCKS button too, which is why the text appeared to
    sit on top of the border instead of inside it. */
+/* two headers on one line, each directly above the control it names */
+.in-heads{display:flex;gap:8px;align-items:flex-end;padding-right:0}
+.in-cell-tkr .in-heads .in-head{flex:1 1 0;min-width:0;padding-right:0}
+.in-heads .in-head-stk{flex:0 0 auto;min-width:52px;color:#8FD4F5}
 .fl-tkwrap{position:relative;flex:1 1 0;min-width:0;display:flex;overflow:hidden;border-radius:12px}
 .fl-tkwrap #tickerIn{flex:1 1 0;min-width:0;width:100%}
 /* the browse control now says what it is */
@@ -1162,16 +1178,23 @@ body.mirlock{overflow:hidden}
 .hdr-duo .battle-btn:active{transform:translateY(1.5px)}
 .dream.deck-wide{display:block;width:100%;flex:none;min-height:44px;margin-top:10px;border-radius:12px;font-size:11.5px;letter-spacing:.06em;padding:6px 10px;box-shadow:0 0 0 2.5px rgba(10,11,19,.9),0 0 0 4px #2A3242,0 3px 7px rgba(0,0,0,.6),inset 0 2px 3px rgba(255,255,255,.12),inset 0 -3px 4px rgba(0,0,0,.55)}
 .dream.deck-wide .bring{border-radius:12px}
-.dream.deck-wide.armed{animation:dreamWide3D .8s linear infinite}
+.dream.deck-wide.armed{animation:dreamWide3D 3.6s ease-in-out infinite}
 @keyframes dreamWide3D{
-  0%,45%{border-color:#35D96B;background:#0A1A10;color:#B9FFD1;
+  /* smooth travel: single stops interpolate; the previous hold-then-cut shape
+     held each colour then CUT, and a cut is what reads as a flash */
+  0%{border-color:#35D96B;background:#0A1A10;color:#B9FFD1;
     box-shadow:0 0 0 2.5px rgba(10,11,19,.9),0 0 0 4px #35D96B,0 0 16px rgba(53,217,107,.75),
      inset 0 2px 3px rgba(255,255,255,.16),inset 0 -3px 4px rgba(0,0,0,.5);
     text-shadow:0 0 8px rgba(53,217,107,.9)}
-  50%,95%{border-color:#4FC3F7;background:#0A1420;color:#CDEFFF;
+  50%{border-color:#4FC3F7;background:#0A1420;color:#CDEFFF;
     box-shadow:0 0 0 2.5px rgba(10,11,19,.9),0 0 0 4px #4FC3F7,0 0 16px rgba(79,195,247,.8),
      inset 0 2px 3px rgba(255,255,255,.16),inset 0 -3px 4px rgba(0,0,0,.5);
-    text-shadow:0 0 8px rgba(79,195,247,.9)}}
+    text-shadow:0 0 8px rgba(79,195,247,.9)}
+  100%{border-color:#35D96B;background:#0A1A10;color:#B9FFD1;
+    box-shadow:0 0 0 2.5px rgba(10,11,19,.9),0 0 0 4px #35D96B,0 0 16px rgba(53,217,107,.75),
+     inset 0 2px 3px rgba(255,255,255,.16),inset 0 -3px 4px rgba(0,0,0,.5);
+    text-shadow:0 0 8px rgba(53,217,107,.9)}
+}
 .in-row{align-items:flex-end}
 .in-cell{display:flex;flex-direction:column;gap:4px;min-width:0}
 .in-cell-tkr{flex:1;min-width:0}
@@ -1490,6 +1513,24 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 </style>
 </head>
 <body>
+<section class="verdict" id="verdict">
+  <div class="v-line" id="vLine">
+    <div class="stars" id="vStars"></div>
+    <div class="score" id="vScore"></div>
+    <div class="big" id="vBig"></div>
+    <div class="small" id="vSmall"></div>
+    <div class="duel" id="vDuel"></div>
+  </div>
+  <button class="btn-expand" id="btnExpand" aria-expanded="false">See the full signal card &#9662;</button>
+  <div class="card" id="card">
+    <div class="band" id="cardBand"><span id="cardTitle"></span><em id="cardTier"></em></div>
+    <div class="tiles" id="cardTiles"></div>
+    <div class="chips" id="cardChips"></div>
+    <div class="qline" id="cardQ"></div>
+    <div class="asof" id="cardAsof"></div>
+  </div>
+</section>
+
 <header class="marquee">
   <h1>GREEN FLAG<br>SLOT MONSTERS</h1>
   <div class="sub">Digital Stock Ticker Slot Machine</div>
@@ -1497,7 +1538,6 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
       <button id="mirToggle" class="mir-toggle" type="button">🪞 PORTFOLIO MIRROR</button>
       <button class="battle-btn" id="btnBattle">&#129354; BATTLE MODE <span class="mirror">&#129354;</span></button>
     </div>
-  <div class="lights" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
 </header>
 <div class="mute-pair"><button type="button" id="hutMute" aria-label="Mute sound" aria-pressed="false">&#128266;</button></div>
 <div class="hut-pair">
@@ -1776,13 +1816,16 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
   <div class="brandbar"><b>GREEN FLAG SLOT MONSTERS</b><span>Digital Stock Ticker Slot Machine</span></div>
   <div class="in-row">
     <div class="in-cell in-cell-tkr">
-      <span class="in-head" aria-hidden="true">Enter Stock</span>
+      <div class="in-heads">
+        <span class="in-head" aria-hidden="true">Enter Stock</span>
+        <span class="in-head in-head-stk" aria-hidden="true">Stocks</span>
+      </div>
       <div class="in-tkr">
         <div class="fl-tkwrap">
             <input id="tickerIn" inputmode="text" enterkeyhint="go" autocomplete="off" spellcheck="false" maxlength="10" placeholder="" aria-label="Type a Stock or Company Name">
             <div class="ph-marq" id="phMarq" aria-hidden="true"><span>Type Stock or Company Name &#8212; Try TTWO, Aritzia, DPM.TO or RRG77777 &#183; &#160; Type Stock or Company Name &#8212; Try TTWO, Aritzia, DPM.TO or RRG77777</span></div>
           </div>
-        <button type="button" class="rlx-br" data-rlx="cas" aria-label="Browse every company in the universe"><span class="rlx-ico">&#128214;</span><span class="rlx-lab">STOCKS</span></button>
+        <button type="button" class="rlx-br" data-rlx="cas" aria-label="Browse every company in the universe"><span class="rlx-ico">&#128214;</span><span class="rlx-lab">List</span></button>
       </div>
     </div>
     <div class="in-cell in-cell-coin">
@@ -1795,23 +1838,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
   <div class="bonus" id="bonusRow"><button id="btnBonus"></button></div>
 </section>
 
-<section class="verdict" id="verdict">
-  <div class="v-line" id="vLine">
-    <div class="stars" id="vStars"></div>
-    <div class="score" id="vScore"></div>
-    <div class="big" id="vBig"></div>
-    <div class="small" id="vSmall"></div>
-    <div class="duel" id="vDuel"></div>
-  </div>
-  <button class="btn-expand" id="btnExpand" aria-expanded="false">See the full signal card &#9662;</button>
-  <div class="card" id="card">
-    <div class="band" id="cardBand"><span id="cardTitle"></span><em id="cardTier"></em></div>
-    <div class="tiles" id="cardTiles"></div>
-    <div class="chips" id="cardChips"></div>
-    <div class="qline" id="cardQ"></div>
-    <div class="asof" id="cardAsof"></div>
-  </div>
-</section>
+
 
 <section class="memo-deck">
   <div class="memo-title">Memo &#183; trade catalyst</div>
@@ -5892,10 +5919,11 @@ function presentKicker(arm, label){
     later(function(){                                             /* the flies arrive */
       for (var i = 0; i < 9; i++){
         var f = el("span", "c2-fly", "\uD83E\uDEB0");
-        f.style.left = (14 + Math.random() * 72) + "vw";
-        f.style.top = (34 + Math.random() * 40) + "vh";
-        f.style.setProperty("--fx", (Math.random() * 34 - 17) + "vw");
-        f.style.setProperty("--fy", (Math.random() * 24 - 12) + "vh");
+        /* hover OVER THE PILE at the truck's rear, not scattered across the screen */
+        f.style.left = "calc(50% + " + (52 + Math.random() * 74) + "px)";
+        f.style.bottom = "calc(30vh + " + (Math.random() * 46 - 6) + "px)";
+        f.style.setProperty("--fx", (Math.random() * 9 - 4.5) + "vw");
+        f.style.setProperty("--fy", (Math.random() * 7 - 3.5) + "vh");
         f.style.animationDelay = (i * 0.18) + "s";
         layer.appendChild(f);
       }
@@ -5921,16 +5949,16 @@ function presentKicker(arm, label){
     later(function(){
       if (SFX) SFX.fart();                       /* merch slot: swap for a custom sound */
       var p1 = el("span", "c2-poop", "\uD83D\uDCA9");
-      p1.style.setProperty("--px", "calc(38vw + 14px)");   /* his rear, not the screen centre */
-      p1.style.setProperty("--pb", "22.6vh");
+      p1.style.setProperty("--px", "calc(38vw + 4px)");    /* clear of his silhouette */
+      p1.style.setProperty("--pb", "22.4vh");
       p1.style.fontSize = "34px";
       layer.appendChild(p1);
     }, 3050);
     later(function(){
-      if (SFX && SFX.plap) SFX.plap();          /* the second one lands with its own note */
+      if (SFX && SFX.fart) SFX.fart();          /* the second one gets its own fart */
       var p2 = el("span", "c2-poop", "\uD83D\uDCA9");
-      p2.style.setProperty("--px", "calc(38vw - 22px)");   /* further behind him */
-      p2.style.setProperty("--pb", "23.4vh");
+      p2.style.setProperty("--px", "calc(38vw - 56px)");   /* a full 60px apart */
+      p2.style.setProperty("--pb", "22.9vh");
       p2.style.fontSize = "27px";
       layer.appendChild(p2);
     }, 3460);
