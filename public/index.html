@@ -293,6 +293,7 @@ button{font-family:inherit;cursor:pointer;border:none}
   color:#7E8DA1;font-family:'Bungee';font-size:9px;letter-spacing:.05em;padding:4px 8px;
   cursor:not-allowed;transition:.3s}
 .dream.armed{cursor:pointer;color:#EAFBF0;animation:kickerFlash .8s linear infinite}
+.bonus-lamp .lamp-dream.armed{box-shadow:inset 0 0 0 2px #0A0B13, inset 0 0 0 3.5px #C8A951}
 .dream.armed:active{transform:scale(.97)}
 .spade-btn{width:38px;height:38px;min-height:38px;flex:none;border-radius:50%;
   background:radial-gradient(circle at 32% 28%,#1E2536,#0A0B13 72%);
@@ -501,7 +502,10 @@ html.hut-lock,html.hut-lock body{overflow:hidden}
    nowrap was the defect: it forbade the only escape valve the text had. Now the
    label may wrap to a second line and the control gets taller to hold it, so the
    words stay inside the border at every width down to the narrowest phone. */
-.bonus-lamp .lamp-dream{flex:1 1 auto;min-width:0;max-width:210px;font-size:10.5px;
+/* double outline: an inner rule inset from the border, the kicker's own grammar,
+   so the dream button reads as the same family of prize control */
+.bonus-lamp .lamp-dream{position:relative;box-shadow:inset 0 0 0 2px #0A0B13, inset 0 0 0 3.5px #3A4250;
+  flex:1 1 auto;min-width:0;max-width:210px;font-size:10.5px;
   letter-spacing:.03em;min-height:40px;height:auto;padding:7px 10px;margin:0;
   white-space:normal;overflow-wrap:break-word;word-break:normal;hyphens:none;
   line-height:1.25;display:flex;align-items:center;justify-content:center;text-align:center}
@@ -509,7 +513,37 @@ html.hut-lock,html.hut-lock body{overflow:hidden}
 .bonus-lamp{align-items:stretch}
 @media (max-width:360px){.bonus-lamp .lamp-dream{font-size:9.5px;letter-spacing:.02em;padding:6px 7px}}
 /* the recent-spins pill lives under the ticker box it belongs to */
-.tray-under{width:100%;margin-top:6px;min-height:34px;font-size:10px;letter-spacing:.05em}
+/* the pill spans the cabinet; the coin slot is then free to centre on the ticker box */
+.tray-wide{display:block;width:100%;margin:8px 0 6px;min-height:38px;font-size:11px;letter-spacing:.06em}
+/* the coin control matches the height of the ticker + browse boxes beside it */
+.in-cell-coin{align-self:flex-end}
+.btn-insert{min-height:44px;height:44px;padding:0 14px;font-size:12px;line-height:1.05;display:flex;align-items:center;justify-content:center}
+/* the marquee's positioning parent must be the INPUT'S OWN BOX. Anchored to the
+   whole row it spanned the STOCKS button too, which is why the text appeared to
+   sit on top of the border instead of inside it. */
+.fl-tkwrap{position:relative;flex:1 1 0;min-width:0;display:flex;overflow:hidden;border-radius:12px}
+.fl-tkwrap #tickerIn{flex:1 1 0;min-width:0;width:100%}
+/* the browse control now says what it is */
+.rlx-br{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:auto;min-width:52px;padding:0 8px}
+.rlx-ico{font-size:15px;line-height:1}
+.rlx-lab{font-family:'Jost',system-ui,sans-serif;font-size:7.5px;font-weight:700;letter-spacing:.1em;color:#8FD4F5;line-height:1}
+/* A PLACEHOLDER THAT CANNOT BE READ IS NOT AN INVITATION. The full sentence
+   scrolls slowly across the box, then repeats — so a narrow phone still shows
+   the whole prompt. It stops the instant the user types (nothing may distract
+   from their own text) and stops entirely under reduced-motion. */
+.ph-marq{position:absolute;left:12px;right:12px;top:0;bottom:0;display:flex;align-items:center;
+  overflow:hidden;pointer-events:none;z-index:1}
+.ph-marq span{white-space:nowrap;animation:phScroll 13s linear infinite}
+@keyframes phScroll{0%{transform:translateX(0)}8%{transform:translateX(0)}
+  92%{transform:translateX(calc(-100% + 62vw))}100%{transform:translateX(calc(-100% + 62vw))}}
+.ph-marq.off{display:none}
+@media (prefers-reduced-motion: reduce){.ph-marq span{animation:none}}
+
+/* the universe line is prime real estate — make it readable, not fine print */
+#hint{font-size:12px;line-height:1.55;opacity:.92}
+footer .anchornote{max-width:640px;margin:10px auto 8px;font-size:12px;line-height:1.6;color:#B9C4D4;text-align:left;padding:11px 14px;border:1px solid #2A3242;border-radius:10px;background:rgba(10,11,19,.5)}
+footer .anchornote b{color:#EED9A0}
+footer .anchornote .anc{display:inline-block;margin:6px 12px 0 0;padding:3px 9px;border:1px solid #3A4250;border-radius:7px;background:#0A0B13;font-size:11.5px}
 .mute-pair{position:absolute;top:calc(8px + env(safe-area-inset-top));left:calc(8px + env(safe-area-inset-left));z-index:12}
 .mute-pair button{width:44px;height:44px;border-radius:50%;background:rgba(10,11,19,.85);border:2px solid var(--gold);color:#EED9A0;font-size:19px;font-weight:800;cursor:pointer;padding:0;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.45)}
 .mute-pair button:active{transform:translateY(1px) scale(.985)}
@@ -991,7 +1025,16 @@ body.mirlock{overflow:hidden}
 .mwait{opacity:.9}
 .manchor{margin-top:18px;text-align:center;font-size:11.5px;color:#C3CEDC;letter-spacing:.05em;text-shadow:0 1px 4px rgba(0,0,0,.7)}
 .pmemo{margin-top:16px;border-style:solid;border-color:rgba(200,169,81,.45);min-height:58px}
-.mshare{display:flex;gap:8px;margin-top:10px}
+/* MACHINE #2'S BUTTON GRAMMAR, ported: taller, rounder, accent-bordered, icons at a
+   readable size. The same family of control now on both cabinets. */
+.mshare{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.mshare button{flex:1 1 40%;min-width:0;min-height:46px;border-radius:11px;
+  background:rgba(14,18,32,.9);border:1.5px solid #C8A951;color:#EED9A0;
+  font-family:'Jost',system-ui,sans-serif;font-weight:700;font-size:13px;
+  letter-spacing:.08em;padding:11px 8px;cursor:pointer;transition:.18s}
+.mshare button:active{transform:translateY(1px) scale(.985)}
+.mshare button:focus-visible{outline:2px solid #C8A951;outline-offset:2px}
+#miReq{border-color:#3A7A54;color:#9FE3C0}
 .mshare button{flex:1;min-height:42px;border-radius:10px;background:#0A0B13;border:2px solid #55606E;color:#DDE5EF;font-family:'Jost';font-weight:700;font-size:11px;letter-spacing:.07em;cursor:pointer}
 .mshare button:active{transform:translateY(1px)}
 #miReset{border-color:#8E2A24;color:#FFC4BC}
@@ -1598,7 +1641,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
         <div class="mshare">
           <button id="miShare" type="button">📤 SHARE</button>
           <button id="miImport" type="button">📥 IMPORT</button>
-          <button id="miReset" type="button">🗑 RESET</button>
+          <button id="miReset" type="button">🧹 RESET</button>
         <button id="miReq" type="button">📝 REQUESTS</button>
         </div>
         <div class="mconfirm" id="miReqBox" hidden></div>
@@ -1733,19 +1776,22 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
   <div class="brandbar"><b>GREEN FLAG SLOT MONSTERS</b><span>Digital Stock Ticker Slot Machine</span></div>
   <div class="in-row">
     <div class="in-cell in-cell-tkr">
-      <span class="in-head" aria-hidden="true">Ticker</span>
+      <span class="in-head" aria-hidden="true">Enter Stock</span>
       <div class="in-tkr">
-        <input id="tickerIn" inputmode="text" enterkeyhint="go" autocomplete="off" spellcheck="false" maxlength="10" placeholder="Ticker or company &#8212; try TTWO or Aritzia" aria-label="Stock ticker">
-        <button type="button" class="rlx-br" data-rlx="cas" aria-label="Browse all companies">&#128214;</button>
+        <div class="fl-tkwrap">
+            <input id="tickerIn" inputmode="text" enterkeyhint="go" autocomplete="off" spellcheck="false" maxlength="10" placeholder="" aria-label="Type a Stock or Company Name">
+            <div class="ph-marq" id="phMarq" aria-hidden="true"><span>Type Stock or Company Name &#8212; Try TTWO, Aritzia, DPM.TO or RRG77777 &#183; &#160; Type Stock or Company Name &#8212; Try TTWO, Aritzia, DPM.TO or RRG77777</span></div>
+          </div>
+        <button type="button" class="rlx-br" data-rlx="cas" aria-label="Browse every company in the universe"><span class="rlx-ico">&#128214;</span><span class="rlx-lab">STOCKS</span></button>
       </div>
-      <button class="tray tray-under" id="tray" aria-haspopup="dialog"><span id="trayTxt">VIEW RECENT SPINS</span></button>
     </div>
     <div class="in-cell in-cell-coin">
       <span class="in-head" aria-hidden="true">Insert Coin</span>
       <button class="btn-insert" id="btnInsert">INSERT<br>COIN</button>
     </div>
   </div>
-  <div class="hint" id="hint">Universe: <b>1147 names &#8212; full S&amp;P 500 + full Nasdaq-100 + full TSX Composite</b> &#183; anchor 11-Au-2026 &#8212; try DPM.TO for the &#9827; bonus, RRG77777 for the full &#127758; demo</div>
+  <button class="tray tray-wide" id="tray" aria-haspopup="dialog"><span id="trayTxt">VIEW RECENT SPINS</span></button>
+  <div class="hint" id="hint"><b>1,147 real companies</b> &#8212; every stock in the S&amp;P 500, the Nasdaq-100 and the TSX Composite.<br>Try <b>DPM.TO</b> to see the &#9827; sector-leader bonus, or <b>RRG77777</b> for the full &#127758; demo jackpot.</div>
   <div class="bonus" id="bonusRow"><button id="btnBonus"></button></div>
 </section>
 
@@ -1830,8 +1876,16 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 <div class="skiphint" id="skipHint">TAP TO SKIP &#9656;</div>
 
 <footer>
-  <div class="pill">1147-NAME UNIVERSE &#183; S&amp;P 500 + NDX + TSX COMPOSITE &#183; 11-Au-2026</div>
   <a class="xcab" id="xcabTS" href="https://green-flag-slot-monsters.lexbeatz.workers.dev/trendspotter.html" rel="noopener">&#127905; Play Green Flag Trend Spotter &#8594;</a>
+  <div class="anchornote">
+    <b>What you are looking at.</b> This machine reads <b>1,147 real companies</b> &#8212; every stock in the
+    S&amp;P 500, the Nasdaq-100 and the TSX Composite. Every price, trend line and signal you see is a
+    <b>photograph of the market taken on one day</b>, not a live feed.<br>
+    <span class="anc"><b>Price &amp; signal data anchored:</b> <span id="ancData">11-Au-2026</span></span>
+    <span class="anc"><b>Sector rotation data:</b> <span id="ancRrg">11-Au-2026</span></span><br>
+    Nothing moves until we take the next photograph, so a stock&#8217;s real price today may differ from
+    what the reels show.
+  </div>
   <div class="disc">For informational and educational purposes only. Not investment advice. Signals describe historical chart conditions, not future results, and nothing here promises winnings or investment performance. Past performance is not indicative of future results. Consult a licensed financial professional before making any investment decisions.</div>
 </footer>
 
@@ -5493,9 +5547,18 @@ function presentKicker(arm, label){
     const vv = window.visualViewport;
     const vh = vv ? vv.height : window.innerHeight;
     const r = inp.getBoundingClientRect();
-    const top = window.scrollY + r.top - Math.max(14, vh/2 - r.height/2);
+    var want = window.scrollY + r.top - Math.max(14, vh/2 - r.height/2);
+    /* clamp to the document: an unclamped target overshoots to the very bottom */
+    var maxTop = Math.max(0, document.documentElement.scrollHeight - vh);
+    var top = Math.min(Math.max(0, want), maxTop);
     window.scrollTo({ top: top, behavior: (smoothOk && !reduceMotion) ? "smooth" : "auto" });
   }
+  (function(){
+    var inp = document.getElementById("tickerIn"), pm = document.getElementById("phMarq");
+    if (!inp || !pm) return;
+    var upd = function(){ pm.className = inp.value ? "ph-marq off" : "ph-marq"; };
+    inp.addEventListener("input", upd); inp.addEventListener("focus", upd); upd();
+  })();
   function jumpToTicker(){
     const inp = $("tickerIn");
     inp.focus({ preventScroll: true });
@@ -5518,8 +5581,11 @@ function presentKicker(arm, label){
     }
   }
   function topperTap(){
-    if ($("verdict").classList.contains("show")) jumpToVerdict();
-    else jumpToTicker();
+    /* the label reads TYPE A TICKER TO PLAY, so that is where it goes. It used to
+       divert to the VERDICT whenever a result was showing — and the verdict sits
+       near the page bottom, which is exactly what the founder saw. A control does
+       what its words say. */
+    jumpToTicker();
   }
   $("topper").addEventListener("click", topperTap);
   $("topper").addEventListener("keydown", function(e){
@@ -5975,6 +6041,3 @@ function presentKicker(arm, label){
 </script>
 </body>
 </html>
-
-
-
