@@ -18,6 +18,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Archivo:wght@400;600;700;800&family=Jost:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root{
+  /* ── MATERIAL-LAW · ELEVATION LADDER (Phase 1 / Pass 1, 26-Au-2026) ──
+     One light source, above-left. Named ONCE; nothing improvises. Declared only —
+     no rule consumes these yet; Pass 2/3 migrate the 109 live shadows onto them.
+     e0 bedrock (matte, unlit) · e1 resting · e2 raised · e3 floating · well debossed.
+     Default twin = obsidian (the cabinet). -lt twin = for any light surface. */
+  --e0: none;
+  --e1: 0 1px 2px rgba(0,0,0,.45), 0 0 0 .5px rgba(255,255,255,.04);
+  --e2: 0 2px 6px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.06) inset;
+  --e3: 0 8px 24px rgba(0,0,0,.65), 0 1px 0 rgba(255,255,255,.08) inset;
+  --well: inset 1px 2px 4px rgba(0,0,0,.70), inset -1px -1px 0 rgba(255,255,255,.04);
+  --e1-lt: 0 1px 2px rgba(20,30,50,.18);
+  --e2-lt: 0 2px 6px rgba(20,30,50,.22), 0 1px 0 rgba(255,255,255,.60) inset;
+  --e3-lt: 0 8px 24px rgba(20,30,50,.28), 0 1px 0 rgba(255,255,255,.70) inset;
+  --well-lt: inset 1px 2px 4px rgba(20,30,50,.25), inset -1px -1px 0 rgba(255,255,255,.55);
   --bg:#0E1220; --bg2:#131A2E;
   --gold:#C8A951; --gold-dk:#8B6914; --gold-lt:#EED9A0;
   --cream:#F6F1E4; --cream-dk:#E4DCC8;
