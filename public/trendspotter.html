@@ -11,7 +11,22 @@
 <meta name="theme-color" content="#0A0D16">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230E1B22'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%234FD8C7' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='12' fill='none' stroke='%234FD8C7' stroke-width='2' opacity='.6'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%2335D96B'/%3E%3Cpath d='M32 32 L50 14' stroke='%23EED9A0' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
-:root{--ts-felt:#0B0F1A;--ts-felt2:#131A2C;--ts-bezel:#1B2540;--ts-reelface:#F4F7FA;--ts-reelink:#0B0E17;--ts-marqbg:#04060B;--ts-marqms:8s;
+:root{
+  /* ── MATERIAL-LAW · ELEVATION LADDER (Phase 1 / Pass 1, 26-Au-2026) ──
+     One light source, above-left. Named ONCE; nothing improvises. Declared only —
+     no rule consumes these yet; Pass 2/3 migrate the 29 live shadows onto them.
+     e0 bedrock (matte, unlit) · e1 resting · e2 raised · e3 floating · well debossed.
+     Default twin = obsidian (the cabinet). -lt twin = for any light surface (reelface). */
+  --ts-e0: none;
+  --ts-e1: 0 1px 2px rgba(0,0,0,.45), 0 0 0 .5px rgba(255,255,255,.04);
+  --ts-e2: 0 2px 6px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.06) inset;
+  --ts-e3: 0 8px 24px rgba(0,0,0,.65), 0 1px 0 rgba(255,255,255,.08) inset;
+  --ts-well: inset 1px 2px 4px rgba(0,0,0,.70), inset -1px -1px 0 rgba(255,255,255,.04);
+  --ts-e1-lt: 0 1px 2px rgba(20,30,50,.18);
+  --ts-e2-lt: 0 2px 6px rgba(20,30,50,.22), 0 1px 0 rgba(255,255,255,.60) inset;
+  --ts-e3-lt: 0 8px 24px rgba(20,30,50,.28), 0 1px 0 rgba(255,255,255,.70) inset;
+  --ts-well-lt: inset 1px 2px 4px rgba(20,30,50,.25), inset -1px -1px 0 rgba(255,255,255,.55);
+  --ts-felt:#0B0F1A;--ts-felt2:#131A2C;--ts-bezel:#1B2540;--ts-reelface:#F4F7FA;--ts-reelink:#0B0E17;--ts-marqbg:#04060B;--ts-marqms:8s;
   --ts-bg:#07080D; --ts-face1:#111726; --ts-face2:#07090F; --ts-panel:#0E1220;
   --ts-line:#242C40; --ts-idea:#4FA8FF;--ts-idea2:#2C7FE0;--ts-ideaD:#0B1626;--ts-teal:#4FD8C7; --ts-teal2:#2AB890; --ts-tealD:#0E1B22;
   --ts-gold:#EED9A0; --ts-goldL:#C8A951; --ts-green:#35D96B; --ts-redB:#7A2E38;
