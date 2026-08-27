@@ -1528,16 +1528,23 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
   .c2-truck,.c2-junk,.c2-tom,.c2-fly,.c2-plane,.c2-jet,.c2-blk,.c2-poop,.c2-mtruck,.c2-bag,.c2-griz .leg,.c2-griz .body{animation:none !important}
 }
 
-/* ── MATERIAL-LAW · PRESS RULE (Phase 1 / Pass 2, 27-Au-2026) ──
-   The FLOOR under every pressable control. Specificity (0,1,0) via :where(), so every
-   bespoke :active on this cabinet (all >= (0,2,0)) outranks it property-by-property;
-   no bang-important overrides. Physics, not colour: sink 1px + scale .985 (visual only — the tap
-   target is the element's layout box, unchanged). Crown collapses: the resting shadow
-   yields to a 5% inset overlay that paints ABOVE the fill and BELOW the text, so text
-   contrast is never dimmed (worst sampled dark-on-light pair gold/navy 5.13 -> 4.64).
-   Reduced motion: the pressed state stays, only the transition dies. */
-:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])){transition:transform 120ms ease-out,box-shadow 120ms ease-out}
-:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):active:where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])){transform:translateY(1px) scale(.985);box-shadow:inset 0 0 0 100vmax rgba(0,0,0,.05)}
+/* ── MATERIAL-LAW · PRESS RULE 2b (27-Au-2026) — supersedes the Pass 2 rule (excised) ──
+   The FLOOR under every pressable control, (0,1,0) via :where() so every bespoke :active
+   (all >= (0,2,0)) keeps its own physics property-by-property. What changed from Pass 2:
+   the press is CARRIED by .is-pressed (set on pointerdown by the JS carrier) as well as
+   :active, because Chrome-Android paints :active only after it rules out a scroll — a
+   quick tap releases first. A dead button is sometimes a late one.
+   Physics: sink 2px + scale .97, INSTANT IN (transition:none while pressed), SETTLED OUT
+   (transform 120ms, light 200ms). Glow = the cabinet's registered accent as a 2px ring +
+   14px bloom, press-gated only (no pulse, no loop — nothing meters against the 3-flash
+   rule). Fill darkened 5% by an inset overlay BELOW the text, so text is never dimmed.
+   The platform tap-highlight is killed on this set only; :focus-visible is untouched.
+   touch-action:manipulation removes the double-tap-zoom delay on these controls (and
+   double-tap zoom itself, on them — pinch zoom is unaffected). Reduced motion: the
+   pressed state is fully present, static. Disabled never flinches (belt below). */
+:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])){transition:transform 120ms ease-out,box-shadow 200ms ease-out;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])):active,:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])).is-pressed{transform:translateY(2px) scale(.97);transition:none;box-shadow:0 0 0 2px color-mix(in srgb,var(--green) 85%,transparent),0 0 14px color-mix(in srgb,var(--green) 30%,transparent),inset 0 0 0 100vmax rgba(0,0,0,.05)}
+:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):is(:disabled,[disabled],.disabled,[aria-disabled="true"]):active,:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):is(:disabled,[disabled],.disabled,[aria-disabled="true"]).is-pressed{transform:none}
 @media (prefers-reduced-motion:reduce){:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]){transition:none}}
 </style>
 </head>
@@ -5868,6 +5875,23 @@ function presentKicker(arm, label){
   });
   window.addEventListener("pagehide", function(){ Sound.hush(); });
   window.addEventListener("blur", function(){ Sound.hush(); });
+})();
+
+/* ── PRESS CARRIER 2b (27-Au-2026): sets .is-pressed on pointerdown so the floor's press
+   rule paints BEFORE Chrome-Android's :active deferral. Three passive listeners, no
+   state beyond the class, no logic beyond a classList toggle. PRESS_SEL / PRESS_OK
+   MUST equal the CSS :where() lists in the press-rule block above — the gate asserts it. */
+(function(){
+  var PRESS_SEL = 'button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]';
+  var PRESS_OK  = ':not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])';
+  function release(){ var p = document.querySelectorAll('.is-pressed'); for (var i = 0; i < p.length; i++) p[i].classList.remove('is-pressed'); }
+  document.addEventListener('pointerdown', function(e){
+    release();
+    var t = e.target && e.target.closest ? e.target.closest(PRESS_SEL) : null;
+    if (t && t.matches(PRESS_OK)) t.classList.add('is-pressed');
+  }, { passive: true });
+  document.addEventListener('pointerup', release, { passive: true });
+  document.addEventListener('pointercancel', release, { passive: true });
 })();
 </script>
 
