@@ -372,9 +372,19 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
    double-tap zoom itself, on them — pinch zoom is unaffected). Reduced motion: the
    pressed state is fully present, static. Disabled never flinches (belt below). */
 :where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])){transition:transform 120ms ease-out,box-shadow 200ms ease-out;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])):active,:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])).is-pressed{transform:translateY(2px) scale(.97);transition:none;box-shadow:0 0 0 2px color-mix(in srgb,var(--ts-teal) 85%,transparent),0 0 14px color-mix(in srgb,var(--ts-teal) 30%,transparent),inset 0 0 0 100vmax rgba(0,0,0,.05)}
+:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])):active,:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])).is-pressed{transform:translateY(2px) scale(.97);transition:none;box-shadow:0 0 0 2px color-mix(in srgb,var(--press-glow,var(--ts-teal)) 85%,transparent),0 0 14px color-mix(in srgb,var(--press-glow,var(--ts-teal)) 30%,transparent),inset 0 0 0 100vmax rgba(0,0,0,.05)}
 :where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):is(:disabled,[disabled],.disabled,[aria-disabled="true"]):active,:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):is(:disabled,[disabled],.disabled,[aria-disabled="true"]).is-pressed{transform:none}
 @media (prefers-reduced-motion:reduce){:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]){transition:none}}
+/* ── PRESS RULE 2c (27-Au-2026) — semantics on top of the 2b floor ──
+   L8-LITE: controls whose RESTING box-shadow outranks the floor never showed the press
+   glow (their gold ring won by specificity). This ONE rule grants them the floor's pressed
+   shadow at higher specificity; their bespoke transforms are untouched. Enumerated by
+   census; lamp/selection rings (signals, not elevation) deliberately excluded.
+   RED = DESTRUCTION: --press-glow defaults to the cabinet accent; wipe actions (RESET /
+   CLEAR and their YES confirms) glow the cabinet's existing red token instead. EXIT is
+   navigation and stays accent. One property, one override list, no new colours. */
+:is(.ts-mute button):active,:is(.ts-mute button).is-pressed{box-shadow:0 0 0 2px color-mix(in srgb,var(--press-glow,var(--ts-teal)) 85%,transparent),0 0 14px color-mix(in srgb,var(--press-glow,var(--ts-teal)) 30%,transparent),inset 0 0 0 100vmax rgba(0,0,0,.05)}
+#tsResetBtn,#tsResetGo{--press-glow:var(--ts-redT)}
 </style>
 </head>
 <body>
