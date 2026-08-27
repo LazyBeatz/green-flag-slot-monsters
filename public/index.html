@@ -1546,6 +1546,17 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 :where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])):active,:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])).is-pressed{transform:translateY(2px) scale(.97);transition:none;box-shadow:0 0 0 2px color-mix(in srgb,var(--green) 85%,transparent),0 0 14px color-mix(in srgb,var(--green) 30%,transparent),inset 0 0 0 100vmax rgba(0,0,0,.05)}
 :where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):is(:disabled,[disabled],.disabled,[aria-disabled="true"]):active,:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):is(:disabled,[disabled],.disabled,[aria-disabled="true"]).is-pressed{transform:none}
 @media (prefers-reduced-motion:reduce){:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]){transition:none}}
+
+/* ── H2 RESET BANNER (27-Au-2026): §G ① a silent success is indistinguishable from a dead
+   button. Every history wipe now SAYS what it did, in words, in the red family, sized to
+   the gravity of the act; self-removes; static under reduced motion. First consumer of the
+   --e3 floating plane. */
+.h2-banner{position:fixed;left:50%;top:16%;transform:translateX(-50%);z-index:75;max-width:86vw;
+  background:#3A1512;border:1.5px solid #8E2A24;color:#FFD9D3;padding:12px 18px;border-radius:12px;
+  font-family:'Jost',sans-serif;font-weight:800;font-size:12.5px;letter-spacing:.07em;text-align:center;
+  box-shadow:var(--e3);pointer-events:none;animation:h2bIn 180ms ease-out}
+@keyframes h2bIn{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion:reduce){.h2-banner{animation:none}}
 </style>
 </head>
 <body>
@@ -1792,6 +1803,10 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
         </div>
         <div id="bhWrap">
           <button class="btl-clearbtn" id="btlClearBtn">CLEAR RECENT BATTLES</button>
+          <div class="mconfirm" id="bcC" hidden>
+            <b>⚠ This clears your recent battle log on this phone — every fight result, gone for good. Battle codes you already shared are NOT touched.</b>
+            <div class="mcrow"><button id="bcYes" type="button">YES — CLEAR THE LOG</button><button id="bcNo" type="button">KEEP MY BATTLES</button></div>
+          </div>
           <div class="btl-hist" id="btlHist" style="display:none"></div>
         </div>
         <div class="btl-arena" id="btlArena">
@@ -1886,6 +1901,10 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
     <button class="btn-ghost" id="btnImport">IMPORT</button>
     <button class="btn-ghost" id="btnReset">RESET</button>
   </div>
+  <div class="mconfirm" id="rsC" hidden>
+    <b>⚠ RESET clears the ticker box, your memo and the last verdict on THIS phone. Your spin history, Portfolio Mirror and battle log are NOT touched.</b>
+    <div class="mcrow"><button id="rsYes" type="button">YES — RESET THE MACHINE</button><button id="rsNo" type="button">KEEP IT</button></div>
+  </div>
   <div class="import-row" id="importRow">
     <input id="importIn" placeholder="Paste a GFS1&#8211; code&#8230;" aria-label="Paste share code"
       autocomplete="off" spellcheck="false" enterkeyhint="go">
@@ -1927,6 +1946,10 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
       <button class="btn-share" id="btnSessShare">SHARE</button>
       <button class="btn-ghost" id="btnSessImport">IMPORT</button>
       <button class="btn-ghost" id="btnSessReset">RESET</button>
+    </div>
+    <div class="mconfirm" id="ssC" hidden>
+      <b>⚠ This wipes your ENTIRE session spin history and session memo on this phone — every spin in the tray, gone for good. Shares you already sent, your Portfolio Mirror and your battle log are NOT touched.</b>
+      <div class="mcrow"><button id="ssYes" type="button">YES — WIPE THE SESSION</button><button id="ssNo" type="button">KEEP MY SPINS</button></div>
     </div>
     <div class="import-row" id="sessImportRow">
       <input id="sessImportIn" placeholder="Paste a GFS1&#8211; code&#8230;" aria-label="Paste session code"
@@ -4789,11 +4812,15 @@ function presentKicker(arm, label){
     }
     $("btlClrB").addEventListener("click", function(){ clearCorner("B"); });
     $("btlClrG").addEventListener("click", function(){ clearCorner("G"); });
-    $("btlClearBtn").addEventListener("click", function(){
+    $("bcYes").addEventListener("click", function(){
+      $("bcC").hidden = true;
       try { localStorage.removeItem("gfsBattles"); } catch(e){}
       renderBattles();
       Sound.engraveTick();
+      h2Banner("BATTLE LOG CLEARED");
     });
+    $("btlClearBtn").addEventListener("click", function(){ $("bcC").hidden = false; });
+    $("bcNo").addEventListener("click", function(){ $("bcC").hidden = true; });
     $("btlInG").addEventListener("keydown", function(e){ if (e.key === "Enter") insert("G"); });
     $("btlInB").addEventListener("keydown", function(e){ if (e.key === "Enter") insert("B"); });
     /* keyboard-safe focus: park the focused ticker box above the mobile keyboard */
@@ -5739,13 +5766,17 @@ function presentKicker(arm, label){
       $("sessImportRow").classList.remove("open");
     }
   });
-  $("btnSessReset").addEventListener("click", function(){
+  $("ssYes").addEventListener("click", function(){
+    $("ssC").hidden = true; $("sessImportRow").classList.remove("open");
     sessionSpins = [];
     $("sessMemo").value = "";
     spins = 0; $("crSpins").textContent = 0;
     persistSpins(); trayCount(); renderSheet();
     say("SESSION CLEARED", "win");
+    h2Banner("SESSION WIPED \u2014 THE TRAY IS EMPTY");
   });
+  $("btnSessReset").addEventListener("click", function(){ $("ssC").hidden = false; });
+  $("ssNo").addEventListener("click", function(){ $("ssC").hidden = true; });
   $("tray").addEventListener("click", openSheet);
   $("sheetX").addEventListener("click", closeSheet);
   $("sheetBack").addEventListener("click", closeSheet);
@@ -5827,14 +5858,18 @@ function presentKicker(arm, label){
   });
   $("btnImportGo").addEventListener("click", function(){ runImport($("importIn").value); });
   $("importIn").addEventListener("keydown", function(e){ if (e.key === "Enter") runImport($("importIn").value); });
-  $("btnReset").addEventListener("click", function(){
+  $("rsYes").addEventListener("click", function(){
+    $("rsC").hidden = true; $("importRow").classList.remove("open");
     hardStop();                            /* emergency stop: kills any spin/celebration */
     memoBox.value = "";
     try { localStorage.removeItem("gfsMemo"); } catch(e){}
     $("tickerIn").value = "";
     resetVerdictUI(); lastSpin = null;
     say(CONFIG.wording.idle);
+    h2Banner("RESET \u2014 MACHINE CLEARED");
   });
+  $("btnReset").addEventListener("click", function(){ $("rsC").hidden = false; });
+  $("rsNo").addEventListener("click", function(){ $("rsC").hidden = true; });
   if (location.hash && location.hash.slice(1).indexOf("GFS") === 0){
     const h = location.hash.slice(1);
     history.replaceState(null, "", location.pathname + location.search);
@@ -5893,6 +5928,15 @@ function presentKicker(arm, label){
   document.addEventListener('pointerup', release, { passive: true });
   document.addEventListener('pointercancel', release, { passive: true });
 })();
+
+/* ── H2 (27-Au-2026): ONE result-banner routine, three callers. Appends a fixed, non-blocking
+   worded confirmation and removes it itself. Never focuses anything (§G ②). */
+function h2Banner(text){
+  var old = document.querySelector(".h2-banner"); if (old) old.remove();
+  var el = document.createElement("div"); el.className = "h2-banner"; el.setAttribute("role","status"); el.textContent = text;
+  document.body.appendChild(el);
+  setTimeout(function(){ if (el.parentNode) el.remove(); }, 2200);
+}
 </script>
 
 <script id="c2js">
