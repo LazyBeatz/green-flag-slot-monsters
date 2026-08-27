@@ -1151,8 +1151,24 @@ function paintWheels(w){
     }
     var g = document.getElementById("tsWheels");
     if (g) g.className = g.className.replace(/\bspin\b/g, "").trim();
+    /* H1 (27-Au-2026, D-TS-WHEEL): RESET CLEARS RESULTS, NEVER FURNITURE. The five
+       .ts-strip nodes are the cabinet, built ONCE at boot by buildReels(); wiping them
+       left the engine animating detached ghosts and the reel window empty after the
+       first spin/reset. Reset their STATE instead: park each strip on the payline and
+       strip the last outcome from its landing cell. */
     var reels = document.getElementById("tsReels");
-    if (reels){ reels.innerHTML = ""; reels.className = "ts-reels"; }
+    if (reels) reels.className = "ts-reels";
+    if (typeof REELS !== "undefined" && REELS.length && typeof tsReelGeo === "function"){
+      var LAND = tsReelGeo().LAND;
+      for (var r = 0; r < REELS.length; r++){
+        var R = REELS[r];
+        if (!R || !R.strip) continue;
+        R.strip.classList.remove("looping");
+        R.strip.style.transition = "none";
+        R.strip.style.transform = "translateY(" + LAND + "px)";
+        if (R.land) R.land.className = "ts-cell ts-land";
+      }
+    }
     var win = document.getElementById("tsReelWin");
     if (win) win.className = "ts-reelwin";
   } catch(e){}
