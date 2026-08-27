@@ -17,6 +17,9 @@
      no rule consumes these yet; Pass 2/3 migrate the 29 live shadows onto them.
      e0 bedrock (matte, unlit) · e1 resting · e2 raised · e3 floating · well debossed.
      Default twin = obsidian (the cabinet). -lt twin = for any light surface (reelface). */
+  /* x-datum (ruled 27-Au-2026): Drop shadows render the y component only (x sub-visual at these
+     blurs; avoids right-edge hairline). Border/edge treatments MUST carry the x component —
+     light is above-left. See Bible §7. */
   --ts-e0: none;
   --ts-e1: 0 1px 2px rgba(0,0,0,.45), 0 0 0 .5px rgba(255,255,255,.04);
   --ts-e2: 0 2px 6px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.06) inset;
@@ -353,6 +356,18 @@ body{background:var(--ts-bg);color:var(--ts-ink);font-family:'Archivo',system-ui
 @media (prefers-reduced-motion: reduce){
   .c2-truck,.c2-junk,.c2-tom,.c2-fly,.c2-plane,.c2-jet,.c2-blk,.c2-poop,.c2-mtruck,.c2-bag,.c2-griz .leg,.c2-griz .body{animation:none !important}
 }
+
+/* ── MATERIAL-LAW · PRESS RULE (Phase 1 / Pass 2, 27-Au-2026) ──
+   The FLOOR under every pressable control. Specificity (0,1,0) via :where(), so every
+   bespoke :active on this cabinet (all >= (0,2,0)) outranks it property-by-property;
+   no bang-important overrides. Physics, not colour: sink 1px + scale .985 (visual only — the tap
+   target is the element's layout box, unchanged). Crown collapses: the resting shadow
+   yields to a 5% inset overlay that paints ABOVE the fill and BELOW the text, so text
+   contrast is never dimmed (worst sampled dark-on-light pair gold/navy 5.13 -> 4.64).
+   Reduced motion: the pressed state stays, only the transition dies. */
+:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])){transition:transform 120ms ease-out,box-shadow 120ms ease-out}
+:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]):active:where(:not(:disabled):not([disabled]):not(.disabled):not([aria-disabled="true"])){transform:translateY(1px) scale(.985);box-shadow:inset 0 0 0 100vmax rgba(0,0,0,.05)}
+@media (prefers-reduced-motion:reduce){:where(button,[role="button"],input[type="button"],input[type="submit"],summary,[onclick]){transition:none}}
 </style>
 </head>
 <body>
@@ -1829,4 +1844,3 @@ window.TSound = TSound;
 </script>
 </body>
 </html>
-
