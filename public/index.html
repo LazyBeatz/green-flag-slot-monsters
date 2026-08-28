@@ -1580,6 +1580,10 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
   z-index:57;width:44px;height:44px;min-height:44px;padding:0;border-radius:50%;
   border:2px solid var(--gold);background:#0A0B13;color:#E8DEC8;font-size:17px;line-height:1;
   display:flex;align-items:center;justify-content:center}
+/* L12.1 CLEARANCE (28-Au-2026): the room's content starts BELOW the door's row — the
+   fixed puck sits in reserved headroom instead of floating over the format chips
+   (founder: the ✕ overlapped TOURNEY off the jump). Safe-area padded like the puck. */
+.btl-scroll{padding-top:calc(60px + env(safe-area-inset-top))}
 </style>
 </head>
 <body>
