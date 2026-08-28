@@ -1134,10 +1134,10 @@ function paintWheels(w){
       });
       /* A2B ONE DECELERANDO: five private ramps overlapped and the ear heard re-acceleration
          every time a fresh strip began braking (founder's catch). One machine, one slowdown:
-         the whir dies as the first strip grabs, then a single tick series widens its gaps
+         the whir dies as the LAST strip's brake begins, then one tick series widens its gaps
          across the ENTIRE brake span — equal-distance points under the ease-out curve. */
       if (SND){
-        var t0 = Math.max(0, base - settle), t1 = base + 4 * stag;
+        var t1 = base + 4 * stag, t0 = Math.max(0, t1 - settle); /* A2C LATE HANDOFF: the slowdown belongs to the LAST wheel's brake — starts much later, ends at the same instant (founder's ear, second catch: wheels were still buzzing under a crawling sound) */
         setTimeout(function(){ if (tok === reelTok) SND.spinLoopStop(); }, t0);
         for (var bt = 1; bt <= 14; bt++) (function(dl){
           setTimeout(function(){ if (tok === reelTok) SND.tick(); }, dl);
