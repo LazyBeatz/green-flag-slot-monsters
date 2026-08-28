@@ -3614,6 +3614,11 @@ document.addEventListener("click", function(ev){
         s.addEventListener("transitionend", onEnd);
       }, Math.max(0, stopAt - settle));
     });
+    (function(){ /* A3: one song per board */
+      const li = strips.length - 1, x = (CONFIG.reelExtra && CONFIG.reelExtra[li]) || 0,
+            t1 = CONFIG.spinBase + li * CONFIG.spinStagger + x;
+      reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x)), t1, function(){ return my === runId; });
+    })();
     setTimeout(doReveal, CONFIG.spinBase + (strips.length - 1) * CONFIG.spinStagger + Math.max.apply(null, CONFIG.reelExtra || [0]) + 800);
   }
 
@@ -4376,6 +4381,11 @@ function presentKicker(arm, label){
         };
         battleSpin(sG, pick.G.d, function(){ sideDone("G", pick.G.d); });
         battleSpin(sB, pick.B.d, function(){ sideDone("B", pick.B.d); });
+        if (!reduceMotion) (function(){ /* A3: ONE decelerando for BOTH corners — board voice, never per-strip */
+          const li = sG.length - 1, x = (CONFIG.reelExtra && CONFIG.reelExtra[li]) || 0,
+                t1 = CONFIG.spinBase + li * CONFIG.spinStagger + x;
+          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x)), t1, function(){ return my === bTok; });
+        })();
       }, 1100);
     }
     function crown(){
@@ -4495,7 +4505,23 @@ function presentKicker(arm, label){
       function msave(){ try { localStorage.setItem(LSK, JSON.stringify(holds)); } catch(e){} }
       function reqLog(t){ try { const r = JSON.parse(localStorage.getItem(RQK) || "{}"); r[t] = (r[t] || 0) + 1; localStorage.setItem(RQK, JSON.stringify(r)); } catch(e){} }
       const mesc = function(x){ return String(x == null ? "" : x).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); };
-      window.roomLock = function(){ /* ONE HOME ON WINDOW: battle and mirror live in separate closures; a scoped declaration is invisible across them (harness caught it) */
+      window.reelSong = function(t0, t1, alive){
+      /* A3 SONG TRAVELS (28-Au-2026) — the reel song grammar on THIS instrument.
+         Roles: whir = Sound.spinLoopStart/Stop · tick = Sound.engraveTick (this engine
+         has no dedicated tick voice yet — a socket for the founder's studio day) ·
+         park = Sound.reelStop. ONE board-level slowdown per spin: the whir dies as the
+         final drum's brake begins, then one tick series widens its gaps to the drum's
+         rest — first gap at the whir's own tempo so the handoff is seamless, never a
+         gear-up. Timers guarded by each board's own alive() token. Defined ONCE on
+         window: the rooms live in separate closures. */
+      setTimeout(function(){ if (alive()) Sound.spinLoopStop(); }, t0);
+      var g = 90, at = t0 + g;   /* mirrors the whir socket's tempo — retune together */
+      while (at < t1){
+        (function(dl){ setTimeout(function(){ if (alive()) Sound.engraveTick(); }, dl); })(Math.round(at));
+        g *= 1.45; at += g;
+      }
+    };
+    window.roomLock = function(){ /* ONE HOME ON WINDOW: battle and mirror live in separate closures; a scoped declaration is invisible across them (harness caught it) */
       /* ONE lock, TWO rooms, computed from the rooms' ACTUAL state — it can only release
          when both are closed, so the two-rooms invariant is guarded at runtime, not assumed. */
       var on = $("battleLayer").classList.contains("show") || $("mirrorLayer").classList.contains("show");
@@ -5140,6 +5166,10 @@ function presentKicker(arm, label){
         $("rmbFight").classList.remove("show");
         var revealOrder = rr.ranked.slice().reverse(); /* worst wheel lands first */
         var step = reduceMotion ? 120 : 900;
+        if (!reduceMotion && revealOrder.length > 1){ /* A3: the last wheel IS the final reveal */
+          var lastAt = 700 + (revealOrder.length - 1) * step;
+          reelSong(lastAt - step, lastAt, function(){ return my === bTok; });
+        }
         revealOrder.forEach(function(rk, idx){
           setTimeout(function(){
             if (my !== bTok) return;
@@ -5329,6 +5359,11 @@ function presentKicker(arm, label){
         };
         battleSpin(sB, dA, function(){ sideDone("B", dA); });
         battleSpin(sG, dB, function(){ sideDone("G", dB); });
+        if (!reduceMotion) (function(){ /* A3: tourney board voice */
+          const li = sG.length - 1, x = (CONFIG.reelExtra && CONFIG.reelExtra[li]) || 0,
+                t1 = CONFIG.spinBase + li * CONFIG.spinStagger + x;
+          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x)), t1, function(){ return my === bTok; });
+        })();
       }, 1100);
     }
     function tnySettle(A, B, dA, dB, my){
