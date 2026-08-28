@@ -1067,9 +1067,9 @@ function paintWheels(w){
       var tok = ++reelTok, stopped = 0, fired = false, win = $("tsReelWin");
       /* ── A2 REEL SONG (28-Au-2026): the reels get their voice — three hooks, calls only.
          The instrument (the sound block) is untouched: every voice is a NAMED SOCKET a
-         custom recording can replace one-for-one later. The spin whir starts here; each
-         strip fires a decelerating ramp through its own brake window; each settle lands
-         a stop clunk; the whir dies when the last strip parks. Mute is gated at the
+         custom recording can replace one-for-one later. The whir runs the launch, then hands off
+         to ONE global decelerando whose tick gaps widen across the entire brake span;
+         each settle lands a stop clunk. Mute is gated at the
          engine, every timer is token-guarded, and the shared clear routine kills the
          loop on reset — no loop outlives its spin. */
       var SND = window.TSound || null;
@@ -1123,9 +1123,6 @@ function paintWheels(w){
           void R.strip.offsetWidth;
           R.strip.style.transition = "transform " + settle + "ms cubic-bezier(.17,.84,.26,1)";
           R.strip.style.transform = "translateY(" + G.LAND + "px)"; /* >=2.2 cycles of brake into the payline */
-          if (SND) for (var bt = 1; bt <= 6; bt++) (function(dl){
-            setTimeout(function(){ if (tok === reelTok) SND.tick(); }, dl);
-          })(Math.round(settle * (1 - Math.pow(1 - bt/7, 1/3)))); /* equal-distance ticks under an ease-out brake: the gaps widen as the reel slows */
           var onEnd = function(){
             R.strip.removeEventListener("transitionend", onEnd);
             if (tok !== reelTok) return;
@@ -1135,6 +1132,17 @@ function paintWheels(w){
           R.strip.addEventListener("transitionend", onEnd);
         }, Math.max(0, stopAt - settle));
       });
+      /* A2B ONE DECELERANDO: five private ramps overlapped and the ear heard re-acceleration
+         every time a fresh strip began braking (founder's catch). One machine, one slowdown:
+         the whir dies as the first strip grabs, then a single tick series widens its gaps
+         across the ENTIRE brake span — equal-distance points under the ease-out curve. */
+      if (SND){
+        var t0 = Math.max(0, base - settle), t1 = base + 4 * stag;
+        setTimeout(function(){ if (tok === reelTok) SND.spinLoopStop(); }, t0);
+        for (var bt = 1; bt <= 14; bt++) (function(dl){
+          setTimeout(function(){ if (tok === reelTok) SND.tick(); }, dl);
+        })(Math.round(t0 + (t1 - t0) * (1 - Math.pow(1 - bt/14, 1/3))));
+      }
       setTimeout(finale, base + 4 * stag + 800); /* master fallback (hidden-tab safety) */
     }
     var marqTok = 0;
