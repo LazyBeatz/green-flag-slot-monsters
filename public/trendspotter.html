@@ -1065,11 +1065,21 @@ function paintWheels(w){
     function reelLaunch(w, ovr, done){
       var G = tsReelGeo(), C = G.C, SY = CONFIG_TS.symbols;
       var tok = ++reelTok, stopped = 0, fired = false, win = $("tsReelWin");
+      /* ── A2 REEL SONG (28-Au-2026): the reels get their voice — three hooks, calls only.
+         The instrument (the sound block) is untouched: every voice is a NAMED SOCKET a
+         custom recording can replace one-for-one later. The spin whir starts here; each
+         strip fires a decelerating ramp through its own brake window; each settle lands
+         a stop clunk; the whir dies when the last strip parks. Mute is gated at the
+         engine, every timer is token-guarded, and the shared clear routine kills the
+         loop on reset — no loop outlives its spin. */
+      var SND = window.TSound || null;
+      if (SND) SND.spinLoopStart();
       if (win) win.classList.remove("hit");
       function finale(){
         if (fired || tok !== reelTok) return;
         fired = true;
         if (win) win.classList.add("hit");
+        if (SND){ SND.spinLoopStop(); if (reduceMotion) SND.reelStop(); }
         setTimeout(function(){ if (tok === reelTok) done(); }, 140);
       }
       for (var r = 0; r < 5; r++){
@@ -1113,9 +1123,13 @@ function paintWheels(w){
           void R.strip.offsetWidth;
           R.strip.style.transition = "transform " + settle + "ms cubic-bezier(.17,.84,.26,1)";
           R.strip.style.transform = "translateY(" + G.LAND + "px)"; /* >=2.2 cycles of brake into the payline */
+          if (SND) for (var bt = 1; bt <= 6; bt++) (function(dl){
+            setTimeout(function(){ if (tok === reelTok) SND.tick(); }, dl);
+          })(Math.round(settle * (1 - Math.pow(1 - bt/7, 1/3)))); /* equal-distance ticks under an ease-out brake: the gaps widen as the reel slows */
           var onEnd = function(){
             R.strip.removeEventListener("transitionend", onEnd);
             if (tok !== reelTok) return;
+            if (SND) SND.reelStop();
             if (++stopped === 5) finale();
           };
           R.strip.addEventListener("transitionend", onEnd);
@@ -1192,6 +1206,7 @@ function paintWheels(w){
 }
 function boardClear(){
   /* DECLARED ONCE, used by spin and by reset — two callers, one definition */
+  if (window.TSound) TSound.spinLoopStop();   /* the reel song dies with the board — spin start AND reset both pass through here */
   try {
     $("tsVerdict").className = "ts-verdict";
     $("tsVLine").textContent = "";
