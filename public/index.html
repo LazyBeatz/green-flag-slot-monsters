@@ -1588,6 +1588,21 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
    fixed puck sits in reserved headroom instead of floating over the format chips
    (founder: the ✕ overlapped TOURNEY off the jump). Safe-area padded like the puck. */
 .btl-scroll{padding-top:calc(40px + env(safe-area-inset-top))} /* L12.2: title band shares the door's row (left vs right corner); the chip row clears the puck with a touch less dead air — founder's retune */
+
+/* M-ADD SEAM (28-Au-2026): the pending strip — misses and doubles pause here for a
+   two-tap choice before anything enters the mirror; clean adds never touch it. */
+.mpend{margin:8px 0 2px;display:flex;flex-direction:column;gap:6px}
+.mpcard{background:#10131D;border:1px solid #2A3242;border-left:3px solid #C8A951;border-radius:10px;padding:8px 10px;font-size:12.5px;color:#C9D4E2}
+.mpcard b{color:#F2E7C9}
+.mpcard.mmiss{border-left-color:#C0392B}
+.mpcard .mpbtns{display:flex;gap:8px;margin-top:7px}
+.mpcard button{flex:1;min-height:38px;border-radius:9px;border:1px solid #3A4356;background:#1A2030;color:#DDE6F0;font:700 11.5px/1 Archivo,sans-serif;letter-spacing:.4px}
+.mpcard button.mpkeep{border-color:#8B6914;color:#F2E7C9}
+.mlot{display:inline-block;margin-left:6px;padding:2px 6px;border:1px solid #8B6914;border-radius:8px;font-size:9.5px;color:#F2E7C9;background:#241E10;vertical-align:middle}
+
+/* L1 CARD DOCK */
+.cardDock{display:none;width:100%;max-width:430px;flex-direction:column;gap:10px;margin:2px 0 4px}
+.cardDock.show{display:flex}
 </style>
 </head>
 <body>
@@ -1599,14 +1614,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
     <div class="small" id="vSmall"></div>
     <div class="duel" id="vDuel"></div>
   </div>
-  <button class="btn-expand" id="btnExpand" aria-expanded="false">See the full signal card &#9662;</button>
-  <div class="card" id="card">
-    <div class="band" id="cardBand"><span id="cardTitle"></span><em id="cardTier"></em></div>
-    <div class="tiles" id="cardTiles"></div>
-    <div class="chips" id="cardChips"></div>
-    <div class="qline" id="cardQ"></div>
-    <div class="asof" id="cardAsof"></div>
-  </div>
+  
 </section>
 
 <header class="marquee">
@@ -1738,6 +1746,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
         <div class="madd">
           <input type="text" id="miQ" placeholder="Ticker or company name" autocomplete="off" spellcheck="false" enterkeyhint="go">
       <div class="mi-note" id="miAddNote" aria-live="polite"></div>
+      <div class="mpend" id="miPend" style="display:none" aria-live="polite"></div>
           <div class="mkind">
             <label><input type="radio" name="miKind" id="miKindS" checked> 📈 STOCK / ETF / ADR</label>
             <label><input type="radio" name="miKind" id="miKindO"> 🎯 CALL OPTION</label>
@@ -1893,6 +1902,21 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
     </div>
   </div>
 </section>
+
+<!-- L1: THE CARD COMES HOME — the full signal card (and its lid) docks directly above
+     the unit's own wordmark, tucked between the spinner block and the entry block, exactly
+     where the eye lands after a spin. The compact banner stays at the top and now scrolls
+     HERE. Dock visibility rides the same show/hide the verdict always had. -->
+<div class="cardDock" id="cardDock">
+  <button class="btn-expand" id="btnExpand" aria-expanded="false">See the full signal card &#9662;</button>
+  <div class="card" id="card">
+    <div class="band" id="cardBand"><span id="cardTitle"></span><em id="cardTier"></em></div>
+    <div class="tiles" id="cardTiles"></div>
+    <div class="chips" id="cardChips"></div>
+    <div class="qline" id="cardQ"></div>
+    <div class="asof" id="cardAsof"></div>
+  </div>
+</div>
 
 <section class="controls">
   <div class="brandbar"><b>GREEN FLAG SLOT MONSTERS</b><span>Digital Stock Ticker Slot Machine</span></div>
@@ -3509,7 +3533,7 @@ document.addEventListener("click", function(ev){
   function resetVerdictUI(){
     $("bonusLamp").classList.remove("lit");
     $("beacon").classList.remove("strobe");
-    $("verdict").classList.remove("show");
+    $("verdict").classList.remove("show"); $("cardDock").classList.remove("show");
     $("card").classList.remove("open");
     const be = $("btnExpand");
     be.className = "btn-expand";
@@ -3558,7 +3582,11 @@ document.addEventListener("click", function(ev){
       for (let i = 0; i < NI; i++) if (ICONS[i].id === id) return i;
       return 0;
     });
-    const my = runId;
+    const my = ++runId;   /* A4 GENERATION-PER-SPIN: a fresh spin orphans every timer of the
+                             spin before it — without this, a quick re-spin let the old song's
+                             fast early ticks land on the new whir (the occasional speed-up
+                             the founder heard at the second drum) and the old handoff could
+                             silence the new whir mid-flight. hardStop's bump still governs reset. */
     const S = stripY(0, starIdx), CYC = NI * CELL;
     let stopped = 0, revealed = false;
     const doReveal = function(){
@@ -3614,10 +3642,13 @@ document.addEventListener("click", function(ev){
         s.addEventListener("transitionend", onEnd);
       }, Math.max(0, stopAt - settle));
     });
-    (function(){ /* A3: one song per board */
+    (function(){ /* A3+A4: one song per board — and the decay NEVER begins before the
+       PENULTIMATE drum rests: the slowdown owns exactly the stretch where only the last
+       wheel still spins (founder's ear — the huge last-reel brake otherwise dragged the
+       song back to the third drum). Rumble already obeys this by construction. */
       const li = strips.length - 1, x = (CONFIG.reelExtra && CONFIG.reelExtra[li]) || 0,
             t1 = CONFIG.spinBase + li * CONFIG.spinStagger + x;
-      reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x)), t1, function(){ return my === runId; });
+      reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)), t1, function(){ return my === runId; });
     })();
     setTimeout(doReveal, CONFIG.spinBase + (strips.length - 1) * CONFIG.spinStagger + Math.max.apply(null, CONFIG.reelExtra || [0]) + 800);
   }
@@ -3702,7 +3733,7 @@ document.addEventListener("click", function(ev){
     } else duel.classList.remove("show");
     buildCard(d, t, club, globe);
     const finish = function(){
-      $("verdict").classList.add("show");
+      $("verdict").classList.add("show"); $("cardDock").classList.add("show");
       $("topper").setAttribute("aria-label", "See this spin's full signal card");
       busy = false; $("btnInsert").disabled = false;
     };
@@ -4384,7 +4415,7 @@ function presentKicker(arm, label){
         if (!reduceMotion) (function(){ /* A3: ONE decelerando for BOTH corners — board voice, never per-strip */
           const li = sG.length - 1, x = (CONFIG.reelExtra && CONFIG.reelExtra[li]) || 0,
                 t1 = CONFIG.spinBase + li * CONFIG.spinStagger + x;
-          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x)), t1, function(){ return my === bTok; });
+          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)), t1, function(){ return my === bTok; });
         })();
       }, 1100);
     }
@@ -4571,26 +4602,61 @@ function presentKicker(arm, label){
         Sound.engraveTick();
       return { sym: o.t, ok: !!t };
     }
+    var mpend = [];
+    function mpendRender(){
+      var el = $("miPend"); if (!el) return;
+      if (!mpend.length){ el.innerHTML = ""; el.style.display = "none"; return; }
+      el.style.display = "flex";
+      el.innerHTML = mpend.map(function(p, i){
+        if (p.why === "miss"){
+          return '<div class="mpcard mmiss"><b>' + mesc(p.sym) + '</b> isn\u2019t on this floor'
+            + (p.sug ? ' \u00b7 did you mean <b>' + mesc(p.sug) + '</b>?' : "")
+            + '<div class="mpbtns"><button data-i="' + i + '" data-a="fix">FIX TYPO</button>'
+            + '<button class="mpkeep" data-i="' + i + '" data-a="keep">KEEP AS REQUEST</button></div></div>';
+        }
+        return '<div class="mpcard"><b>' + mesc(p.t) + '</b> is already in your mirror'
+          + '<div class="mpbtns"><button data-i="' + i + '" data-a="skip">SKIP</button>'
+          + '<button class="mpkeep" data-i="' + i + '" data-a="lot">ADD ANYWAY</button></div></div>';
+      }).join("");
+    }
+    function mpendAct(i, a){
+      var p = mpend[i]; if (!p) return;
+      mpend.splice(i, 1);
+      if (a === "fix"){ $("miQ").value = p.sym; $("miQ").focus(); }
+      else if (a === "keep" || a === "lot"){ addOneHold(a === "keep" ? p.sym : p.t, false); mRender(); }
+      mpendRender();
+    }
     function addHold(){
       const raw = $("miQ").value.trim();
       if (!raw) return;
       const list = parseTickerList(raw);
       if (!list.length) return;
-      const openAdd = list.length === 1;
-      const res = list.map(function(s){ return addOneHold(s, openAdd); });
+      /* M-ADD SEAM: synchronous certainty gates AT THE DOOR — the seed answers instantly,
+         so a miss or a double PAUSES here for a two-tap choice, while every clean resolved
+         add stays exactly as rapid as before. A request is EARNED by the KEEP tap now,
+         never by a typo; the req type's out-of-seed contract is unchanged — only what
+         QUALIFIES changed. Doubles enter by per-instance consent and wear a lot badge. */
+      const clean = [], batch = {};
+      list.forEach(function(sym){
+        const t = mirrorResolve(sym);
+        if (!t){ mpend.push({ why: "miss", sym: sym, sug: suffixMiss(sym, MSEED) }); return; }
+        if (batch[t] || holds.some(function(h){ return h.ok && h.t === t; })){ mpend.push({ why: "dupe", sym: sym, t: t }); return; }
+        batch[t] = 1; clean.push(sym);
+      });
+      clean.forEach(function(sy){ addOneHold(sy, list.length === 1 && clean.length === 1 && !mpend.length); });
       $("miQ").value = "";
       $("miQ").focus();
-      mRender();
+      mRender(); mpendRender();
+      if (mpend.some(function(p){ return p.why === "miss"; })) Sound.rejectClunk();
+      else if (mpend.length) Sound.plap();
       const noteEl = $("miAddNote");
       if (noteEl){
-        if (list.length > 1){
-          const okN = res.filter(function(r){ return r.ok; }).length;
-          const un = res.filter(function(r){ return !r.ok; }).map(function(r){ return r.sym; });
-          noteEl.textContent = "Added " + okN + " live" + (un.length ? " \u00b7 " + un.length + " unresolved (logged): " + un.join(", ") : "");
-        } else { noteEl.textContent = ""; }
+        noteEl.textContent = (list.length > 1 && clean.length ? "Added " + clean.length + " live" : "")
+          + (mpend.length ? ((clean.length && list.length > 1) ? " \u00b7 " : "") + mpend.length + " waiting on you below" : "");
       }
     }
       $("miGo").addEventListener("click", addHold);
+      $("miPend").addEventListener("click", function(e){ var bt = e.target && e.target.closest ? e.target.closest("button") : null; if (!bt) return; mpendAct(parseInt(bt.getAttribute("data-i"), 10), bt.getAttribute("data-a")); });
       (function(){ var hE = $("hint"); if (hE) hE.innerHTML = hE.innerHTML.replace(/(\d{3,4})(?= names)/, String(Object.keys(MSEED).length - 1)); })();
       $("miQ").addEventListener("keydown", function(e){ if (e.key === "Enter") addHold(); });
       $("miReq").addEventListener("click", function(){
@@ -4608,6 +4674,7 @@ function presentKicker(arm, label){
         }
         box.hidden = false;
       });
+      function lotChip(o){ if (!o.ok) return ""; var n = 0; for (var i = 0; i < holds.length; i++) if (holds[i].ok && holds[i].t === o.t) n++; return n > 1 ? '<span class="mlot">LOT \u00d7' + n + '</span>' : ""; }
       function dotSpan(d){
         return '<span class="mdot"><i style="color:' + CMAP[d.c] + '">\u25CF</i>' + d.k + '</span>';
       }
@@ -4677,7 +4744,7 @@ function presentKicker(arm, label){
         const rec = o.ok ? MSEED[o.t] : null;
         if (!rec){
           return '<div class="mrow mwait' + (o.open ? " open" : "") + '" data-id="' + o.id + '">'
-            + '<div class="mr1"><span class="mtkr">' + mesc(o.t) + "</span>"
+            + '<div class="mr1"><span class="mtkr">' + mesc(o.t) + "</span>" + lotChip(o)
             + '<span class="mpx"><b>\u2014</b></span>'
             + '<button class="mplus" data-act="open">' + (o.open ? "\u2212" : "\uFF0B") + '</button></div>'
             + '<span class="mchip-wait">AWAITING DATA \u2014 not in the ' + (Object.keys(MSEED).length - 1) + '-name universe yet \u00b7 request logged</span>'
@@ -4699,7 +4766,7 @@ function presentKicker(arm, label){
           : "<small>" + mesc((rec.n || "").slice(0, 26)) + "</small>";
         return '<div class="mrow' + (o.open ? " open" : "") + '" data-id="' + o.id + '">'
           + '<div class="mr1">'
-          + '<span class="mtkr">' + mesc(o.t) + sub + "</span>" + gsp
+          + '<span class="mtkr">' + mesc(o.t) + sub + "</span>" + lotChip(o) + gsp
           + '<span class="mpx"><b>' + rec.cur + fmt2(rec.px) + "</b>"
           + '<span class="' + dcCl + '">' + (rec.dc >= 0 ? "+" : "") + rec.dc + "% \u00b7 " + (rec.da >= 0 ? "+" : "") + fmt2(rec.da) + "</span></span>"
           + '<button class="mplus" data-act="open">' + (o.open ? "\u2212" : "\uFF0B") + '</button></div>'
@@ -5362,7 +5429,7 @@ function presentKicker(arm, label){
         if (!reduceMotion) (function(){ /* A3: tourney board voice */
           const li = sG.length - 1, x = (CONFIG.reelExtra && CONFIG.reelExtra[li]) || 0,
                 t1 = CONFIG.spinBase + li * CONFIG.spinStagger + x;
-          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x)), t1, function(){ return my === bTok; });
+          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)), t1, function(){ return my === bTok; });
         })();
       }, 1100);
     }
@@ -5733,7 +5800,7 @@ function presentKicker(arm, label){
     setTimeout(function(){ centerTicker(false); }, 800);
   }
   function jumpToVerdict(){
-    $("verdict").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+    $("cardDock").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
     if (!reduceMotion){
       const be = $("btnExpand");
       be.classList.remove("pulse");
