@@ -1570,6 +1570,16 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
   box-shadow:var(--e3);pointer-events:none;animation:h2bIn 180ms ease-out}
 @keyframes h2bIn{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translate(-50%,0)}}
 @media (prefers-reduced-motion:reduce){.h2-banner{animation:none}}
+
+/* L12 DOOR (28-Au-2026): the room-level exit becomes a fixed corner puck — the door is
+   always in the same place, same size-class and corner grammar as the ?/save pucks,
+   safe-area padded, BELOW the ceremony scrim so tap-to-skip owns the screen during a
+   crown. Navigation stays accent (never red). All four exits share one routine already
+   (stop()) — the gate asserts it. The results-screen EXIT BATTLE rows are unchanged. */
+#btlExit{position:fixed;top:calc(10px + env(safe-area-inset-top));right:calc(10px + env(safe-area-inset-right));
+  z-index:57;width:44px;height:44px;min-height:44px;padding:0;border-radius:50%;
+  border:2px solid var(--gold);background:#0A0B13;color:#E8DEC8;font-size:17px;line-height:1;
+  display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
@@ -1765,7 +1775,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
     </div>
     <div class="battle" id="battleLayer" role="dialog" aria-label="Battle mode">
       <div class="btl-scroll">
-        <div class="btl-head"><b>&#129354; BATTLE MODE</b><button class="btl-exit" id="btlExit">EXIT &#10005;</button></div>
+        <div class="btl-head"><b>&#129354; BATTLE MODE</b><button class="btl-exit" id="btlExit" aria-label="Exit battle">&#10005;</button></div>
         <div class="fmt-strip">
           <button class="fmt-chip on" id="fmtClassic">&#9876;&#65039; CLASSIC 1v1</button>
           <button class="fmt-chip" id="fmtRumble">&#128165; RUMBLE</button>
