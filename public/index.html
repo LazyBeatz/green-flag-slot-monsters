@@ -4560,7 +4560,8 @@ function presentKicker(arm, label){
       }
     };
     window.reelSong.PARK_TAIL = 0.35;
-    window.reelSong.PARK_TAIL_BATTLE = 0.2;   /* A4c: battle boards (Classic/Tourney) start the decay a touch later so the tail doesn't drag — same clock as the main spin, tuned per surface on the founder's ear */
+    window.reelSong.PARK_TAIL_BATTLE = 0.2;
+    window.reelSong.PARK_TAIL_TOURNEY = 0.27;   /* A4d: the founder's hair-pin — Tourney starts its decay a touch earlier than Classic ("perfect", untouched); adjacent, named, one home each */   /* A4c: battle boards (Classic/Tourney) start the decay a touch later so the tail doesn't drag — same clock as the main spin, tuned per surface on the founder's ear */
     window.roomLock = function(){ /* ONE HOME ON WINDOW: battle and mirror live in separate closures; a scoped declaration is invisible across them (harness caught it) */
       /* ONE lock, TWO rooms, computed from the rooms' ACTUAL state — it can only release
          when both are closed, so the two-rooms invariant is guarded at runtime, not assumed. */
@@ -5437,10 +5438,10 @@ function presentKicker(arm, label){
         };
         battleSpin(sB, dA, function(){ sideDone("B", dA); });
         battleSpin(sG, dB, function(){ sideDone("G", dB); });
-        if (!reduceMotion) (function(){ /* A3: tourney board voice */
+        if (!reduceMotion) (function(){ /* A3: tourney board voice — A4d: its own park tail */
           const li = sG.length - 1, x = (CONFIG.reelExtra && CONFIG.reelExtra[li]) || 0,
                 t1 = CONFIG.spinBase + li * CONFIG.spinStagger + x;
-          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), (CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)) - reelSong.PARK_TAIL_BATTLE * (CONFIG.spinSettle + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0))), t1, function(){ return my === bTok; });
+          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), (CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)) - reelSong.PARK_TAIL_TOURNEY * (CONFIG.spinSettle + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0))), t1, function(){ return my === bTok; });
         })();
       }, 1100);
     }
