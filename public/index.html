@@ -3643,7 +3643,7 @@ document.addEventListener("click", function(ev){
        song back to the third drum). Rumble already obeys this by construction. */
       const li = strips.length - 1, x = (CONFIG.reelExtra && CONFIG.reelExtra[li]) || 0,
             t1 = CONFIG.spinBase + li * CONFIG.spinStagger + x;
-      reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)), t1, function(){ return my === runId; });
+      reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), (CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)) - reelSong.PARK_TAIL * (CONFIG.spinSettle + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0))), t1, function(){ return my === runId; });
     })();
     setTimeout(doReveal, CONFIG.spinBase + (strips.length - 1) * CONFIG.spinStagger + Math.max.apply(null, CONFIG.reelExtra || [0]) + 800);
   }
@@ -4069,13 +4069,21 @@ function presentKicker(arm, label){
     let bTok = 0, pick = { G: null, B: null }, live = false, prizePick = null;
     let btlGlobeOn = false, papTimer = null, battleGlobeEnd = null;
     const kpHome = $("kickerPanel").parentElement, hmHome = $("hmPanel").parentElement;
+    function sweepCeremonyResidue(){
+      /* T-CER: the loser's trash pail AND tomato layer are appended to a MACHINE node and were
+         never removed between Tourney matches (only Classic's open/reset swept, and only the
+         pail) — so the next pair loaded with last match's garbage already sitting on one
+         side: the founder's "tomatoes before the wheel even spins". Declared once, called by
+         every arena prep. */
+      document.querySelectorAll(".btl-trash,.tmato-layer").forEach(function(n){ n.remove(); });
+    }
     function cleanupPrizes(){
       prizePick = null;
       $("btlPrizeBtn").className = "btl-prize";
       const kp = $("kickerPanel"), hp = $("hmPanel");
       if (kp.parentElement !== kpHome){ kp.classList.remove("show"); kpHome.appendChild(kp); }
       if (hp.parentElement !== hmHome){ hp.classList.remove("show"); hmHome.appendChild(hp); }
-      document.querySelectorAll(".btl-trash").forEach(function(n){ n.remove(); });
+      sweepCeremonyResidue();
       $("judgesLayer").classList.remove("on");
       if (battleGlobeEnd) battleGlobeEnd();
       document.querySelectorAll(".pap-flash").forEach(function(n){ n.remove(); });
@@ -4410,7 +4418,7 @@ function presentKicker(arm, label){
         if (!reduceMotion) (function(){ /* A3: ONE decelerando for BOTH corners — board voice, never per-strip */
           const li = sG.length - 1, x = (CONFIG.reelExtra && CONFIG.reelExtra[li]) || 0,
                 t1 = CONFIG.spinBase + li * CONFIG.spinStagger + x;
-          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)), t1, function(){ return my === bTok; });
+          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), (CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)) - reelSong.PARK_TAIL * (CONFIG.spinSettle + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0))), t1, function(){ return my === bTok; });
         })();
       }, 1100);
     }
@@ -4532,6 +4540,9 @@ function presentKicker(arm, label){
       function reqLog(t){ try { const r = JSON.parse(localStorage.getItem(RQK) || "{}"); r[t] = (r[t] || 0) + 1; localStorage.setItem(RQK, JSON.stringify(r)); } catch(e){} }
       const mesc = function(x){ return String(x == null ? "" : x).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); };
       window.reelSong = function(t0, t1, alive){
+      /* A4b PARK_TAIL: an ease-out brake LOOKS parked well before its transition formally
+         ends; the decay starts at the penultimate drum's VISIBLE park, i.e. this fraction of
+         its brake before its formal rest (founder's ear, round seven). One home, three boards. */
       /* A3 SONG TRAVELS (28-Au-2026) — the reel song grammar on THIS instrument.
          Roles: whir = Sound.spinLoopStart/Stop · tick = Sound.engraveTick (this engine
          has no dedicated tick voice yet — a socket for the founder's studio day) ·
@@ -4547,6 +4558,7 @@ function presentKicker(arm, label){
         g *= 1.45; at += g;
       }
     };
+    window.reelSong.PARK_TAIL = 0.35;
     window.roomLock = function(){ /* ONE HOME ON WINDOW: battle and mirror live in separate closures; a scoped declaration is invisible across them (harness caught it) */
       /* ONE lock, TWO rooms, computed from the rooms' ACTUAL state — it can only release
          when both are closed, so the two-rooms invariant is guarded at runtime, not assumed. */
@@ -5391,7 +5403,9 @@ function presentKicker(arm, label){
       if (!tny || tny.champ != null) return;
       var my = bTok;
       var m = tnyRoundOf()[tny.mi];
+      if (Math.random() < 0.5) m.reverse();   /* T-CER: corner assignment alternates by coin so the bottom slot never telegraphs the loser (the pair array itself flips, so results indexes stay consistent) */
       var A = m[0], B = m[1];
+      sweepCeremonyResidue();
       var dA = SEED[A.t], dB = SEED[B.t];
       $("tnyArena").classList.remove("show");
       $("btlArena").classList.add("show");
@@ -5424,7 +5438,7 @@ function presentKicker(arm, label){
         if (!reduceMotion) (function(){ /* A3: tourney board voice */
           const li = sG.length - 1, x = (CONFIG.reelExtra && CONFIG.reelExtra[li]) || 0,
                 t1 = CONFIG.spinBase + li * CONFIG.spinStagger + x;
-          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)), t1, function(){ return my === bTok; });
+          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), (CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)) - reelSong.PARK_TAIL * (CONFIG.spinSettle + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0))), t1, function(){ return my === bTok; });
         })();
       }, 1100);
     }
@@ -6190,7 +6204,7 @@ function h2Banner(text){
     later(function(){
       if (SFX && SFX.fart) SFX.fart();          /* the second one gets its own fart */
       var p2 = el("span", "c2-poop", "\uD83D\uDCA9");
-      p2.style.setProperty("--px", "calc(38vw - 22px)");   /* A5: a tight 26px apart — the pair reads as one act */
+      p2.style.setProperty("--px", "calc(38vw + 30px)");   /* A5b: 26px past the first on the CLEAR side — the A5 value sat behind his silhouette (founder: "the 2nd poop was gone") */
       p2.style.setProperty("--pb", "22.9vh");
       p2.style.fontSize = "27px";
       layer.appendChild(p2);
