@@ -2843,6 +2843,7 @@ const Sound = (function(){
     coinInsert(){ tone(880, .09, "triangle", .09); tone(1320, .12, "triangle", .07, .07); },
     rejectClunk(){ tone(160, .22, "square", .1); tone(110, .3, "square", .09, .1); },
     plap(){ tone(300, .04, "sine", .13); tone(150, .07, "sine", .16, .02); tone(85, .1, "sine", .1, .05); },
+    fart(){ tone(92, .22, "sawtooth", .12); tone(64, .2, "sawtooth", .1, .1); tone(48, .14, "sawtooth", .07, .22); },   /* A5c: named socket — the bear scene called this voice for weeks and it never existed (the call threw and killed the first dropping); a low three-step sputter, swap-ready for the founder's pack */
     bonusSting(){ [520,660,780].forEach((f,i)=>tone(f, .12, "triangle", .07, i*.09)); },
     leverCrank(){ tone(220, .16, "sawtooth", .06); tone(180, .2, "sawtooth", .05, .12); },
     spinLoopStart(){
@@ -4418,7 +4419,7 @@ function presentKicker(arm, label){
         if (!reduceMotion) (function(){ /* A3: ONE decelerando for BOTH corners — board voice, never per-strip */
           const li = sG.length - 1, x = (CONFIG.reelExtra && CONFIG.reelExtra[li]) || 0,
                 t1 = CONFIG.spinBase + li * CONFIG.spinStagger + x;
-          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), (CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)) - reelSong.PARK_TAIL * (CONFIG.spinSettle + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0))), t1, function(){ return my === bTok; });
+          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), (CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)) - reelSong.PARK_TAIL_BATTLE * (CONFIG.spinSettle + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0))), t1, function(){ return my === bTok; });
         })();
       }, 1100);
     }
@@ -4559,6 +4560,7 @@ function presentKicker(arm, label){
       }
     };
     window.reelSong.PARK_TAIL = 0.35;
+    window.reelSong.PARK_TAIL_BATTLE = 0.2;   /* A4c: battle boards (Classic/Tourney) start the decay a touch later so the tail doesn't drag — same clock as the main spin, tuned per surface on the founder's ear */
     window.roomLock = function(){ /* ONE HOME ON WINDOW: battle and mirror live in separate closures; a scoped declaration is invisible across them (harness caught it) */
       /* ONE lock, TWO rooms, computed from the rooms' ACTUAL state — it can only release
          when both are closed, so the two-rooms invariant is guarded at runtime, not assumed. */
@@ -5438,7 +5440,7 @@ function presentKicker(arm, label){
         if (!reduceMotion) (function(){ /* A3: tourney board voice */
           const li = sG.length - 1, x = (CONFIG.reelExtra && CONFIG.reelExtra[li]) || 0,
                 t1 = CONFIG.spinBase + li * CONFIG.spinStagger + x;
-          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), (CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)) - reelSong.PARK_TAIL * (CONFIG.spinSettle + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0))), t1, function(){ return my === bTok; });
+          reelSong(Math.max(0, t1 - (CONFIG.spinSettle + x), (CONFIG.spinBase + (li - 1) * CONFIG.spinStagger + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0)) - reelSong.PARK_TAIL_BATTLE * (CONFIG.spinSettle + ((CONFIG.reelExtra && CONFIG.reelExtra[li - 1]) || 0))), t1, function(){ return my === bTok; });
         })();
       }, 1100);
     }
@@ -6194,7 +6196,7 @@ function h2Banner(text){
     later(function(){ b.classList.add("run"); }, 40);
     later(function(){ b.classList.remove("run"); b.classList.add("squat"); }, 2450);
     later(function(){
-      if (SFX) SFX.fart();                       /* merch slot: swap for a custom sound */
+      if (SFX && SFX.fart) SFX.fart();          /* merch slot: swap for a custom sound. A5c: GUARDED — the unguarded call threw for weeks (no such voice) and the first dropping never spawned */
       var p1 = el("span", "c2-poop", "\uD83D\uDCA9");
       p1.style.setProperty("--px", "calc(38vw + 4px)");    /* clear of his silhouette */
       p1.style.setProperty("--pb", "22.4vh");
