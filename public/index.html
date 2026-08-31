@@ -4385,7 +4385,7 @@ function presentKicker(arm, label){
           const onEnd = function(){
             st.removeEventListener("transitionend", onEnd);
             if (my !== bTok) return;
-            Sound.reelStop();
+            reelSong.park(i);   /* T-CLUNK: board-level, twins coalesce */
             if (++stopped === strips2.length) finish();
           };
           st.addEventListener("transitionend", onEnd);
@@ -4561,7 +4561,21 @@ function presentKicker(arm, label){
     };
     window.reelSong.PARK_TAIL = 0.35;
     window.reelSong.PARK_TAIL_BATTLE = 0.2;
-    window.reelSong.PARK_TAIL_TOURNEY = 0.27;   /* A4d: the founder's hair-pin — Tourney starts its decay a touch earlier than Classic ("perfect", untouched); adjacent, named, one home each */   /* A4c: battle boards (Classic/Tourney) start the decay a touch later so the tail doesn't drag — same clock as the main spin, tuned per surface on the founder's ear */
+    window.reelSong.PARK_TAIL_TOURNEY = 0.27;
+    window.reelSong.PARK_TWIN_MS = 80;
+    window.reelSong._parkAt = {};
+    window.reelSong.park = function(i){
+      /* T-CLUNK ONE PARK, ONE CLUNK: a battle board runs two corners on one clock, so every
+         park event arrived as TWO clunks that usually fused and occasionally split (a main-
+         thread stall separates the twins by tens of ms — the founder's one-off ‘trip’). The
+         first corner to park strip i speaks; a twin inside PARK_TWIN_MS is dropped. The
+         window sits above the measured split ceiling and far below the inter-park stagger
+         floor, so distinct parks never fuse. Grammar first: the main spin already says each
+         park once; the boards inherit the rule. */
+      var now = Date.now(), at = reelSong._parkAt[i] || 0;
+      if (now - at < reelSong.PARK_TWIN_MS) return;
+      reelSong._parkAt[i] = now; Sound.reelStop();
+    };   /* A4d: the founder's hair-pin — Tourney starts its decay a touch earlier than Classic ("perfect", untouched); adjacent, named, one home each */   /* A4c: battle boards (Classic/Tourney) start the decay a touch later so the tail doesn't drag — same clock as the main spin, tuned per surface on the founder's ear */
     window.roomLock = function(){ /* ONE HOME ON WINDOW: battle and mirror live in separate closures; a scoped declaration is invisible across them (harness caught it) */
       /* ONE lock, TWO rooms, computed from the rooms' ACTUAL state — it can only release
          when both are closed, so the two-rooms invariant is guarded at runtime, not assumed. */
@@ -4647,22 +4661,23 @@ function presentKicker(arm, label){
          never by a typo; the req type's out-of-seed contract is unchanged — only what
          QUALIFIES changed. Doubles enter by per-instance consent and wear a lot badge. */
       const clean = [], batch = {};
+      let newMiss = false, newDupe = false;   /* M-ADD.1: the voice judges THIS add, never the backlog — correcting one of four typos used to sound like failing three times */
       list.forEach(function(sym){
         const t = mirrorResolve(sym);
-        if (!t){ mpend.push({ why: "miss", sym: sym, sug: suffixMiss(sym, MSEED) }); return; }
-        if (batch[t] || holds.some(function(h){ return h.ok && h.t === t; })){ mpend.push({ why: "dupe", sym: sym, t: t }); return; }
+        if (!t){ mpend.unshift({ why: "miss", sym: sym, sug: suffixMiss(sym, MSEED) }); newMiss = true; return; }
+        if (batch[t] || holds.some(function(h){ return h.ok && h.t === t; })){ mpend.unshift({ why: "dupe", sym: sym, t: t }); newDupe = true; return; }
         batch[t] = 1; clean.push(sym);
       });
       clean.forEach(function(sy){ addOneHold(sy, list.length === 1 && clean.length === 1 && !mpend.length); });
       $("miQ").value = "";
       $("miQ").focus();
       mRender(); mpendRender();
-      if (mpend.some(function(p){ return p.why === "miss"; })) Sound.rejectClunk();
-      else if (mpend.length) Sound.plap();
+      if (newMiss) Sound.rejectClunk();
+      else if (newDupe) Sound.plap();
       const noteEl = $("miAddNote");
       if (noteEl){
         noteEl.textContent = (list.length > 1 && clean.length ? "Added " + clean.length + " live" : "")
-          + (mpend.length ? ((clean.length && list.length > 1) ? " \u00b7 " : "") + mpend.length + " waiting on you below" : "");
+          + (mpend.length ? ((clean.length && list.length > 1) ? " \u00b7 " : "") + mpend.length + (mpend.length === 1 ? " choice" : " choices") + " waiting below" : "");
       }
     }
       $("miGo").addEventListener("click", addHold);
