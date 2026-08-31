@@ -1600,22 +1600,10 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 .mpcard button.mpkeep{border-color:#8B6914;color:#F2E7C9}
 .mlot{display:inline-block;margin-left:6px;padding:2px 6px;border:1px solid #8B6914;border-radius:8px;font-size:9.5px;color:#F2E7C9;background:#241E10;vertical-align:middle}
 
-/* L1 CARD DOCK */
-.cardDock{display:none;width:100%;max-width:430px;flex-direction:column;gap:10px;margin:2px 0 4px}
-.cardDock.show{display:flex}
 </style>
 </head>
 <body>
-<section class="verdict" id="verdict">
-  <div class="v-line" id="vLine">
-    <div class="stars" id="vStars"></div>
-    <div class="score" id="vScore"></div>
-    <div class="big" id="vBig"></div>
-    <div class="small" id="vSmall"></div>
-    <div class="duel" id="vDuel"></div>
-  </div>
-  
-</section>
+
 
 <header class="marquee">
   <h1>GREEN FLAG<br>SLOT MONSTERS</h1>
@@ -1903,11 +1891,18 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
   </div>
 </section>
 
-<!-- L1: THE CARD COMES HOME — the full signal card (and its lid) docks directly above
-     the unit's own wordmark, tucked between the spinner block and the entry block, exactly
-     where the eye lands after a spin. The compact banner stays at the top and now scrolls
-     HERE. Dock visibility rides the same show/hide the verdict always had. -->
-<div class="cardDock" id="cardDock">
+<!-- L1b: ONE FAMILY, ONE HOME — the whole verdict cluster (score strip · lid · full
+     signal card) seats together directly above the unit's own wordmark. The first pass
+     moved the card and left the score strip behind at the page top — a family split
+     across two homes; superseded dock excised, not stacked. -->
+<section class="verdict" id="verdict">
+  <div class="v-line" id="vLine">
+    <div class="stars" id="vStars"></div>
+    <div class="score" id="vScore"></div>
+    <div class="big" id="vBig"></div>
+    <div class="small" id="vSmall"></div>
+    <div class="duel" id="vDuel"></div>
+  </div>
   <button class="btn-expand" id="btnExpand" aria-expanded="false">See the full signal card &#9662;</button>
   <div class="card" id="card">
     <div class="band" id="cardBand"><span id="cardTitle"></span><em id="cardTier"></em></div>
@@ -1916,7 +1911,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
     <div class="qline" id="cardQ"></div>
     <div class="asof" id="cardAsof"></div>
   </div>
-</div>
+</section>
 
 <section class="controls">
   <div class="brandbar"><b>GREEN FLAG SLOT MONSTERS</b><span>Digital Stock Ticker Slot Machine</span></div>
@@ -3533,7 +3528,7 @@ document.addEventListener("click", function(ev){
   function resetVerdictUI(){
     $("bonusLamp").classList.remove("lit");
     $("beacon").classList.remove("strobe");
-    $("verdict").classList.remove("show"); $("cardDock").classList.remove("show");
+    $("verdict").classList.remove("show");
     $("card").classList.remove("open");
     const be = $("btnExpand");
     be.className = "btn-expand";
@@ -3733,7 +3728,7 @@ document.addEventListener("click", function(ev){
     } else duel.classList.remove("show");
     buildCard(d, t, club, globe);
     const finish = function(){
-      $("verdict").classList.add("show"); $("cardDock").classList.add("show");
+      $("verdict").classList.add("show");
       $("topper").setAttribute("aria-label", "See this spin's full signal card");
       busy = false; $("btnInsert").disabled = false;
     };
@@ -5800,7 +5795,7 @@ function presentKicker(arm, label){
     setTimeout(function(){ centerTicker(false); }, 800);
   }
   function jumpToVerdict(){
-    $("cardDock").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+    $("verdict").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
     if (!reduceMotion){
       const be = $("btnExpand");
       be.classList.remove("pulse");
@@ -5810,10 +5805,12 @@ function presentKicker(arm, label){
     }
   }
   function topperTap(){
-    /* the label reads TYPE A TICKER TO PLAY, so that is where it goes. It used to
-       divert to the VERDICT whenever a result was showing — and the verdict sits
-       near the page bottom, which is exactly what the founder saw. A control does
-       what its words say. */
+    /* L1b: THE CONTROL OBEYS ITS OWN SPOKEN LABEL IN BOTH STATES (derived-state law).
+       Before a spin the billboard says TYPE A TICKER → it goes to the ticker box.
+       After a spin its label says SEE THE FULL SIGNAL CARD → it goes to the card —
+       which now lives just under the machine — and it NEVER summons the keyboard on
+       a tap whose promise was to show, not to type. */
+    if ($("verdict").classList.contains("show")){ jumpToVerdict(); return; }
     jumpToTicker();
   }
   $("topper").addEventListener("click", topperTap);
@@ -6193,11 +6190,11 @@ function h2Banner(text){
     later(function(){
       if (SFX && SFX.fart) SFX.fart();          /* the second one gets its own fart */
       var p2 = el("span", "c2-poop", "\uD83D\uDCA9");
-      p2.style.setProperty("--px", "calc(38vw - 56px)");   /* a full 60px apart */
+      p2.style.setProperty("--px", "calc(38vw - 22px)");   /* A5: a tight 26px apart — the pair reads as one act */
       p2.style.setProperty("--pb", "22.9vh");
       p2.style.fontSize = "27px";
       layer.appendChild(p2);
-    }, 3460);
+    }, 3290);   /* A5: 240ms after the first — the farts ring off one after another */
     later(function(){ b.classList.remove("squat"); b.classList.add("off"); }, 3600);
     later(function(){
       for (var i = 0; i < 6; i++){                    /* minimum five; six for good measure */
