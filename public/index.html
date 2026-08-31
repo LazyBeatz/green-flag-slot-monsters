@@ -1600,6 +1600,31 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
 .mpcard button.mpkeep{border-color:#8B6914;color:#F2E7C9}
 .mlot{display:inline-block;margin-left:6px;padding:2px 6px;border:1px solid #8B6914;border-radius:8px;font-size:9.5px;color:#F2E7C9;background:#241E10;vertical-align:middle}
 
+
+/* L12b MASTHEAD (31-Au-2026): the BATTLE MODE wordmark grows to masthead class — Jost, gold,
+   dark drop shadow (glow is flavour, shadow is contrast), clamp-BEFORE-wrap so a longer
+   translation shrinks first and folds last. Two SOURCE-photo gloves flank it: the red photo
+   faces right, the green faces left, so seated left/right of the title they stare each other
+   down by nature — never a scaleX flip (a flip mirrors baked branding). The header drops 16px
+   so the right glove clears the door puck's row. */
+.btl-head{justify-content:center;gap:10px;padding-right:0;margin:16px 0 10px}
+.btl-head b{font-size:clamp(22px,7vw,30px);line-height:1.05;letter-spacing:.06em;text-align:center;color:var(--gold-lt);text-shadow:0 2px 8px rgba(0,0,0,.85)}
+.btl-mast-glove{height:44px;width:auto;flex:0 0 auto;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+@media (max-width:340px){.btl-mast-glove{height:36px}}
+
+/* T-JUMP LOCATOR (31-Au-2026): the roster status becomes a pointer. A pressable chip whose
+   label is DERIVED from corner state jumps to the first empty-or-invalid corner and lights its
+   border with the border-beam in that CORNER'S OWN hue; each tap advances to the next gap and
+   wraps. Hidden when the roster is valid (no dead doors). It never focuses the corner — the beam
+   is the pointer; the user's own tap raises the keyboard. Beam fades, never blinks; dies early
+   the moment typing starts there; reduced-motion = static ring. */
+.rmb-jump{display:none;margin:8px auto 0;min-height:40px;padding:0 16px;border-radius:12px;border:1.5px solid var(--gold);
+  background:#141827;color:var(--gold-lt);font:700 12.5px/1 Jost,sans-serif;letter-spacing:.06em;cursor:pointer}
+.rmb-jump.show{display:inline-flex;align-items:center;gap:6px}
+.rlx-inrow{position:relative}
+.rlx-inrow .bring{border-radius:10px;inset:-3px;transition:opacity .35s;opacity:0}
+.rlx-inrow .bring.jump-on{display:block;opacity:1}
+@media (prefers-reduced-motion:reduce){.rlx-inrow .bring.jump-on s{animation:none;background:none;box-shadow:inset 0 0 0 3px var(--beam)}}
 </style>
 </head>
 <body>
@@ -1780,7 +1805,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
     </div>
     <div class="battle" id="battleLayer" role="dialog" aria-label="Battle mode">
       <div class="btl-scroll">
-        <div class="btl-head"><b>&#129354; BATTLE MODE</b><button class="btl-exit" id="btlExit" aria-label="Exit battle">&#10005;</button></div>
+        <div class="btl-head"><img class="btl-mast-glove" id="btlMastB" alt="" aria-hidden="true"><b>BATTLE MODE</b><img class="btl-mast-glove" id="btlMastG" alt="" aria-hidden="true"><button class="btl-exit" id="btlExit" aria-label="Exit battle">&#10005;</button></div>
         <div class="fmt-strip">
           <button class="fmt-chip on" id="fmtClassic">&#9876;&#65039; CLASSIC 1v1</button>
           <button class="fmt-chip" id="fmtRumble">&#128165; RUMBLE</button>
@@ -1826,6 +1851,7 @@ footer{width:100%;max-width:430px;margin-top:26px;text-align:center;display:flex
             <div class="rmb-corner" style="--rc:#FF7BAC;--hr:215deg"><b>PINK</b><div class="rmb-ava"><img id="rmbAva7" alt=""></div><div class="rlx-inrow"><input id="rmbIn7" maxlength="10" placeholder="Ticker or company" autocomplete="off" spellcheck="false" enterkeyhint="go" aria-label="PINK corner ticker"><button type="button" class="rlx-br" data-rlx="rmb7" aria-label="Browse companies">&#128214;</button></div><button id="rmbGo7">INSERT COIN</button><button class="btl-cclear" id="rmbClr7" type="button">CLEAR</button><div class="rmb-rdy" id="rmbRdy7"></div></div>
             </div>
           <div class="btl-wait" id="rmbWait">0 of 8 corners paid &#8212; need 3+ to rumble&#8230;</div>
+        <button class="rmb-jump" id="rmbJump" type="button" aria-label="Jump to the next corner that needs attention">&#128073; FILL 2 MORE</button>
           <button class="btl-fightbtn" id="rmbFightBtn" disabled aria-disabled="true">RUMBLE!</button>
           <button class="btl-clearbtn" id="rmbClearAll">CLEAR ALL CORNERS</button>
         </div>
@@ -4280,7 +4306,7 @@ function presentKicker(arm, label){
     function open(){
       live = true; bTok++;
       pick = { G: null, B: null };
-      setAva("btlImgG", CONFIG.battleAvatarG, "btlAvaG");
+      setAva("btlImgG", CONFIG.battleAvatarG, "btlAvaG"); $("btlMastB").src = CONFIG.battleAvatarB; $("btlMastG").src = CONFIG.battleAvatarG;   /* L12b: masthead gloves, source-faced */
       setAva("btlImgB", CONFIG.battleAvatarB, "btlAvaB");
       ["G","B"].forEach(function(sd){
         $("btlIn" + sd).value = ""; $("btlIn" + sd).disabled = false;
@@ -5002,6 +5028,37 @@ function presentKicker(arm, label){
       { n: "PURPLE", c: "#AB7BF5", src: "B", hue: 255 }, { n: "BLUE", c: "#5B9BFF", src: "G", hue: 235 },
       { n: "ORANGE", c: "#FF9142", src: "B", hue: 35 }, { n: "PINK", c: "#FF7BAC", src: "G", hue: 345 }];
     function rmbCount(){ return rmbPick.filter(Boolean).length; }
+    var rmbJumpIdx = -1, rmbJumpTok = 0;
+    function rmbGaps(){
+      /* a gap = a corner with no pick: empty, or typed-but-unresolved (needs a fix) */
+      var g = []; for (var i = 0; i < 8; i++) if (!rmbPick[i]) g.push(i); return g;
+    }
+    function rmbJumpSync(ok, n){
+      var pill = $("rmbJump"); if (!pill) return;
+      var gaps = rmbGaps();
+      var typed = gaps.filter(function(i){ return ($("rmbIn" + i).value || "").trim().length > 0; }).length;
+      var need = btlFmt === "T" ? (n < 4 ? 4 - n : 8 - n) : Math.max(0, 3 - n);
+      if (ok || !gaps.length){ pill.classList.remove("show"); return; }
+      pill.textContent = typed ? "\uD83D\uDC49 FIX " + typed + (typed === 1 ? " CORNER" : " CORNERS") : "\uD83D\uDC49 FILL " + need + " MORE";
+      pill.classList.add("show");
+    }
+    function rmbJumpGo(){
+      var gaps = rmbGaps(); if (!gaps.length) return;
+      var next = gaps.find(function(i){ return i > rmbJumpIdx; }); if (next === undefined) next = gaps[0];
+      rmbJumpIdx = next;
+      var inp = $("rmbIn" + next), row = inp.parentElement;
+      var corner = row.closest(".rmb-corner") || row;
+      corner.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      var ring = row.querySelector(".bring");
+      if (!ring){ ring = document.createElement("i"); ring.className = "bring"; ring.appendChild(document.createElement("s")); row.appendChild(ring); }
+      ring.style.setProperty("--beam", RMB_COLORS[next].c);
+      var my = ++rmbJumpTok;
+      document.querySelectorAll(".rlx-inrow .bring.jump-on").forEach(function(r){ r.classList.remove("jump-on"); });
+      ring.classList.add("jump-on");
+      var kill = function(){ if (my === rmbJumpTok) ring.classList.remove("jump-on"); };
+      setTimeout(kill, 2400);
+      inp.addEventListener("input", kill, { once: true });
+    }
     function rmbSync(){
       var n = rmbCount(), ok, msg;
       if (btlFmt === "T"){
@@ -5012,6 +5069,7 @@ function presentKicker(arm, label){
         msg = n + " of 8 corners paid" + (ok ? " \u2014 ready to RUMBLE!" : " \u2014 need 3+ to rumble\u2026");
       }
       $("rmbWait").textContent = msg;
+      rmbJumpSync(ok, n);
       var fb = $("rmbFightBtn");
       fb.disabled = !ok;
       fb.classList.toggle("armed", ok);
@@ -5674,6 +5732,7 @@ function presentKicker(arm, label){
           var col = RMB_COLORS[i];
           var av = $("rmbAva" + i);
           if (av) av.src = col.src === "B" ? CONFIG.battleAvatarB : CONFIG.battleAvatarG;
+          $("rmbIn" + i).addEventListener("input", function(){ rmbSync(); });   /* T-JUMP: the pill label is derived live — a typed-but-unresolved corner reads FIX, an empty one FILL */
           $("rmbGo" + i).addEventListener("click", function(){ rmbInsert(i); });
           $("rmbClr" + i).addEventListener("click", function(){ rmbClear(i); });
           $("rmbIn" + i).addEventListener("keydown", function(e){ if (e.key === "Enter"){ e.preventDefault(); if (rmbInsert(i)) rmbFocusNext(i); } });
@@ -5712,6 +5771,7 @@ function presentKicker(arm, label){
           presentHailMary(prizePick);
         }
       });
+      $("rmbJump").addEventListener("click", rmbJumpGo);
       $("rmbFightBtn").addEventListener("click", function(){ if (btlFmt === "T") tnyStart(); else if (rmbCount() >= 3) rmbFightGo(); });
       $("rmbClearAll").addEventListener("click", function(){ for (var i = 0; i < 8; i++) rmbClear(i); Sound.engraveTick(); });
       $("rmbRematch").addEventListener("click", function(){
